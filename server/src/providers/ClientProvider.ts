@@ -3,7 +3,7 @@ import { IOrder } from "../controllers/Controller";
 import { Orders } from "../database/entity/Order";
 import { Provider } from "./Provider";
 
-export class UserProvider extends Provider {
+export class ClientProvider extends Provider {
   async sendOrder(order: IOrder): Promise<{ status: boolean; error: unknown }> {
     try {
       await getRepository(Orders).save(order);

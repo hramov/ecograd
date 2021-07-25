@@ -1,36 +1,40 @@
 import { Request, Response } from "express-serve-static-core";
-import { Controller, IOrder } from "./Controller";
+import { AuthProvider } from "../providers/AuthProvider";
+import { ClientProvider } from "../providers/ClientProvider";
+import { Controller } from "./Controller";
 import { sendOrder } from "./Telegram/Messages";
 
 export class ClientController extends Controller {
     
     async sendOrder(req: Request, res: Response) {
-        const order: IOrder = {
-            name: req.body.order.name,
-            email: req.body.order.email,
-            company: req.body.order.company,
-            object: req.body.order.object,
-            phone: req.body.order.phone,
-            created_at: new Date(Date.now())
+
+        const result = await new ClientProvider().sendOrder(req.body.order)
+        if (result.status) {
+
+            sendOrder(req.body.order)
+            if (!req.body.user.id) {
+                const user = await new AuthProvider().addUser({
+                    name: req.body.order.name,
+                    last_name: '',
+                    email: req.body.order.email,
+                    role: 'client',
+                    birthdate: new Date(Date.now()),
+                    login: req.body.order.email,
+                    password: new Date().toString(),
+                    telegram_id: 0,
+                })
+            }
+
+            res.status(200).send({
+                status: true,
+                message: result.error
+            })
+            return
         }
 
-        /** Some validation here */
-
-        // const userProvider = new UserProvider()
-        // const result = await userProvider.sendOrder(order)
-        // if (result.status) {
-        //     res.status(200).send({
-        //         status: true,
-        //         message: result.error
-        //     })
-        //     return
-        // }
-        
-        sendOrder(order)
-
-        res.status(200).send({
-            status: true,
-            message: null
+        res.status(500).send({
+            status: result.status,
+            message: result.error
         })
     }
 

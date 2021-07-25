@@ -25,6 +25,7 @@ export interface IOrder {
   email: string;
   company: string;
   object: string;
+  object_type: string,
   phone: string;
   created_at: Date;
 }

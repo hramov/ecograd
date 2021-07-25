@@ -1,7 +1,7 @@
 import { Controller, ITelegramUser } from "../Controller";
 import TelegramBot from "node-telegram-bot-api";
 import { AuthProvider } from "../../providers/AuthProvider";
-import { UserProvider } from "../../providers/UserProvider";
+import { ClientProvider } from "../../providers/ClientProvider";
 import { newOrderWithoutReply } from "./Order";
 import { workerHandler } from "./WorkerHandler";
 import { clientHandler } from "./ClientHandler";
@@ -32,7 +32,7 @@ export class TelegramController extends Controller {
 
   listen() {
     const auth = new AuthProvider();
-    const user = new UserProvider();
+    const user = new ClientProvider();
     const bot = TelegramController.bot;
 
     bot.on("message", async (msg) => {

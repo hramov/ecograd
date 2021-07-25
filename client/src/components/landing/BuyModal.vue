@@ -14,6 +14,8 @@
           </div>
           <div v-else class="alert alert-success" role="alert">
             Ваш заказ успешно отправлен!
+            <!-- <p>Для входа на сайт используйте логин: {{ tempuser.login }}</p> -->
+            <!-- <p>пароль: {{ tempuser.password }}</p> -->
           </div>
         </div>
         <div class="modal-header">
@@ -35,8 +37,9 @@
                 id="name"
                 type="text"
                 class="form-control"
-                placeholder="Ваше имя"
+                placeholder="* Ваше имя"
                 v-model="order.name"
+                required
               />
             </div>
             <div class="form-group">
@@ -44,8 +47,9 @@
                 id="email"
                 type="text"
                 class="form-control"
-                placeholder="Ваш E-mail"
+                placeholder="* Ваш E-mail"
                 v-model="order.email"
+                required
               />
             </div>
             <div class="form-group">
@@ -62,17 +66,25 @@
                 id="object"
                 type="text"
                 class="form-control"
-                placeholder="Объект"
+                placeholder="* Объект"
                 v-model="order.object"
+                required
               />
+            </div>
+            <div class="form-group">
+              <select class="form-select" aria-label="Default select example">
+                <option value="1">Объект капитального строительства</option>
+                <option value="2">Линейный объект</option>
+              </select>
             </div>
             <div class="form-group">
               <input
                 id="phone"
                 type="number"
                 class="form-control"
-                placeholder="Номер телефона"
+                placeholder="* Номер телефона"
                 v-model="order.phone"
+                required
               />
             </div>
           </form>
@@ -81,7 +93,7 @@
           <a
             class="btn btn-success"
             style="margin: 0 auto; cursor: pointer"
-            @click="sendOrder(order)"
+            @click.prevent="sendOrder"
             >Отправить</a
           >
         </div>
@@ -92,21 +104,13 @@
 
 <script lang="ts">
 import axios from "axios";
-import { defineComponent, getCurrentInstance, ref } from "vue";
+import { computed, defineComponent, reactive, ref } from "vue";
+import { useStore } from "vuex";
 
 export default defineComponent({
-  data() {
-    return {
-      order: {
-        name: "",
-        email: "",
-        company: "",
-        object: "",
-        phone: "",
-      },
-    };
-  },
   setup() {
+    const store = useStore();
+
     interface IOrder {
       name: string;
       email: string;
@@ -115,17 +119,27 @@ export default defineComponent({
       phone: number;
     }
 
-    const instance = getCurrentInstance();
+    const order = reactive({
+      name: "",
+      email: "",
+      company: "",
+      object: "",
+      phone: "",
+    });
 
     const status = ref(false);
     const error = ref("");
     const edited = ref(false);
 
-    const sendOrder = async (order: IOrder) => {
+    const tempuser = computed(() => store.getters.getTempUser);
+    const user = computed(() => store.getters.getUser)
+
+    const sendOrder = async () => {
       const response = await axios.post(
         "http://localhost:5000/api/v1/send-order",
         {
           order: order,
+          user: user
         }
       );
 
@@ -133,11 +147,9 @@ export default defineComponent({
       error.value = response.data.error;
       edited.value = true;
 
-      instance!.data.order = {};
-
       setTimeout(() => {
         document.getElementById("closeBtn")!.click();
-      }, 2000);
+      }, 10000);
     };
 
     return {
@@ -145,6 +157,7 @@ export default defineComponent({
       status: status,
       error: error,
       edited: edited,
+      order: order,
     };
   },
 });

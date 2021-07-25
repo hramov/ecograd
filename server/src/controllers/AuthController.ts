@@ -40,8 +40,7 @@ export class AuthController extends Controller {
   }
 
   async formRegister(req: Request, res: Response) {
-    const auth = new AuthProvider();
-    const result = await auth.addUser({
+    const result = await new AuthProvider().addUser({
       name: req.body.name,
       last_name: req.body.last_name,
       email: req.body.email,
@@ -65,8 +64,7 @@ export class AuthController extends Controller {
   }
 
   async formLogout(req: Request, res: Response) {
-    const auth = new AuthProvider();
-    const result = auth.logout(Number(req.params.id));
+    const result = await new AuthProvider().logout(Number(req.params.id));
     res.status(200).send("OK");
   }
 }

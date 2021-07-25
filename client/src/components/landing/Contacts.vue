@@ -7,7 +7,7 @@
     <div class="small">Общество с ограниченной ответственностью "ЭкоГрадЪ"</div>
 
     <div class="row">
-      <div class="col-md-5 col-lg-4 col-sm-12 offset-lg-1">
+      <div class="col-md-5 col-lg-4 col-sm-12 offset-lg-1 text-left">
         <div class="contact_item">
           <i class="fa fa-map-marker fa-2x"></i>
           <!-- <p> -->

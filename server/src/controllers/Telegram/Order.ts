@@ -1,9 +1,9 @@
 import TelegramBot from "node-telegram-bot-api";
-import { UserProvider } from "../../providers/UserProvider";
+import { ClientProvider } from "../../providers/ClientProvider";
 import { IOrder } from "./../Controller"
 
 export async function newOrderWithReply(
-  user: UserProvider,
+  user: ClientProvider,
   bot: TelegramBot,
   msg: TelegramBot.Message
 ) {
@@ -12,6 +12,7 @@ export async function newOrderWithReply(
     email: "",
     company: "",
     object: "",
+    object_type: '',
     phone: "",
     created_at: new Date(Date.now()),
   };
@@ -77,7 +78,7 @@ export async function newOrderWithReply(
 }
 
 export async function newOrderWithoutReply(
-  user: UserProvider,
+  user: ClientProvider,
   bot: TelegramBot,
   msg: TelegramBot.Message
 ) {
@@ -86,6 +87,7 @@ export async function newOrderWithoutReply(
     email: "",
     company: "",
     object: "",
+    object_type: '',
     phone: "",
     created_at: new Date(Date.now()),
   };
