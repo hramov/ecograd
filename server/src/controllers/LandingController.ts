@@ -42,10 +42,8 @@ export class LandingController extends Controller {
   }
 
   async editExpert(req: Request, res: Response) {
-    console.log(req.file);
     const expert = JSON.parse(req.body.expert);
     expert.image_url = `${process.env.IMAGE_URL}/${expert.id}.png`;
-    console.log(expert);
     if (req.file && expert.id) {
       toConsole("Check", "debug");
       const path = `${appRootPath}/uploads/${expert.image_url}`;

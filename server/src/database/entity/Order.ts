@@ -20,14 +20,16 @@ export class Orders {
   @Column("varchar", {
       nullable: true
   })
-  type: string;
+  object_type: string;
 
   @Column("timestamp")
   created_at: Date;
 
   @ManyToOne(() => Users, (user) => user.id)
+  @JoinColumn({name: 'userId'})
   exec: Users;
 
   @ManyToOne(() => Clients, (client) => client.id)
+  @JoinColumn({name: 'clientId'})
   client: Clients;
 }

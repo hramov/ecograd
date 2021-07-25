@@ -114,6 +114,7 @@ export default createStore({
           .catch(() => {
             state.jwt_token = "";
             localStorage.setItem("jwt_token", "");
+            localStorage.setItem('user', '')
           });
       }
       return state.jwt_token;
@@ -125,8 +126,6 @@ export default createStore({
     getUser: (state) => {
       if (
         JSON.parse(localStorage.getItem("user")!).id &&
-        JSON.parse(localStorage.getItem("user")!).last_name &&
-        JSON.parse(localStorage.getItem("user")!).name &&
         state.jwt_token
       ) {
         state.user = JSON.parse(localStorage.getItem("user")!);

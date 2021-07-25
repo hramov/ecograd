@@ -1,10 +1,10 @@
 import { Request, Response } from "express";
-import { toConsole } from "../utils/log";
 import { AuthProvider } from "../providers/AuthProvider";
 import { JWT } from "../utils/jwt/index";
 import { Controller } from "./Controller";
 
 export class AuthController extends Controller {
+
   async getUsers(req: Request, res: Response) {
     const auth = new AuthProvider();
     const users = await auth.getUsers();
@@ -12,21 +12,32 @@ export class AuthController extends Controller {
   }
 
   async getUser(req: Request, res: Response) {
-    const auth = new AuthProvider();
-    const user = await auth.singleUser(req.params.id);
+    const user = await new AuthProvider().singleUser(req.params.id);
     res.status(200).json(user[0]);
   }
 
   async formLogin(req: Request, res: Response) {
-    const auth = new AuthProvider();
-    const result = await auth.getUser(req.body.login, req.body.password);
-    if (result.status) {
+    
+    const user = await new AuthProvider().getUser(req.body.login, req.body.password);
+    if (user.status) {
       const jwt = new JWT();
-      const jwt_token = jwt.createJWT(600000, result.data!.id!, "admin");
+      const jwt_token = jwt.createJWT(600000, user.data!.id!, "admin");
       res.status(200).json({
-        status: result.status,
+        status: user.status,
         jwt_token: jwt_token,
-        user: result.data
+        user: user.data
+      });
+      return;
+    }
+
+    const client = await new AuthProvider().getClient(req.body.login, req.body.password);
+    if (client.status) {
+      const jwt = new JWT();
+      const jwt_token = jwt.createJWT(600000, client.data!.id!, "client");
+      res.status(200).json({
+        status: client.status,
+        jwt_token: jwt_token,
+        user: client.data
       });
       return;
     }

@@ -60,7 +60,8 @@ router.get(
   clientMW.check,
   client.getOrdersForClientById
 );
-router.post("/client/:client_id/send-order", clientMW.check, client.sendOrder);
+router.post("/client/send-order", client.sendOrder);
+router.get("/admin/get-client/:id", clientMW.check, auth.getUser);
 
 // Routes for get data
 router.get("/users", adminMW.check, auth.getUsers);

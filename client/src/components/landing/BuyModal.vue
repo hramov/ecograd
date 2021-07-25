@@ -14,8 +14,9 @@
           </div>
           <div v-else class="alert alert-success" role="alert">
             Ваш заказ успешно отправлен!
-            <!-- <p>Для входа на сайт используйте логин: {{ tempuser.login }}</p> -->
-            <!-- <p>пароль: {{ tempuser.password }}</p> -->
+            <p>Для входа на сайт используйте</p>
+            <p>логин: {{ tempuser.login }}</p>
+            <p>пароль: {{ tempuser.password }}</p>
           </div>
         </div>
         <div class="modal-header">
@@ -72,7 +73,11 @@
               />
             </div>
             <div class="form-group">
-              <select class="form-select" aria-label="Default select example">
+              <select
+                class="form-select"
+                aria-label="Default select example"
+                v-model="order.object_type"
+              >
                 <option value="1">Объект капитального строительства</option>
                 <option value="2">Линейный объект</option>
               </select>
@@ -116,14 +121,16 @@ export default defineComponent({
       email: string;
       company: string;
       object: string;
-      phone: number;
+      object_type: string;
+      phone: string;
     }
 
-    const order = reactive({
+    const order: IOrder = reactive({
       name: "",
       email: "",
       company: "",
       object: "",
+      object_type: "",
       phone: "",
     });
 
@@ -131,20 +138,28 @@ export default defineComponent({
     const error = ref("");
     const edited = ref(false);
 
-    const tempuser = computed(() => store.getters.getTempUser);
-    const user = computed(() => store.getters.getUser)
+    const tempuser = reactive({
+      login: "",
+      password: "",
+    });
+
+    const user = computed(() => store.getters.getUser);
 
     const sendOrder = async () => {
-      const response = await axios.post(
-        "http://localhost:5000/api/v1/send-order",
+      const result = await axios.post(
+        "http://localhost:5000/api/v1/client/send-order",
         {
           order: order,
-          user: user
+          user: user.value,
         }
       );
 
-      status.value = response.data.status;
-      error.value = response.data.error;
+      status.value = result.data.status;
+      if (!result.data.status) error.value = result.data.data;
+
+      tempuser.login = result.data.data.login;
+      tempuser.password = result.data.data.password;
+
       edited.value = true;
 
       setTimeout(() => {
@@ -158,6 +173,7 @@ export default defineComponent({
       error: error,
       edited: edited,
       order: order,
+      tempuser: tempuser,
     };
   },
 });

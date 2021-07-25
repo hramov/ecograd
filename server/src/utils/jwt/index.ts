@@ -65,7 +65,7 @@ export class JWT {
     return JWT.createSignature(jwt);
   }
 
-  public verifyJWT(jwt_token: string, role: string): boolean {
+  public verifyJWT(jwt_token: string): boolean {
     const uint8array = new TextEncoder();
     let [header, payload, signature] = jwt_token.split(".");
     header = header.split(" ")[1];
@@ -73,8 +73,8 @@ export class JWT {
     try {
       const payloadDec: Payload = JSON.parse(base64url.decode(payload, "utf-8")); // Error when JWT in illegal
 
-      if (payloadDec.exp < Date.now()) return false
-      if (payloadDec.role != role) return false
+      // if (payloadDec.exp < Date.now()) return false
+      if (payloadDec.role == 'admin' || payloadDec.role == 'client') {
 
       const signatureEnc = hmac(
         uint8array.encode(JWT.SECRET_KEY),
@@ -84,6 +84,7 @@ export class JWT {
       if (Buffer.from(signatureEnc).toString("base64url") === signature) {
         return true
       }
+    }
     } catch (err: unknown) {
       toConsole('Unauthorized jwt spotted!', 'error')
     }

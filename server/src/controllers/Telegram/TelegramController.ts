@@ -2,7 +2,7 @@ import { Controller, ITelegramUser } from "../Controller";
 import TelegramBot from "node-telegram-bot-api";
 import { AuthProvider } from "../../providers/AuthProvider";
 import { ClientProvider } from "../../providers/ClientProvider";
-import { newOrderWithoutReply } from "./Order";
+// import { newOrderWithoutReply } from "./Order";
 import { workerHandler } from "./WorkerHandler";
 import { clientHandler } from "./ClientHandler";
 import { greeting } from "./Greeting";
@@ -41,8 +41,8 @@ export class TelegramController extends Controller {
           await greeting(auth, bot, msg);
           break;
         case "/order":
-          await newOrderWithoutReply(user, bot, msg);
-          break;
+          // await newOrderWithoutReply(user, bot, msg);
+          // break;
         case "/client":
           await clientHandler(auth, bot, msg);
           break;

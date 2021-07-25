@@ -5,10 +5,9 @@ import { Middleware } from "./Middleware";
 export class AdminMiddleware extends Middleware {
   check(req: Request, res: Response, next: NextFunction) {
     const jwt_token = req.get("Authorization");
-    console.log(jwt_token)
     if (jwt_token) {
       const jwt = new JWT();
-      if (jwt.verifyJWT(jwt_token, "admin")) {
+      if (jwt.verifyJWT(jwt_token)) {
         next();
         return;
       }

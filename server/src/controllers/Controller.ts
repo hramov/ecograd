@@ -21,13 +21,24 @@ export interface ITelegramUser {
 }
 
 export interface IOrder {
-  name: string;
-  email: string;
-  company: string;
+  id?: string;
   object: string;
   object_type: string,
-  phone: string;
   created_at: Date;
+}
+
+export interface IClient {
+  id?: string,
+  last_name: string,
+  name: string,
+  second_name: string,
+  email: string;
+  phone: string;
+  login: string;
+  password: string;
+  role: string;
+  telegram_id: number;
+  orders: IOrder[]
 }
 
 /**

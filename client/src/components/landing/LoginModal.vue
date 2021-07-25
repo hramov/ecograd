@@ -53,10 +53,10 @@
 </template>
 
 <script lang="ts">
-import { defineComponent, reactive, getCurrentInstance } from "vue";
+import { defineComponent, reactive, getCurrentInstance, ref } from "vue";
 import { useStore } from "vuex";
 import axios from "axios";
-import { IAuthResponse } from './../../custom/interfaces'
+import { IAuthResponse } from "./../../custom/interfaces";
 
 export default defineComponent({
   data() {
@@ -68,14 +68,14 @@ export default defineComponent({
 
   setup() {
     const instance = getCurrentInstance();
-    const router = instance!.proxy?.$router
+    const router = instance!.proxy?.$router;
 
     const store = useStore();
 
     let authResponse: IAuthResponse = reactive({
       status: false,
       jwt_token: "",
-      user: { id: 0 },
+      user: { id: 0, role: "" },
     });
 
     async function loginMehod(login: string, password: string): Promise<void> {
@@ -85,25 +85,12 @@ export default defineComponent({
       });
       if (result.status) {
         authResponse = result.data;
-        console.log(authResponse);
         localStorage.setItem("jwt_token", authResponse.jwt_token);
         store.commit("setJWT", authResponse.jwt_token);
         document.getElementById("closeBtn")!.click();
-
-        const user = await axios.get(
-          `http://localhost:5000/api/v1/admin/get-user/${
-            authResponse.user!.id
-          }`,
-          {
-            headers: {
-              Authorization: `Bearer ${authResponse.jwt_token}`,
-            },
-          }
-        );
-
-        store.commit("setUser", user.data);
-        localStorage.setItem("user", JSON.stringify(user.data));
-        router!.push("/dashboard")!;
+        store.commit("setUser", authResponse.user);
+        localStorage.setItem("user", JSON.stringify(authResponse.user));
+        router!.push("/");
       }
     }
 

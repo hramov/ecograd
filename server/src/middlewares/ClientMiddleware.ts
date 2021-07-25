@@ -8,7 +8,7 @@ export class ClientMiddleware extends Middleware {
         const jwt_token = req.get("Authorization")
         if (jwt_token) {
             const jwt = new JWT()
-            if (jwt.verifyJWT(jwt_token, 'client')) {
+            if (jwt.verifyJWT(jwt_token)) {
                 next()
                 return
             }

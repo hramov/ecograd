@@ -25,8 +25,8 @@ async function main() {
 
     await db.connect()
 
-    const tc = new TelegramController()
-    tc.listen()
+    // const tc = new TelegramController()
+    // tc.listen()
 
     app.use(cors())
     app.use('/api/v1/', router)

@@ -1,9 +1,9 @@
 import { getRepository } from "typeorm";
-
 import { Users } from "../database/entity/Users";
 import { Provider } from "./Provider";
-import { isUserType, IUser } from "./../controllers/Controller";
+import { IClient, IUser } from "./../controllers/Controller";
 import { sendNewMember } from "../controllers/Telegram/Messages";
+import { Clients } from "../database/entity/Clients";
 
 export class AuthProvider extends Provider {
   async getUsers(role?: string): Promise<IUser[]> {
@@ -73,4 +73,40 @@ export class AuthProvider extends Provider {
     });
     return result[0];
   }
+
+  async addClient(client: IClient): Promise<{ status: boolean; data: IClient | string }> {
+    const result = await getRepository(Clients).save(client)
+    if (result.id) {
+      return {
+      status: true,
+      data: result
+    }
+  }
+    return {
+      status: false,
+      data: "Error"
+    } 
+  }
+
+  async getClient(login: string, password: string): Promise<{status: boolean, data: IClient | null }> {
+    const checkedLogin = this.checkParams(login);
+    const checkedPassword = this.checkParams(password);
+    if (checkedLogin && checkedPassword) {
+      const result = await getRepository(Clients).find({
+        where: [{ login: login, password: password }],
+      });
+
+      if (result.length == 1) {
+        return {
+          status: true,
+          data: result[0],
+        };
+      }
+    }
+    return {
+      status: false,
+      data: null,
+    };
+  }
+
 }

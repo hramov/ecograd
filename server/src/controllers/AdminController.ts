@@ -24,7 +24,7 @@ export class AdminController extends Controller {
 
   checkJWT(req: Request, res: Response) {
     const token = req.body.token;
-    const result = new JWT().verifyJWT("Bearer " + token, "admin");
+    const result = new JWT().verifyJWT("Bearer " + token);
     if (result) {
       res.status(200).send({ status: true, data: token });
       return;

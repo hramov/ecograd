@@ -64,7 +64,10 @@
               </button>
               <ul class="dropdown-menu" aria-labelledby="dropdownMenuButton1">
                 <li>
-                  <a class="dropdown-item" @click="$router.push('/dashboard')"
+                  <a class="dropdown-item" v-if="user.role == 'admin'" @click="$router.push('/dashboard')"
+                    >Открыть</a
+                  >
+                  <a class="dropdown-item" v-if="user.role == 'client'" @click="$router.push('/client')"
                     >Открыть</a
                   >
                 </li>

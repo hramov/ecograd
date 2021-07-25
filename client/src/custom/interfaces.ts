@@ -30,6 +30,7 @@ export interface IAuthResponse {
   status: boolean;
   jwt_token: string;
   user: {
-    id: number
+    id: number,
+    role: ''
   }
 }
