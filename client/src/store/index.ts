@@ -125,7 +125,7 @@ export default createStore({
     getOrders: (state) => state.orders,
     getUser: (state) => {
       if (
-        JSON.parse(localStorage.getItem("user")!).id &&
+        localStorage.getItem("user") &&
         state.jwt_token
       ) {
         state.user = JSON.parse(localStorage.getItem("user")!);

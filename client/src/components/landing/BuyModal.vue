@@ -146,19 +146,20 @@ export default defineComponent({
     const user = computed(() => store.getters.getUser);
 
     const sendOrder = async () => {
+      console.log("123")
       const result = await axios.post(
         "http://localhost:5000/api/v1/client/send-order",
         {
           order: order,
-          user: user.value,
+          client: user.value,
         }
       );
 
       status.value = result.data.status;
       if (!result.data.status) error.value = result.data.data;
 
-      tempuser.login = result.data.data.login;
-      tempuser.password = result.data.data.password;
+      tempuser.login = result.data.client.login;
+      tempuser.password = result.data.client.password;
 
       edited.value = true;
 

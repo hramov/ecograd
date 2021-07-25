@@ -37,8 +37,7 @@ export interface IClient {
   login: string;
   password: string;
   role: string;
-  telegram_id: number;
-  orders: IOrder[]
+  telegram_id: number
 }
 
 /**

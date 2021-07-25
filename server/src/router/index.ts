@@ -61,6 +61,7 @@ router.get(
   client.getOrdersForClientById
 );
 router.post("/client/send-order", client.sendOrder);
+router.get("/client/get-clients", client.getClients);
 router.get("/admin/get-client/:id", clientMW.check, auth.getUser);
 
 // Routes for get data
