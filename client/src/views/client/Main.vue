@@ -1,19 +1,19 @@
 <template>
   <div>
+    <Header />
     <Orders />
-    <Experts />
   </div>
 </template>
 
 <script lang="ts">
 import { defineComponent } from "vue";
-import Orders from './../../components/dashboard/Orders.vue'
-import Experts from './../../components/dashboard/Experts.vue'
+import Orders from './../../components/client/Orders.vue'
+import Header from './../../components/client/Header.vue'
 
 export default defineComponent({
   components: {
-    Orders,
-    Experts,
+    Header,
+    Orders
   }
 });
 </script>
