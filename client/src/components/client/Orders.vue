@@ -21,6 +21,7 @@
               <td>{{ order.object_type }}</td>
               <td>{{ new Date(order.created_at).toLocaleDateString() }}</td>
               <td>
+                <div v-if="!order.files_url">
                 <button
                   v-if="order.object_type == 'Объект капитального строительства'"
                   type="button"
@@ -41,8 +42,8 @@
                 >
                   Загрузить
                 </button>
-
-                <!-- <a v-else href="" class="btn btn-success">Скачать</a> -->
+                </div>
+                <a v-else :href="'http://localhost:5000/api/v1/static' + order.files_url" class="btn btn-success">Скачать</a>
               </td>
             </tr>
           </tbody>

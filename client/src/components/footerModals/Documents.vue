@@ -81,6 +81,7 @@ export default defineComponent({});
 <style scoped>
 a {
   color: black;
+  font-weight: normal;
 }
 a:hover {
   color: darkgray;
