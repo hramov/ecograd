@@ -40,7 +40,7 @@
             >
               <div class="col">Cхема размещения линейного объекта</div>
               <div class="col">
-                <div v-if="!isImage" class="form-group">
+                <div class="form-group">
                   <input
                     id="image_url"
                     type="file"
@@ -60,7 +60,7 @@
                 Постановление о согласовании схемы размещения линейного объекта
               </div>
               <div class="col">
-                <div v-if="!isImage" class="form-group">
+                <div class="form-group">
                   <input
                     id="image_url"
                     type="file"
@@ -78,7 +78,7 @@
             >
               <div class="col">Технические условия</div>
               <div class="col">
-                <div v-if="!isImage" class="form-group">
+                <div class="form-group">
                   <input
                     id="image_url"
                     type="file"
@@ -99,7 +99,7 @@
                 подписью)
               </div>
               <div class="col">
-                <div v-if="!isImage" class="form-group">
+                <div class="form-group">
                   <input
                     id="image_url"
                     type="file"
@@ -117,7 +117,7 @@
             >
               <div class="col">Пояснительная записка</div>
               <div class="col">
-                <div v-if="!isImage" class="form-group">
+                <div class="form-group">
                   <input
                     id="image_url"
                     type="file"
@@ -135,7 +135,7 @@
             >
               <div class="col">Проект полосы отвода</div>
               <div class="col">
-                <div v-if="!isImage" class="form-group">
+                <div class="form-group">
                   <input
                     id="image_url"
                     type="file"
@@ -156,7 +156,7 @@
                 Искусственные сооружения
               </div>
               <div class="col">
-                <div v-if="!isImage" class="form-group">
+                <div class="form-group">
                   <input
                     id="image_url"
                     type="file"
@@ -174,7 +174,7 @@
             >
               <div class="col">Проект организации строительства</div>
               <div class="col">
-                <div v-if="!isImage" class="form-group">
+                <div class="form-group">
                   <input
                     id="image_url"
                     type="file"
@@ -192,7 +192,7 @@
             >
               <div class="col">Мероприятия по охране окружающей среды</div>
               <div class="col">
-                <div v-if="!isImage" class="form-group">
+                <div class="form-group">
                   <input
                     id="image_url"
                     type="file"
@@ -212,7 +212,7 @@
                 Мероприятия по обеспечению пожарной безопасности
               </div>
               <div class="col">
-                <div v-if="!isImage" class="form-group">
+                <div class="form-group">
                   <input
                     id="image_url"
                     type="file"
@@ -234,7 +234,7 @@
                 характера
               </div>
               <div class="col">
-                <div v-if="!isImage" class="form-group">
+                <div class="form-group">
                   <input
                     id="image_url"
                     type="file"
@@ -258,7 +258,7 @@
                 утвержденное заказчиком электронной подписью
               </div>
               <div class="col">
-                <div v-if="!isImage" class="form-group">
+                <div class="form-group">
                   <input
                     id="image_url"
                     type="file"
@@ -278,7 +278,7 @@
                 электронной подписью
               </div>
               <div class="col">
-                <div v-if="!isImage" class="form-group">
+                <div class="form-group">
                   <input
                     id="image_url"
                     type="file"
@@ -295,7 +295,7 @@
             >
               <div class="col">СРО на проектирование инженерных изысканий</div>
               <div class="col">
-                <div v-if="!isImage" class="form-group">
+                <div class="form-group">
                   <input
                     id="image_url"
                     type="file"
@@ -312,7 +312,7 @@
             >
               <div class="col">Отчет по Инженерно-геологическим изысканиям</div>
               <div class="col">
-                <div v-if="!isImage" class="form-group">
+                <div class="form-group">
                   <input
                     id="image_url"
                     type="file"
@@ -329,7 +329,7 @@
             >
               <div class="col">Отчет по Инженерно-геодезическим изысканиям</div>
               <div class="col">
-                <div v-if="!isImage" class="form-group">
+                <div class="form-group">
                   <input
                     id="image_url"
                     type="file"
@@ -346,7 +346,7 @@
             >
               <div class="col">Отчет по Инженерно-экологическим изысканиям</div>
               <div class="col">
-                <div v-if="!isImage" class="form-group">
+                <div class="form-group">
                   <input
                     id="image_url"
                     type="file"
@@ -365,7 +365,7 @@
                 Отчет по Инженерно-гидрометеорологичекским изысканиям
               </div>
               <div class="col">
-                <div v-if="!isImage" class="form-group">
+                <div class="form-group">
                   <input
                     id="image_url"
                     type="file"
@@ -386,7 +386,7 @@
             >
               <div class="col">Смета</div>
               <div class="col">
-                <div v-if="!isImage" class="form-group">
+                <div class="form-group">
                   <input
                     id="image_url"
                     type="file"

@@ -39,13 +39,14 @@
             >
               <div class="col">Градостроительный план земельного участка</div>
               <div class="col">
-                <div v-if="!isImage" class="form-group">
+                <div class="form-group">
                   <input
                     id="image_url"
                     type="file"
                     class="form-control"
                     placeholder="Файл"
                     ref="file"
+                    @change="changeFile"
                   />
                 </div>
               </div>
@@ -57,13 +58,14 @@
             >
               <div class="col">Технические условия</div>
               <div class="col">
-                <div v-if="!isImage" class="form-group">
+                <div class="form-group">
                   <input
                     id="image_url"
                     type="file"
                     class="form-control"
                     placeholder="Файл"
                     ref="file"
+                    @change="changeFile"
                   />
                 </div>
               </div>
@@ -78,13 +80,14 @@
                 подписью
               </div>
               <div class="col">
-                <div v-if="!isImage" class="form-group">
+                <div class="form-group">
                   <input
                     id="image_url"
                     type="file"
                     class="form-control"
                     placeholder="Файл"
                     ref="file"
+                    @change="changeFile"
                   />
                 </div>
               </div>
@@ -96,13 +99,14 @@
             >
               <div class="col">Доверенность</div>
               <div class="col">
-                <div v-if="!isImage" class="form-group">
+                <div class="form-group">
                   <input
                     id="image_url"
                     type="file"
                     class="form-control"
                     placeholder="Файл"
                     ref="file"
+                    @change="changeFile"
                   />
                 </div>
               </div>
@@ -114,13 +118,14 @@
             >
               <div class="col">СРО на проектирование</div>
               <div class="col">
-                <div v-if="!isImage" class="form-group">
+                <div class="form-group">
                   <input
                     id="image_url"
                     type="file"
                     class="form-control"
                     placeholder="Файл"
                     ref="file"
+                    @change="changeFile"
                   />
                 </div>
               </div>
@@ -132,13 +137,14 @@
             >
               <div class="col">Пояснительная записка</div>
               <div class="col">
-                <div v-if="!isImage" class="form-group">
+                <div class="form-group">
                   <input
                     id="image_url"
                     type="file"
                     class="form-control"
                     placeholder="Файл"
                     ref="file"
+                    @change="changeFile"
                   />
                 </div>
               </div>
@@ -152,13 +158,14 @@
                 Схема планировочной организации земельного участка
               </div>
               <div class="col">
-                <div v-if="!isImage" class="form-group">
+                <div class="form-group">
                   <input
                     id="image_url"
                     type="file"
                     class="form-control"
                     placeholder="Файл"
                     ref="file"
+                    @change="changeFile"
                   />
                 </div>
               </div>
@@ -170,13 +177,14 @@
             >
               <div class="col">Архитектурные решения</div>
               <div class="col">
-                <div v-if="!isImage" class="form-group">
+                <div class="form-group">
                   <input
                     id="image_url"
                     type="file"
                     class="form-control"
                     placeholder="Файл"
                     ref="file"
+                    @change="changeFile"
                   />
                 </div>
               </div>
@@ -190,13 +198,14 @@
                 Конструктивные и объемно-планировочные решения
               </div>
               <div class="col">
-                <div v-if="!isImage" class="form-group">
+                <div class="form-group">
                   <input
                     id="image_url"
                     type="file"
                     class="form-control"
                     placeholder="Файл"
                     ref="file"
+                    @change="changeFile"
                   />
                 </div>
               </div>
@@ -208,13 +217,14 @@
             >
               <div class="col">Система электроснабжения</div>
               <div class="col">
-                <div v-if="!isImage" class="form-group">
+                <div class="form-group">
                   <input
                     id="image_url"
                     type="file"
                     class="form-control"
                     placeholder="Файл"
                     ref="file"
+                    @change="changeFile"
                   />
                 </div>
               </div>
@@ -226,13 +236,14 @@
             >
               <div class="col">Система водоснабжения</div>
               <div class="col">
-                <div v-if="!isImage" class="form-group">
+                <div class="form-group">
                   <input
                     id="image_url"
                     type="file"
                     class="form-control"
                     placeholder="Файл"
                     ref="file"
+                    @change="changeFile"
                   />
                 </div>
               </div>
@@ -246,13 +257,14 @@
                 Отопление вентиляция и кондиционирование воздуха, тепловые сети
               </div>
               <div class="col">
-                <div v-if="!isImage" class="form-group">
+                <div class="form-group">
                   <input
                     id="image_url"
                     type="file"
                     class="form-control"
                     placeholder="Файл"
                     ref="file"
+                    @change="changeFile"
                   />
                 </div>
               </div>
@@ -264,13 +276,14 @@
             >
               <div class="col">Сети связи</div>
               <div class="col">
-                <div v-if="!isImage" class="form-group">
+                <div class="form-group">
                   <input
                     id="image_url"
                     type="file"
                     class="form-control"
                     placeholder="Файл"
                     ref="file"
+                    @change="changeFile"
                   />
                 </div>
               </div>
@@ -282,13 +295,14 @@
             >
               <div class="col">Система газоснабжения</div>
               <div class="col">
-                <div v-if="!isImage" class="form-group">
+                <div class="form-group">
                   <input
                     id="image_url"
                     type="file"
                     class="form-control"
                     placeholder="Файл"
                     ref="file"
+                    @change="changeFile"
                   />
                 </div>
               </div>
@@ -300,13 +314,14 @@
             >
               <div class="col">Проект организации строительства</div>
               <div class="col">
-                <div v-if="!isImage" class="form-group">
+                <div class="form-group">
                   <input
                     id="image_url"
                     type="file"
                     class="form-control"
                     placeholder="Файл"
                     ref="file"
+                    @change="changeFile"
                   />
                 </div>
               </div>
@@ -321,13 +336,14 @@
                 капитального строительства
               </div>
               <div class="col">
-                <div v-if="!isImage" class="form-group">
+                <div class="form-group">
                   <input
                     id="image_url"
                     type="file"
                     class="form-control"
                     placeholder="Файл"
                     ref="file"
+                    @change="changeFile"
                   />
                 </div>
               </div>
@@ -341,13 +357,14 @@
                 Перечень мероприятий по охране окружающей среды
               </div>
               <div class="col">
-                <div v-if="!isImage" class="form-group">
+                <div class="form-group">
                   <input
                     id="image_url"
                     type="file"
                     class="form-control"
                     placeholder="Файл"
                     ref="file"
+                    @change="changeFile"
                   />
                 </div>
               </div>
@@ -361,13 +378,14 @@
                 Мероприятия по обеспечению пожарной безопасности
               </div>
               <div class="col">
-                <div v-if="!isImage" class="form-group">
+                <div class="form-group">
                   <input
                     id="image_url"
                     type="file"
                     class="form-control"
                     placeholder="Файл"
                     ref="file"
+                    @change="changeFile"
                   />
                 </div>
               </div>
@@ -381,13 +399,14 @@
                 Мероприятия по обеспечению доступа инвалидов
               </div>
               <div class="col">
-                <div v-if="!isImage" class="form-group">
+                <div class="form-group">
                   <input
                     id="image_url"
                     type="file"
                     class="form-control"
                     placeholder="Файл"
                     ref="file"
+                    @change="changeFile"
                   />
                 </div>
               </div>
@@ -402,13 +421,14 @@
                 строительства
               </div>
               <div class="col">
-                <div v-if="!isImage" class="form-group">
+                <div class="form-group">
                   <input
                     id="image_url"
                     type="file"
                     class="form-control"
                     placeholder="Файл"
                     ref="file"
+                    @change="changeFile"
                   />
                 </div>
               </div>
@@ -424,13 +444,14 @@
                 характера
               </div>
               <div class="col">
-                <div v-if="!isImage" class="form-group">
+                <div class="form-group">
                   <input
                     id="image_url"
                     type="file"
                     class="form-control"
                     placeholder="Файл"
                     ref="file"
+                    @change="changeFile"
                   />
                 </div>
               </div>
@@ -449,13 +470,14 @@
                 утвержденное заказчиком электронной подписью
               </div>
               <div class="col">
-                <div v-if="!isImage" class="form-group">
+                <div class="form-group">
                   <input
                     id="image_url"
                     type="file"
                     class="form-control"
                     placeholder="Файл"
                     ref="file"
+                    @change="changeFile"
                   />
                 </div>
               </div>
@@ -469,13 +491,14 @@
                 электронной подписью
               </div>
               <div class="col">
-                <div v-if="!isImage" class="form-group">
+                <div class="form-group">
                   <input
                     id="image_url"
                     type="file"
                     class="form-control"
                     placeholder="Файл"
                     ref="file"
+                    @change="changeFile"
                   />
                 </div>
               </div>
@@ -486,13 +509,14 @@
             >
               <div class="col">СРО на проектирование инженерных изысканий</div>
               <div class="col">
-                <div v-if="!isImage" class="form-group">
+                <div class="form-group">
                   <input
                     id="image_url"
                     type="file"
                     class="form-control"
                     placeholder="Файл"
                     ref="file"
+                    @change="changeFile"
                   />
                 </div>
               </div>
@@ -503,13 +527,14 @@
             >
               <div class="col">Отчет по Инженерно-геологическим изысканиям</div>
               <div class="col">
-                <div v-if="!isImage" class="form-group">
+                <div class="form-group">
                   <input
                     id="image_url"
                     type="file"
                     class="form-control"
                     placeholder="Файл"
                     ref="file"
+                    @change="changeFile"
                   />
                 </div>
               </div>
@@ -520,13 +545,14 @@
             >
               <div class="col">Отчет по Инженерно-геодезическим изысканиям</div>
               <div class="col">
-                <div v-if="!isImage" class="form-group">
+                <div class="form-group">
                   <input
                     id="image_url"
                     type="file"
                     class="form-control"
                     placeholder="Файл"
                     ref="file"
+                    @change="changeFile"
                   />
                 </div>
               </div>
@@ -537,13 +563,14 @@
             >
               <div class="col">Отчет по Инженерно-экологическим изысканиям</div>
               <div class="col">
-                <div v-if="!isImage" class="form-group">
+                <div class="form-group">
                   <input
                     id="image_url"
                     type="file"
                     class="form-control"
                     placeholder="Файл"
                     ref="file"
+                    @change="changeFile"
                   />
                 </div>
               </div>
@@ -556,13 +583,14 @@
                 Отчет по Инженерно-гидрометеорологичекским изысканиям
               </div>
               <div class="col">
-                <div v-if="!isImage" class="form-group">
+                <div class="form-group">
                   <input
                     id="image_url"
                     type="file"
                     class="form-control"
                     placeholder="Файл"
                     ref="file"
+                    @change="changeFile"
                   />
                 </div>
               </div>
@@ -577,13 +605,14 @@
             >
               <div class="col">Смета</div>
               <div class="col">
-                <div v-if="!isImage" class="form-group">
+                <div class="form-group">
                   <input
                     id="image_url"
                     type="file"
                     class="form-control"
                     placeholder="Файл"
                     ref="file"
+                    @change="changeFile"
                   />
                 </div>
               </div>
@@ -592,7 +621,14 @@
 
           <hr />
           <div class="text-center">
-            <button type="button" class="btn btn-success">Отправить</button>
+            <button
+              type="button"
+              class="btn btn-success"
+              :disabled="disabled"
+              @click.prevent="uploadFiles"
+            >
+              Отправить
+            </button>
           </div>
         </div>
       </div>
@@ -601,12 +637,47 @@
 </template>
 
 <script lang="ts">
-import { defineComponent } from "vue";
+import axios from "axios";
+import { computed, defineComponent, ref } from "vue";
+import { useStore } from "vuex";
 
 export default defineComponent({
-  //   setup() {
-  //     return {
-  //     };
-  //   },
+  setup() {
+    const files: any[] = [];
+    const disabled = ref(true);
+    const store = useStore()
+    const user = computed(() => store.getters.getUser)
+
+    const changeFile = (e: any) => {
+      if (e.target.files[0]) {
+        files.push(e.target.files[0]);
+        if (files.length > 2) disabled.value = false;
+        // console.log(e.target.files[0].name)
+      }
+    };
+
+    const uploadFiles = async () => {
+      let formData = new FormData();
+      for (const file in files) {
+        formData.append("files[]", file);
+      }
+      const result = await axios.put(
+        `http://localhost:5000/api/v1/client/${user.value.id}/orders/`,
+        formData,
+        {
+          headers: {
+            "Content-Type": "multipart/form-data",
+            Authorization: `Bearer ${store.getters.getJWT}`,
+          },
+        }
+      );
+    };
+
+    return {
+      disabled: disabled,
+      changeFile: changeFile,
+      uploadFiles: uploadFiles,
+    };
+  },
 });
 </script>
