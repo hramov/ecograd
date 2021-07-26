@@ -104,8 +104,4 @@ export class ClientController extends Controller {
       });
     }
   }
-
-  async uploadDocumentsForOrder(req: Request, res: Response) {
-    console.log(req.files);
-  }
 }

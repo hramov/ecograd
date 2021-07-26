@@ -1,13 +1,19 @@
 import { Controller, IExpert } from "./Controller";
 import csv from "csv-parse";
 import { Request, Response } from "express";
-import { createReadStream, unlinkSync, writeFileSync } from "fs";
+import {
+  createReadStream,
+  createWriteStream,
+  unlinkSync,
+  writeFileSync,
+} from "fs";
 import rootPath from "app-root-path";
 
-import archiver from 'archiver'
+import archiver from "archiver";
+import { FileArray } from "express-fileupload";
+import { ClientProvider } from "../providers/ClientProvider";
 
 export class DataController extends Controller {
-  
   importExperts(req: Request, res: Response) {
     const experts: IExpert[] = [];
     let counter: number = 0;
@@ -44,7 +50,34 @@ export class DataController extends Controller {
     res.status(200).send("OK");
   }
 
-  uploadOrderFiles(req: Request, res: Response) {
-    
+  async uploadOrderFiles(req: Request, res: Response) {
+    const files: Express.Multer.File[] = req.files as Express.Multer.File[];
+    const path = `${rootPath}/uploads/orders/${req.params.client_id}_${req.params.order_id}.zip`;
+    const url = `static/uploads/orders/${req.params.client_id}_${req.params.order_id}.zip`
+    const output = createWriteStream(path);
+
+    const archive = archiver("zip", {
+      zlib: { level: 9 },
+    });
+
+    archive.pipe(output);
+
+    for (let i = 0; i < files.length; i++) {
+      console.log(files[i]);
+      archive.append(files[i].buffer, { name: files[i].originalname });
+    }
+    archive.finalize();
+
+    const result = await new ClientProvider().addOrderFileUrl(
+      Number(req.params.order_id),
+      url
+    );
+
+    if (result.status) console.log("Успешно")
+
+    res.status(200).json({
+      status: true,
+      data: "Документы успешно загружены",
+    });
   }
 }

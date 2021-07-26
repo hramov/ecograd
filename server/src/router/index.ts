@@ -61,7 +61,7 @@ router.get(
 router.post("/client/send-order", client.sendOrder);
 router.get("/client/get-clients", client.getClients);
 router.get("/admin/get-client/:id", clientMW.check, auth.getUser);
-router.post("/client/:client_id/orders/:order_id/upload", client.uploadDocumentsForOrder);
+router.post("/client/:client_id/orders/:order_id/upload", upload.array('file'), data.uploadOrderFiles);
 // Routes for get data
 router.get("/users", adminMW.check, auth.getUsers);
 

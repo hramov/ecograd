@@ -9,6 +9,7 @@ export default createStore({
     orders: {},
     user: {},
     experts: [],
+    order: {},
     expert: {
       id: 0,
       name: "",
@@ -34,6 +35,9 @@ export default createStore({
     },
     setOrders(state, orders) {
       state.orders = orders;
+    },
+    setOrder(state, order) {
+      state.order = order
     },
     setUser(state, data) {
       state.user = data;
@@ -137,5 +141,6 @@ export default createStore({
     },
     getExperts: (state) => state.experts,
     getExpert: (state) => state.expert,
+    getOrder: state => state.order
   },
 });

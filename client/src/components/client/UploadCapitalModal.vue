@@ -10,7 +10,7 @@
       <div class="modal-content">
         <div class="modal-header">
           <h5 class="modal-title" id="buyModalLable">
-            Форма добавления документов объекта капитального строительства
+            Форма добавления документов объекта капитального строительства {{ order.object }}
           </h5>
           <button
             type="button"
@@ -624,7 +624,6 @@
             <button
               type="button"
               class="btn btn-success"
-              :disabled="disabled"
               @click.prevent="uploadFiles"
             >
               Отправить
@@ -647,22 +646,24 @@ export default defineComponent({
     const disabled = ref(true);
     const store = useStore()
     const user = computed(() => store.getters.getUser)
+    const order = computed(() => store.getters.getOrder)
 
     const changeFile = (e: any) => {
       if (e.target.files[0]) {
         files.push(e.target.files[0]);
         if (files.length > 2) disabled.value = false;
-        // console.log(e.target.files[0].name)
       }
     };
 
     const uploadFiles = async () => {
       let formData = new FormData();
-      for (const file in files) {
-        formData.append("files[]", file);
+      for (const file of files) {
+        console.log(file)
+        formData.append("file", file);
       }
-      const result = await axios.put(
-        `http://localhost:5000/api/v1/client/${user.value.id}/orders/`,
+
+      const result = await axios.post(
+        `http://localhost:5000/api/v1/client/${user.value.id}/orders/${order.value.id}/upload`,
         formData,
         {
           headers: {
@@ -675,6 +676,7 @@ export default defineComponent({
 
     return {
       disabled: disabled,
+      order: order,
       changeFile: changeFile,
       uploadFiles: uploadFiles,
     };

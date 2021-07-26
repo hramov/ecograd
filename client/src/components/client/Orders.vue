@@ -27,6 +27,7 @@
                   class="btn btn-warning"
                   data-bs-toggle="modal"
                   data-bs-target="#uploadCapitalModal"
+                  @click.prevent="getOrder(order.id)"
                 >
                   Загрузить
                 </button>
@@ -84,9 +85,17 @@ export default defineComponent({
       }
     };
 
+    const getOrder = async(id) =>{
+      const result = await axios.get(`http://localhost:5000/api/v1/client/${client.value.id}/orders/${id}`)
+      if (result.data.status) {
+        store.commit('setOrder', result.data.data)
+      }
+    }
+
     return {
       orders: orders,
       client: client,
+      getOrder: getOrder
     };
   },
 });
