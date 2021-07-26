@@ -4,6 +4,8 @@ import { Request, Response } from "express";
 import { createReadStream, unlinkSync, writeFileSync } from "fs";
 import rootPath from "app-root-path";
 
+import archiver from 'archiver'
+
 export class DataController extends Controller {
   
   importExperts(req: Request, res: Response) {
@@ -40,5 +42,9 @@ export class DataController extends Controller {
       });
 
     res.status(200).send("OK");
+  }
+
+  uploadOrderFiles(req: Request, res: Response) {
+    
   }
 }

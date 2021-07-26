@@ -2,7 +2,8 @@
   <section class="client-orders">
     <div class="container">
       <div class="text-center">
-        <h1>Мои заказы</h1> <BuyButton />
+        <h1>Мои заказы</h1>
+        <BuyButton />
         <table class="table">
           <thead>
             <tr>
@@ -19,7 +20,29 @@
               <td>{{ order.object }}</td>
               <td>{{ order.object_type }}</td>
               <td>{{ new Date(order.created_at).toLocaleDateString() }}</td>
-              <td><button type="button" class="btn btn-warning">Загрузить</button></td>
+              <td>
+                <button
+                  v-if="order.object_type == 'Объект капитального строительства'"
+                  type="button"
+                  class="btn btn-warning"
+                  data-bs-toggle="modal"
+                  data-bs-target="#uploadCapitalModal"
+                >
+                  Загрузить
+                </button>
+
+                <button
+                  v-if="order.object_type == 'Линейный объект'"
+                  type="button"
+                  class="btn btn-warning"
+                  data-bs-toggle="modal"
+                  data-bs-target="#uploadLineModal"
+                >
+                  Загрузить
+                </button>
+
+                <!-- <a v-else href="" class="btn btn-success">Скачать</a> -->
+              </td>
             </tr>
           </tbody>
         </table>
@@ -32,11 +55,11 @@
 import { computed, defineComponent, onMounted, ref } from "@vue/runtime-core";
 import axios from "axios";
 import { useStore } from "vuex";
-import BuyButton from './../BuyButton.vue'
+import BuyButton from "./../BuyButton.vue";
 
 export default defineComponent({
   components: {
-    BuyButton
+    BuyButton,
   },
   setup() {
     const store = useStore();
@@ -52,10 +75,11 @@ export default defineComponent({
         `http://localhost:5000/api/v1/client/${client.value.id}/orders`
       );
       if (result.data.status) {
-        result.data.data.map(order => {
-          if (order.object_type == '1') order.object_type = 'Линейный объект'
-          else if (order.object_type == '2') order.object_type = 'Объект капитального строительства'
-        })
+        result.data.data.map((order) => {
+          if (order.object_type == "1") order.object_type = "Линейный объект";
+          else if (order.object_type == "2")
+            order.object_type = "Объект капитального строительства";
+        });
         orders.value = result.data.data;
       }
     };

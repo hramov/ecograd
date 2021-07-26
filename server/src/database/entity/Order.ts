@@ -18,18 +18,23 @@ export class Orders {
   object: string;
 
   @Column("varchar", {
-      nullable: true
+    nullable: true,
   })
   object_type: string;
+
+  @Column("varchar", {
+    nullable: true,
+  })
+  files_url: string;
 
   @Column("timestamp")
   created_at: Date;
 
   @ManyToOne(() => Users, (user) => user.id)
-  @JoinColumn({name: 'userId'})
+  @JoinColumn({ name: "userId" })
   exec: Users;
 
   @ManyToOne(() => Clients, (client) => client.id)
-  @JoinColumn({name: 'clientId'})
+  @JoinColumn({ name: "clientId" })
   client: Clients;
 }
