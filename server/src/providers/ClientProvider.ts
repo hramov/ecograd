@@ -5,7 +5,7 @@ import { Provider } from "./Provider";
 
 export class ClientProvider extends Provider {
 
-  async getExperts(): Promise<{status: boolean, data: Clients[] | string }> {
+  async getClients(): Promise<{status: boolean, data: Clients[] | string }> {
     try {
       const result = await getRepository(Clients).find({ 
         relations: ["orders"] 
@@ -36,4 +36,29 @@ export class ClientProvider extends Provider {
       };
     }
   }
+
+  async getOrderForClient(id: number): Promise<{status: boolean, data: Orders[]}> {
+    const result = await getRepository(Orders).find({
+        where: [{
+            client: id
+        }]
+    })
+    return {
+        status: true,
+        data: result
+    }
+  }
+
+  async getOrdersForClientById(client_id: number, order_id: number): Promise<{status: boolean, data: Orders}> {
+  const result = await getRepository(Orders).find({
+    where: [{
+      client: client_id,
+      id: order_id
+    }]
+  })
+  return {
+    status: true,
+    data: result[0]
+  }
+}
 }

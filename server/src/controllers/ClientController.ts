@@ -1,4 +1,6 @@
 import { Request, Response } from "express-serve-static-core";
+import { getRepository } from "typeorm";
+import { Orders } from "../database/entity/Order";
 import { AuthProvider } from "../providers/AuthProvider";
 import { ClientProvider } from "../providers/ClientProvider";
 import { Controller, IClient } from "./Controller";
@@ -6,7 +8,7 @@ import { Controller, IClient } from "./Controller";
 export class ClientController extends Controller {
     
     async getClients(req: Request, res: Response) {
-        const result = await new ClientProvider().getExperts()
+        const result = await new ClientProvider().getClients()
         if (result.status) {
             res.status(200).json({
                 status: result.status,
@@ -42,14 +44,14 @@ export class ClientController extends Controller {
 
     async sendOrder(req: Request, res: Response) {
         let client: IClient;
-        if (!req.body.user) {
+        if (!req.body.client.id) {
+            console.log("user is not here")
             const result = await ClientController.addClient(req.body.order)
             client = result.data as IClient
         } else {
+            console.log("user is here")
             client = req.body.client
         }
-
-        console.log(client)
 
         req.body.order.created_at = new Date(Date.now())
         req.body.order.client = client
@@ -76,10 +78,27 @@ export class ClientController extends Controller {
     }
 
     async getOrdersForClient(req: Request, res: Response) {
-
+        const result = await new ClientProvider().getOrderForClient(Number(req.params.client_id))
+        if (result.status) {
+            res.status(200).json({
+                status: result.status,
+                data: result.data
+            })
+            return
+        }
+        res.status(500).json({
+            status: result.status,
+            data: result.data
+        })
     }
 
     async getOrdersForClientById(req: Request, res: Response) {
-
+        const result = await new ClientProvider().getOrdersForClientById(Number(req.params.client_id), Number(req.params.order_id))
+        if (result.status) {
+            res.status(200).json({
+                status: result.status,
+                data: result.data
+            })
+        }
     }
 }

@@ -14,9 +14,11 @@
           </div>
           <div v-else class="alert alert-success" role="alert">
             Ваш заказ успешно отправлен!
-            <p>Для входа на сайт используйте</p>
-            <p>логин: {{ tempuser.login }}</p>
-            <p>пароль: {{ tempuser.password }}</p>
+            <div v-if="!user.id">
+              <p>Для входа на сайт используйте</p>
+              <p>логин: {{ tempuser.login }}</p>
+              <p>пароль: {{ tempuser.password }}</p>
+            </div>
           </div>
         </div>
         <div class="modal-header">
@@ -46,7 +48,7 @@
             <div class="form-group">
               <input
                 id="email"
-                type="text"
+                type="email"
                 class="form-control"
                 placeholder="* Ваш E-mail"
                 v-model="order.email"
@@ -146,7 +148,7 @@ export default defineComponent({
     const user = computed(() => store.getters.getUser);
 
     const sendOrder = async () => {
-      console.log("123")
+      console.log("123");
       const result = await axios.post(
         "http://localhost:5000/api/v1/client/send-order",
         {
@@ -175,6 +177,7 @@ export default defineComponent({
       edited: edited,
       order: order,
       tempuser: tempuser,
+      user: user
     };
   },
 });

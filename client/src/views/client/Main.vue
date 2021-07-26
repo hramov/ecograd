@@ -1,19 +1,23 @@
 <template>
   <div>
-    <Header />
+    <!-- <Header /> -->
     <Orders />
+    <BuyModal />
   </div>
 </template>
 
 <script lang="ts">
 import { defineComponent } from "vue";
 import Orders from './../../components/client/Orders.vue'
-import Header from './../../components/client/Header.vue'
+import BuyModal from './../../components/landing/BuyModal.vue'
+
+// import Header from './../../components/client/Header.vue'
 
 export default defineComponent({
   components: {
-    Header,
-    Orders
+    // Header,
+    Orders,
+    BuyModal
   }
 });
 </script>

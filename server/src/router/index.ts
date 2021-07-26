@@ -52,12 +52,10 @@ router.get("/admin/orders/:id", adminMW.check, admin.getSingleOrder);
 // Routes for user account
 router.get(
   "/client/:client_id/orders",
-  clientMW.check,
   client.getOrdersForClient
 );
 router.get(
-  "/client/:client_id/orders/:id",
-  clientMW.check,
+  "/client/:client_id/orders/:order_id",
   client.getOrdersForClientById
 );
 router.post("/client/send-order", client.sendOrder);
