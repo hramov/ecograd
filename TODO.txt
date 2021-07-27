@@ -1,0 +1,6 @@
+#1. Fix middlewares with separate access for admin and client moddlewares
+#2. Fix orders table in admin dashboard
+3. Check if I could add email notifications
+4. Restore telegram bot usage
+5. Complete MVP version to get a chance to show this to potential customer
+6. Try to add some auto tests

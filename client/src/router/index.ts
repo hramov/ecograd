@@ -1,4 +1,5 @@
 import axios from "axios";
+import { computed } from "vue";
 import { createRouter, createWebHistory, RouteRecordRaw } from "vue-router";
 import { useStore } from "vuex";
 import Landing from "../views/Landing.vue";
@@ -54,6 +55,7 @@ const router = createRouter({
 
 router.beforeEach(async (to, from, next) => {
   const store = useStore();
+
   if (to.path == "/dashboard" && localStorage.getItem("jwt_token")) {
     const result = await axios.post(
       "http://localhost:5000/api/v1/admin/check-jwt",

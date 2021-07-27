@@ -65,29 +65,52 @@ export class JWT {
     return JWT.createSignature(jwt);
   }
 
-  public verifyJWT(jwt_token: string): boolean {
+  public verifyJWT(jwt_token: string, perms: string[]): boolean {
     const uint8array = new TextEncoder();
     let [header, payload, signature] = jwt_token.split(".");
     header = header.split(" ")[1];
 
     try {
-      const payloadDec: Payload = JSON.parse(base64url.decode(payload, "utf-8")); // Error when JWT in illegal
+      const payloadDec: Payload = JSON.parse(
+        base64url.decode(payload, "utf-8")
+      ); // Error when JWT is illegal
 
       // if (payloadDec.exp < Date.now()) return false
-      if (payloadDec.role == 'admin' || payloadDec.role == 'client') {
+      if (!perms.includes(payloadDec.role)) return false;
 
       const signatureEnc = hmac(
         uint8array.encode(JWT.SECRET_KEY),
         uint8array.encode(header + "." + payload)
       );
 
-      if (Buffer.from(signatureEnc).toString("base64url") === signature) {
-        return true
-      }
-    }
+      if (Buffer.from(signatureEnc).toString("base64url") === signature)
+        return true;
     } catch (err: unknown) {
-      toConsole('Unauthorized jwt spotted!', 'error')
+      toConsole("Unauthorized jwt spotted!", "error");
     }
-    return false
+    return false;
+  }
+
+  public verifyJWTIsValid(jwt_token: string): boolean {
+    const uint8array = new TextEncoder();
+    let [header, payload, signature] = jwt_token.split(".");
+    header = header.split(" ")[1];
+
+    try {
+      const payloadDec: Payload = JSON.parse(
+        base64url.decode(payload, "utf-8")
+      ); // Error when JWT is illegal
+
+      const signatureEnc = hmac(
+        uint8array.encode(JWT.SECRET_KEY),
+        uint8array.encode(header + "." + payload)
+      );
+
+      if (Buffer.from(signatureEnc).toString("base64url") === signature)
+        return true;
+    } catch (err: unknown) {
+      toConsole("Unauthorized jwt spotted!", "error");
+    }
+    return false;
   }
 }

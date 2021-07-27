@@ -59,6 +59,7 @@ export default createStore({
           },
         }
       );
+      console.log(result.data)
       if (result.data.status) {
         commit("setOrders", result.data.data);
         return true;

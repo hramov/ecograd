@@ -12,7 +12,6 @@
         <thead>
           <tr>
             <th scope="col">Имя</th>
-            <th scope="col">Компания</th>
             <th scope="col">Объект</th>
             <th scope="col">E-mail</th>
             <th scope="col">Телефон</th>
@@ -21,11 +20,10 @@
         </thead>
         <tbody>
           <tr v-for="order in orders" :key="order.id">
-            <td>{{ order.name }}</td>
-            <td>{{ order.company }}</td>
+            <td v-if="order.client">{{ order.client.name }}</td>
             <td>{{ order.object }}</td>
-            <td>{{ order.email }}</td>
-            <td>{{ order.phone }}</td>
+            <td v-if="order.client">{{ order.client.email }}</td>
+            <td v-if="order.client">{{ order.client.phone }}</td>
             <td v-if="order.exec">{{ order.phone }}</td>
             <td v-else>
               <button type="button" class="btn btn-success" @click="getWork">
@@ -57,7 +55,7 @@ export default defineComponent({
     const store = useStore();
     const isOrders = ref(false);
     const isLoaded = ref(false);
-
+    
     const getOrders = async () => {
       if (await store.dispatch("getOrdersAction")) {
         isLoaded.value = true;
