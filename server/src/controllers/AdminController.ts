@@ -24,11 +24,22 @@ export class AdminController extends Controller {
 
   checkJWT(req: Request, res: Response) {
     const token = req.body.token;
+    const role = req.body.role;
+    const result = new JWT().verifyJWT("Bearer " + token, role);
+    if (result) {
+      res.status(200).send({ status: true, data: token });
+      return;
+    }
+    res.status(200).send({ status: false, data: "Unathorized" });
+  }
+
+  checkJWTIsValid(req: Request, res: Response) {
+    const token = req.body.token;
     const result = new JWT().verifyJWTIsValid("Bearer " + token);
     if (result) {
       res.status(200).send({ status: true, data: token });
       return;
     }
-    res.status(401).send({ status: false, data: "Unathorized" });
+    res.status(200).send({ status: false, data: "Unathorized" });
   }
 }

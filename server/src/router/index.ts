@@ -44,6 +44,7 @@ router.post("/register", auth.formRegister);
 
 // Routes for admin dashboard
 router.post("/admin/check-jwt", admin.checkJWT);
+router.post("/admin/check-jwt-is-valid", admin.checkJWTIsValid);
 router.get("/admin/orders", adminMW.check, admin.getOrders);
 router.get("/admin/get-user/:id", adminMW.check, auth.getUser);
 router.get("/admin/logout/:id", auth.formLogout);

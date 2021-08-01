@@ -1,7 +1,5 @@
 import axios from "axios";
-import { computed } from "vue";
 import { createRouter, createWebHistory, RouteRecordRaw } from "vue-router";
-import { useStore } from "vuex";
 import Landing from "../views/Landing.vue";
 
 const routes: Array<RouteRecordRaw> = [
@@ -13,38 +11,22 @@ const routes: Array<RouteRecordRaw> = [
   {
     path: "/expertise",
     name: "Expertise",
-    // route level code-splitting
-    // this generates a separate chunk (about.[hash].js) for this route
-    // which is lazy-loaded when the route is visited.
-    component: () =>
-      import(/* webpackChunkName: "about" */ "../views/Expertise.vue"),
+    component: () => import("../views/Expertise.vue"),
   },
   {
     path: "/login",
     name: "Login",
-    // route level code-splitting
-    // this generates a separate chunk (about.[hash].js) for this route
-    // which is lazy-loaded when the route is visited.
-    component: () =>
-      import(/* webpackChunkName: "about" */ "../views/Login.vue"),
+    component: () => import("../views/Login.vue"),
   },
   {
     path: "/dashboard",
     name: "Dashboard",
-    // route level code-splitting
-    // this generates a separate chunk (about.[hash].js) for this route
-    // which is lazy-loaded when the route is visited.
-    component: () =>
-      import(/* webpackChunkName: "about" */ "../views/dashboard/Main.vue"),
+    component: () => import("../views/dashboard/Main.vue"),
   },
   {
     path: "/client",
     name: "Client",
-    // route level code-splitting
-    // this generates a separate chunk (about.[hash].js) for this route
-    // which is lazy-loaded when the route is visited.
-    component: () =>
-      import(/* webpackChunkName: "about" */ "../views/client/Main.vue"),
+    component: () => import("../views/client/Main.vue"),
   },
 ];
 
@@ -54,19 +36,16 @@ const router = createRouter({
 });
 
 router.beforeEach(async (to, from, next) => {
-  const store = useStore();
-
   if (to.path == "/dashboard" && localStorage.getItem("jwt_token")) {
     const result = await axios.post(
       "http://localhost:5000/api/v1/admin/check-jwt",
       {
         token: localStorage.getItem("jwt_token"),
+        role: "admin",
       }
     );
-    const allowed = result.data.status;
-    if (allowed) {
-      next();
-    }
+    if (result.data.status) next();
+    else next("/");
   } else if (to.path == "/dashboard" && !localStorage.getItem("jwt_token")) {
     next("/");
   } else {

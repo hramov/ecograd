@@ -64,10 +64,16 @@
               </button>
               <ul class="dropdown-menu" aria-labelledby="dropdownMenuButton1">
                 <li>
-                  <a class="dropdown-item" v-if="user.role == 'admin'" @click="$router.push('/dashboard')"
+                  <a
+                    class="dropdown-item"
+                    v-if="user.role == 'admin'"
+                    @click="$router.push('/dashboard')"
                     >Открыть</a
                   >
-                  <a class="dropdown-item" v-if="user.role == 'client'" @click="$router.push('/client')"
+                  <a
+                    class="dropdown-item"
+                    v-if="user.role == 'client'"
+                    @click="$router.push('/client')"
                     >Открыть</a
                   >
                 </li>
@@ -94,7 +100,6 @@ export default defineComponent({
     // const user = JSON.parse(localStorage.getItem("user")!);
 
     const logout = async () => {
-      // console.log(await axios.get(`http://localhost:5000/api/v1/admin/logout/${user}`))
       localStorage.setItem("jwt_token", "");
       localStorage.setItem("user", JSON.stringify({}));
       store.commit("setJWT", null);
