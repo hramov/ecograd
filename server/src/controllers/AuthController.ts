@@ -4,7 +4,6 @@ import { JWT } from "../utils/jwt/index";
 import { Controller } from "./Controller";
 
 export class AuthController extends Controller {
-
   async getUsers(req: Request, res: Response) {
     const auth = new AuthProvider();
     const users = await auth.getUsers();
@@ -17,31 +16,38 @@ export class AuthController extends Controller {
   }
 
   async formLogin(req: Request, res: Response) {
-    
-    const user = await new AuthProvider().getUser(req.body.login, req.body.password);
+    const user = await new AuthProvider().getUser(
+      req.body.login,
+      req.body.password
+    );
     if (user.status) {
       const jwt = new JWT();
       const jwt_token = jwt.createJWT(600000, user.data!.id!, "admin");
       res.status(200).json({
         status: user.status,
         jwt_token: jwt_token,
-        user: user.data
+        user: user.data,
       });
       return;
     }
 
-    const client = await new AuthProvider().getClient(req.body.login, req.body.password);
+    const client = await new AuthProvider().getClient(
+      req.body.login,
+      req.body.password
+    );
     if (client.status) {
       const jwt = new JWT();
       const jwt_token = jwt.createJWT(600000, client.data!.id!, "client");
       res.status(200).json({
         status: client.status,
         jwt_token: jwt_token,
-        user: client.data
+        user: client.data,
       });
       return;
     }
-    res.status(401).send("Unauthenticated!");
+    res.status(200).json({
+      status: false,
+    });
   }
 
   async googleLogin() {

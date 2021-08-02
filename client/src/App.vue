@@ -5,6 +5,7 @@
     <NormatModal />
     <ObjectsModal />
     <DocumentsModal />
+    <br />
     <Footer />
   </div>
 </template>

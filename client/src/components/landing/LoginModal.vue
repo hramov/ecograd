@@ -8,6 +8,7 @@
   >
     <div class="modal-dialog">
       <div class="modal-content">
+        <div v-if="!isLoggedIn && isTouched" class="alert alert-danger" role="alert">Ошибка авторизации!</div>
         <div class="modal-header">
           <h5 class="modal-title" id="exampleModalLabel">Вход</h5>
           <button
@@ -43,7 +44,7 @@
           </form>
         </div>
         <div class="modal-footer">
-          <button class="btn btn-success" @click="loginMehod(login, password)">
+          <button class="btn btn-success" @click.prevent="loginMethod">
             Войти
           </button>
         </div>
@@ -59,18 +60,16 @@ import axios from "axios";
 import { IAuthResponse } from "./../../custom/interfaces";
 
 export default defineComponent({
-  data() {
-    return {
-      login: "",
-      password: "",
-    };
-  },
-
   setup() {
     const instance = getCurrentInstance();
     const router = instance!.proxy?.$router;
 
     const store = useStore();
+
+    const login = ref("");
+    const password = ref("");
+    const isLoggedIn = ref(true)
+    const isTouched = ref(false)
 
     let authResponse: IAuthResponse = reactive({
       status: false,
@@ -78,12 +77,13 @@ export default defineComponent({
       user: { id: 0, role: "" },
     });
 
-    async function loginMehod(login: string, password: string): Promise<void> {
+    async function loginMethod(): Promise<void> {
+      isTouched.value = true
       const result = await axios.post("http://localhost:5000/api/v1/login", {
-        login: login,
-        password: password,
+        login: login.value,
+        password: password.value,
       });
-      if (result.status) {
+      if (result.data.status) {
         authResponse = result.data;
         localStorage.setItem("jwt_token", authResponse.jwt_token);
         store.commit("setJWT", authResponse.jwt_token);
@@ -91,10 +91,18 @@ export default defineComponent({
         store.commit("setUser", authResponse.user);
         localStorage.setItem("user", JSON.stringify(authResponse.user));
         router!.push("/");
+      } else {
+        isLoggedIn.value = false
       }
     }
 
-    return { loginMehod };
+    return {
+      loginMethod: loginMethod,
+      login: login,
+      password: password,
+      isLoggedIn: isLoggedIn,
+      isTouched: isTouched
+    };
   },
 });
 </script>
