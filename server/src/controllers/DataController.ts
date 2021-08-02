@@ -10,7 +10,6 @@ import {
 import rootPath from "app-root-path";
 
 import archiver from "archiver";
-import { FileArray } from "express-fileupload";
 import { ClientProvider } from "../providers/ClientProvider";
 
 export class DataController extends Controller {
@@ -53,7 +52,7 @@ export class DataController extends Controller {
   async uploadOrderFiles(req: Request, res: Response) {
     const files: Express.Multer.File[] = req.files as Express.Multer.File[];
     const path = `${rootPath}/uploads/orders/${req.params.client_id}_${req.params.order_id}.zip`;
-    const url = `static/uploads/orders/${req.params.client_id}_${req.params.order_id}.zip`
+    const url = `static/uploads/orders/${req.params.client_id}_${req.params.order_id}.zip`;
     const output = createWriteStream(path);
 
     const archive = archiver("zip", {
@@ -73,7 +72,7 @@ export class DataController extends Controller {
       url
     );
 
-    if (result.status) console.log("Успешно")
+    if (result.status) console.log("Успешно");
 
     res.status(200).json({
       status: true,

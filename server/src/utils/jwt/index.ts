@@ -73,9 +73,9 @@ export class JWT {
     try {
       const payloadDec: Payload = JSON.parse(
         base64url.decode(payload, "utf-8")
-      ); // Error when JWT is illegal
+      );
 
-      if (payloadDec.role != role) return false
+      if (payloadDec.role != role && payloadDec.role != "admin") return false;
 
       const signatureEnc = hmac(
         uint8array.encode(JWT.SECRET_KEY),
@@ -98,7 +98,7 @@ export class JWT {
     try {
       const payloadDec: Payload = JSON.parse(
         base64url.decode(payload, "utf-8")
-      ); // Error when JWT is illegal
+      );
 
       const signatureEnc = hmac(
         uint8array.encode(JWT.SECRET_KEY),

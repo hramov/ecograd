@@ -5,7 +5,7 @@ import { Provider } from "./Provider";
 export class AdminProvider extends Provider {
     
   async getOrders() {
-    const result = await getRepository(Orders).find({ relations: ['client']});
+    const result = await getRepository(Orders).find({ relations: ['client', 'exec']});
     if (result.length > 0) return { status: true, data: result };
     return { status: false, data: [] };
   }

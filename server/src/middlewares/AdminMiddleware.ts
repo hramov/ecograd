@@ -7,7 +7,7 @@ export class AdminMiddleware extends Middleware {
     const jwt_token = req.get("Authorization");
     if (jwt_token) {
       const jwt = new JWT();
-      if (jwt.verifyJWT(jwt_token, ['admin'])) {
+      if (jwt.verifyJWT(jwt_token, 'admin')) {
         next();
         return;
       }

@@ -183,7 +183,7 @@
               >
                 Изменить
               </button>
-              <button type="button" class="btn btn-danger">Удалить</button>
+              <button type="button" class="btn btn-danger" @click.prevent="deleteExpert(expert.id)">Удалить</button>
             </div>
           </div>
         </div>
@@ -212,11 +212,6 @@ export default defineComponent({
     EditExpertModal,
   },
 
-  // methods: {
-  //   uploadCSV() {
-  //     console.log(this.$refs.file)
-  //   },
-  // },
   setup() {
     const expert = reactive({
       id: 0,
@@ -309,6 +304,11 @@ export default defineComponent({
       isOpenEditExpert.value = true;
       await store.dispatch("getSingleExpertAction", id);
     };
+
+    const deleteExpert = async(id: number) => {
+      const result = await axios.delete(`http://localhost:5000/api/v1/experts/${id}`)
+      if (result.data.status) console.log("Success")
+    }
 
     return {
       experts: experts,
