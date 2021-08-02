@@ -90,7 +90,7 @@ p {
 }
 
 .team > img {
-  width: 200px;
+  width: 100px !important;
 }
 
 .img_ved {

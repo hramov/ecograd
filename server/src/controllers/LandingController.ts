@@ -43,11 +43,13 @@ export class LandingController extends Controller {
 
   async editExpert(req: Request, res: Response) {
     const expert = JSON.parse(req.body.expert);
-    expert.image_url = `${process.env.IMAGE_URL}/${expert.id}.png`;
-    if (req.file && expert.id) {
+    if (expert.id) {
       toConsole("Check", "debug");
-      const path = `${appRootPath}/uploads/${expert.image_url}`;
-      writeFileSync(path, req.file!.buffer);
+      if (req.file) {
+        expert.image_url = `${process.env.IMAGE_URL}/${expert.id}.png`;
+        const path = `${appRootPath}/uploads/${expert.image_url}`;
+        writeFileSync(path, req.file!.buffer);
+      }
       const result = await new LandingProvider().editExpert(
         expert,
         Number(req.params.id)
@@ -73,19 +75,19 @@ export class LandingController extends Controller {
   }
 
   async writeFeedback(req: Request, res: Response) {
-    const feedback: IFeedback = req.body.feedback
-    feedback.created_at = new Date(Date.now())
+    const feedback: IFeedback = req.body.feedback;
+    feedback.created_at = new Date(Date.now());
     const result = await new LandingProvider().writeFeedback(feedback);
     if (result.status) {
       res.status(200).send({
         status: result.status,
-        data: result.data
+        data: result.data,
       });
-      return
+      return;
     }
     res.status(500).send({
       status: result.status,
-      data: result.data
+      data: result.data,
     });
   }
 }

@@ -6,29 +6,60 @@
         Список экспертов по экспертизе проектной документации и результатам
         инженерных изысканий
       </div>
-
+      <br />
       <div class="row">
-
-        <div class="col-md-6 col-lg-3 col-sm-12 mb-3" v-for="expert in experts" :key="expert.id">
+        <div
+          class="col-md-6 col-lg-4 col-sm-12 col-xl-4"
+          v-for="expert in experts"
+          :key="expert.id"
+        >
           <div class="card">
             <img
-              :src="`http://localhost:5000/static/${expert.image_url}`"
+              v-if="expert.image_url"
+              :src="`http://localhost:5000/static/` + expert.image_url"
               class="card-img-top"
-              :alt="expert.last_name"
+              alt="..."
             />
-            <div class="card-body">
-              <!-- <p class="card-text">
-                Some quick example text to build on the card title and make up
-                the bulk of the card's content.
-              </p> -->
-              <h5 class="card-title" style="margin-bottom: 5px;">{{ expert.last_name }} {{ expert.name }}</h5>
-              <p class="">Должность: {{ expert.position }}</p>
-              <p class="">Сертификаты: {{ expert.cert }}</p>
-              <p class="">Направления: {{ expert.direction }}</p>
+            <img
+              v-else
+              :src="`http://localhost:5000/static/users/img/dummy.png`"
+              class="card-img-top"
+              alt="..."
+            />
+            <div class="card-body text-left">
+              <h5 class="card-title">
+                {{ expert.last_name }} {{ expert.name }}
+              </h5>
+              <h6 class="card-subtitle mb-2 text-muted">
+                <i class="fa fa-male"></i>{{ expert.position }}
+              </h6>
+              <!-- <hr />
+              <h6 class="card-subtitle mb-2 text-muted">
+                <i class="fa fa-envelope-square"></i>{{ expert.email }}
+              </h6> -->
+              <hr />
+              <!-- <h6 class="card-subtitle mb-2 text-muted">
+                <i class="fa fa-phone"></i>{{ expert.phone }}
+              </h6>
+              <hr /> -->
+              <h6
+                class="card-subtitle mb-2 text-muted"
+                v-for="c in expert.cert.split(';')"
+                :key="c"
+              >
+                <i class="fa fa-certificate"></i>{{ c }}
+              </h6>
+              <hr />
+              <h6
+                class="card-subtitle mb-2 text-muted"
+                v-for="dir in expert.direction.split(';')"
+                :key="dir"
+              >
+                <i class="fa fa-compass"></i>{{ dir }}
+              </h6>
             </div>
           </div>
         </div>
-
       </div>
     </div>
   </section>
@@ -40,16 +71,16 @@ import { useStore } from "vuex";
 
 export default defineComponent({
   setup() {
-    const store = useStore()
-    const experts = computed(() => store.getters.getExperts)
+    const store = useStore();
+    const experts = computed(() => store.getters.getExperts);
 
-    onMounted(async() => {
-      await store.dispatch('getExpertsAction')
-    })
+    onMounted(async () => {
+      await store.dispatch("getExpertsAction");
+    });
 
     return {
-      experts: experts
-    }
+      experts: experts,
+    };
   },
 });
 </script>

@@ -20,13 +20,13 @@ export class Experts {
   @Column("varchar")
   position: string;
 
-  @Column("timestamp")
+  @Column("timestamp", { nullable: true })
   birth_date: Date;
 
-  @Column("varchar")
+  @Column("varchar", { nullable: true })
   email: string;
 
-  @Column("varchar")
+  @Column("varchar", { nullable: true })
   phone: string;
 
   @Column("text")
@@ -35,7 +35,9 @@ export class Experts {
   @Column("text")
   direction: string;
 
-  @Column("text")
+  @Column("text", {
+    nullable: true
+  })
   misc: string;
 
   @Column("timestamp")

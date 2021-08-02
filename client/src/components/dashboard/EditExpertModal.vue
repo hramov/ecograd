@@ -115,32 +115,35 @@
                 v-model="expert.birth_date"
               />
             </div>
-            <div class="form-group">
-              <input
-                id="cert"
-                type="text"
+
+            <div class="form-floating mb-3">
+              <textarea
                 class="form-control"
-                placeholder="Сертификаты"
+                rows="3"
+                style="height: 100%"
                 v-model="expert.cert"
-              />
+              ></textarea>
+              <label for="floatingTextarea">Квалификационный аттестат</label>
             </div>
-            <div class="form-group">
-              <input
-                id="direction"
-                type="text"
+
+            <div class="form-floating mb-3">
+              <textarea
                 class="form-control"
-                placeholder="Направления"
+                rows="3"
+                style="height: 100%"
                 v-model="expert.direction"
-              />
+              ></textarea>
+              <label for="floatingTextarea">Направления исследований</label>
             </div>
-            <div class="form-group">
-              <input
-                id="misc"
-                type="text"
+
+            <div class="form-floating mb-3">
+              <textarea
                 class="form-control"
-                placeholder="Примечание"
+                rows="3"
+                style="height: 100%"
                 v-model="expert.misc"
-              />
+              ></textarea>
+              <label for="floatingTextarea">Примечания</label>
             </div>
           </form>
         </div>
@@ -184,15 +187,13 @@ export default defineComponent({
       }
     });
 
-    const user = computed(() => store.getters.getUser);
-
     const updateExpert = async () => {
       let formData = new FormData();
       formData.append("file", file.value!);
       formData.append("expert", JSON.stringify(expert.value));
 
       const result = await axios.put(
-        `http://localhost:5000/api/v1/experts/${user.value.id}`,
+        `http://localhost:5000/api/v1/experts/${expert.value.id}`,
         formData,
         {
           headers: {
@@ -201,7 +202,10 @@ export default defineComponent({
           },
         }
       );
-      store.commit("setExpert", expert.value);
+      // store.commit("setExpert", expert.value);
+
+      await store.dispatch('getExpertsAction')
+
       isUpdated.status = result.data.status;
       isUpdated.touched = true;
     };

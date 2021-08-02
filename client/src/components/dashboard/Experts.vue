@@ -6,6 +6,7 @@
         <button
           class="btn btn-success"
           type="button"
+          id="addExpertBtn"
           data-bs-toggle="collapse"
           data-bs-target="#collapseExample"
           aria-expanded="false"
@@ -28,6 +29,7 @@
         </button>
       </h1>
     </div>
+    <br />
 
     <div
       class="collapse"
@@ -148,29 +150,60 @@
           <a
             style="margin: 0 auto; cursor: pointer"
             class="btn-get-started"
-            @click="addExpert"
+            @click.prevent="addExpert"
             >Сохранить</a
           >
         </form>
       </div>
     </div>
 
-    <div class="row container" v-if="isExperts">
-      <div class="col-md-6 col-lg-4 col-sm-12">
-        <div class="card" v-for="expert in experts" :key="expert.id">
+    <div class="row" v-if="isExperts">
+      <div
+        class="col-md-6 col-lg-4 col-sm-12 col-xl-4"
+        v-for="expert in experts"
+        :key="expert.id"
+      >
+        <div class="card">
           <img
+            v-if="expert.image_url"
             :src="`http://localhost:5000/static/` + expert.image_url"
             class="card-img-top"
             alt="..."
           />
-          <div class="card-body">
+          <img
+            v-else
+            :src="`http://localhost:5000/static/users/img/dummy.png`"
+            class="card-img-top"
+            alt="..."
+          />
+          <div class="card-body text-left">
             <h5 class="card-title">{{ expert.last_name }} {{ expert.name }}</h5>
-            <h6 class="card-subtitle mb-2 text-muted">{{ expert.position }}</h6>
-            <h6 class="card-subtitle mb-2 text-muted">{{ expert.email }}</h6>
-            <h6 class="card-subtitle mb-2 text-muted">{{ expert.phone }}</h6>
-            <h6 class="card-subtitle mb-2 text-muted">{{ expert.cert }}</h6>
             <h6 class="card-subtitle mb-2 text-muted">
-              {{ expert.direction }}
+              <i class="fa fa-male"></i>{{ expert.position }}
+            </h6>
+            <hr />
+            <h6 class="card-subtitle mb-2 text-muted">
+              <i class="fa fa-envelope-square"></i>{{ expert.email }}
+            </h6>
+            <hr />
+            <h6 class="card-subtitle mb-2 text-muted">
+              <i class="fa fa-phone"></i>{{ expert.phone }}
+            </h6>
+            <hr />
+            <h6
+              class="card-subtitle mb-2 text-muted"
+              v-for="c in expert.cert.split(';')"
+              :key="c"
+            >
+              <i class="fa fa-certificate"></i>{{ c }}
+            </h6>
+            <hr />
+            <h6
+              class="card-subtitle mb-2 text-muted"
+              v-for="dir in expert.direction.split(';')"
+              :key="dir"
+            >
+              <i class="fa fa-compass"></i>{{ dir }}
             </h6>
             <hr />
             <div style="display: flex; justify-content: space-around">
@@ -183,7 +216,13 @@
               >
                 Изменить
               </button>
-              <button type="button" class="btn btn-danger" @click.prevent="deleteExpert(expert.id)">Удалить</button>
+              <button
+                type="button"
+                class="btn btn-danger"
+                @click.prevent="deleteExpert(expert.id)"
+              >
+                Удалить
+              </button>
             </div>
           </div>
         </div>
@@ -213,7 +252,7 @@ export default defineComponent({
   },
 
   setup() {
-    const expert = reactive({
+    let expert = reactive({
       id: 0,
       last_name: "",
       name: "",
@@ -251,7 +290,6 @@ export default defineComponent({
         },
         {
           headers: {
-            "Content-Type": "multipart/form-data",
             Authorization: `Bearer ${store.getters.getJWT}`,
           },
         }
@@ -259,7 +297,7 @@ export default defineComponent({
 
       if (result.data) {
         if (result.data.status) {
-          console.log("Success");
+          document.getElementById("addExpertBtn")!.click();
         }
         await getExperts();
       } else {
@@ -305,10 +343,12 @@ export default defineComponent({
       await store.dispatch("getSingleExpertAction", id);
     };
 
-    const deleteExpert = async(id: number) => {
-      const result = await axios.delete(`http://localhost:5000/api/v1/experts/${id}`)
-      if (result.data.status) console.log("Success")
-    }
+    const deleteExpert = async (id: number) => {
+      const result = await axios.delete(
+        `http://localhost:5000/api/v1/experts/${id}`
+      );
+      if (result.data.status) console.log("Success");
+    };
 
     return {
       experts: experts,
@@ -320,6 +360,7 @@ export default defineComponent({
       editExpert: editExpert,
       uploadCSV: uploadCSV,
       changeUploadCSV: changeUploadCSV,
+      deleteExpert: deleteExpert,
     };
   },
 });

@@ -26,7 +26,8 @@ export class LandingProvider extends Provider {
     };
   }
 
-  async addExpert(expert: IExpert): Promise<LandingProviderResponse> {
+  async addExpert(expert: Experts): Promise<LandingProviderResponse> {
+    console.log(expert)
     return {
       status: true,
       data: new Array(await getRepository(Experts).save(expert)),
@@ -34,7 +35,7 @@ export class LandingProvider extends Provider {
   }
 
   async editExpert(
-    expert: IExpert,
+    expert: Experts,
     id: number
   ): Promise<LandingProviderResponse> {
     return {
