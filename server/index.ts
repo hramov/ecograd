@@ -13,20 +13,18 @@ import { TelegramController } from "./src/controllers/Telegram/TelegramControlle
 
 async function main() {
     const db = new Database()
+    await db.connect()
 
     const app = express()
     const port: number = 5000
-    
+
     app.use(bodyParser.urlencoded({ extended: true }));
     app.use(bodyParser.json());
     app.use(bodyParser.raw());
-
     app.use('/static', express.static(appRootPath + '/uploads/'))
 
-    await db.connect()
-
-    // const tc = new TelegramController()
-    // tc.listen()
+    const tc = new TelegramController()
+    tc.listen()
 
     app.use(cors())
     app.use('/api/v1/', router)
