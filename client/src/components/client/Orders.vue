@@ -43,7 +43,7 @@
                   Загрузить
                 </button>
                 </div>
-                <a v-else :href="'http://localhost:5000/api/v1/static' + order.files_url" class="btn btn-success">Скачать</a>
+                <a v-else :href="'http://localhost:5000/api/v2/static' + order.files_url" class="btn btn-success">Скачать</a>
               </td>
             </tr>
           </tbody>
@@ -74,7 +74,7 @@ export default defineComponent({
 
     const getOrders = async () => {
       const result = await axios.get(
-        `http://localhost:5000/api/v1/client/${client.value.id}/orders`
+        `http://localhost:5000/api/v2/client/${client.value.id}/orders`
       );
       if (result.data.status) {
         result.data.data.map((order) => {
@@ -87,7 +87,7 @@ export default defineComponent({
     };
 
     const getOrder = async(id) =>{
-      const result = await axios.get(`http://localhost:5000/api/v1/client/${client.value.id}/orders/${id}`)
+      const result = await axios.get(`http://localhost:5000/api/v2/client/${client.value.id}/orders/${id}`)
       if (result.data.status) {
         store.commit('setOrder', result.data.data)
       }

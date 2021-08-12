@@ -33,15 +33,7 @@
               <h6 class="card-subtitle mb-2 text-muted">
                 <i class="fa fa-male"></i>{{ expert.position }}
               </h6>
-              <!-- <hr />
-              <h6 class="card-subtitle mb-2 text-muted">
-                <i class="fa fa-envelope-square"></i>{{ expert.email }}
-              </h6> -->
               <hr />
-              <!-- <h6 class="card-subtitle mb-2 text-muted">
-                <i class="fa fa-phone"></i>{{ expert.phone }}
-              </h6>
-              <hr /> -->
               <h6
                 class="card-subtitle mb-2 text-muted"
                 v-for="c in expert.cert.split(';')"

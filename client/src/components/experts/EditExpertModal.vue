@@ -193,7 +193,7 @@ export default defineComponent({
       formData.append("expert", JSON.stringify(expert.value));
 
       const result = await axios.put(
-        `http://localhost:5000/api/v1/experts/${expert.value.id}`,
+        `http://localhost:5000/api/v2/experts/${expert.value.id}`,
         formData,
         {
           headers: {

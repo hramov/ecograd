@@ -41,7 +41,7 @@
           <li class="nav-item item">
             <a
               type="button"
-              v-if="!isUser"
+              v-if="Object.values(user).length == 0"
               class="nav-link item"
               data-bs-toggle="modal"
               data-bs-target="#exampleModal"
@@ -66,7 +66,7 @@
                 <li>
                   <a
                     class="dropdown-item"
-                    v-if="user.role == 'admin'"
+                    v-if="user.roles.some(role => role.id == 1)"
                     @click="$router.push('/dashboard')"
                     >Открыть</a
                   >
@@ -95,9 +95,7 @@ export default defineComponent({
   setup() {
     const store = useStore();
     const router = store.getters.getRouter;
-    const isUser = computed(() => store.getters.getJWT);
     const computedUser = computed(() => store.getters.getUser);
-    // const user = JSON.parse(localStorage.getItem("user")!);
 
     const logout = async () => {
       localStorage.setItem("jwt_token", "");
@@ -108,7 +106,6 @@ export default defineComponent({
     };
 
     return {
-      isUser: isUser,
       user: computedUser,
       logout: logout,
     };

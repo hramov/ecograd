@@ -38,6 +38,7 @@
             <div class="form-group">
               <input
                 id="name"
+                v-if="!user.id"
                 type="text"
                 class="form-control"
                 placeholder="* Ваше имя"
@@ -48,6 +49,7 @@
             <div class="form-group">
               <input
                 id="email"
+                v-if="!user.id"
                 type="email"
                 class="form-control"
                 placeholder="* Ваш E-mail"
@@ -55,15 +57,16 @@
                 required
               />
             </div>
-            <div class="form-group">
+            <!-- <div class="form-group">
               <input
                 id="company"
+                v-if="!user.id"
                 type="text"
                 class="form-control"
                 placeholder="Компания"
-                v-model="order.company"
+                v-model="newOrder.company"
               />
-            </div>
+            </div> -->
             <div class="form-group">
               <input
                 id="object"
@@ -80,13 +83,16 @@
                 aria-label="Default select example"
                 v-model="order.object_type"
               >
-                <option value="1">Объект капитального строительства</option>
-                <option value="2">Линейный объект</option>
+                <option :value="Number(1)">
+                  Объект капитального строительства
+                </option>
+                <option :value="Number(1)">Линейный объект</option>
               </select>
             </div>
             <div class="form-group">
               <input
                 id="phone"
+                v-if="!user.id"
                 type="number"
                 class="form-control"
                 placeholder="* Номер телефона"
@@ -110,30 +116,23 @@
 </template>
 
 <script lang="ts">
-import axios from "axios";
+import { FetchDataProvider } from "@/custom/fetch-data.provider";
+import { IOrder } from "@/custom/interfaces";
 import { computed, defineComponent, reactive, ref } from "vue";
 import { useStore } from "vuex";
 
 export default defineComponent({
   setup() {
     const store = useStore();
-
-    interface IOrder {
-      name: string;
-      email: string;
-      company: string;
-      object: string;
-      object_type: string;
-      phone: string;
-    }
+    const user = computed(() => store.getters.getUser);
 
     const order: IOrder = reactive({
-      name: "",
-      email: "",
-      company: "",
+      name: user.value.name,
+      email: user.value.email,
+      // company: user.value.company,
       object: "",
-      object_type: "",
-      phone: "",
+      object_type: 1,
+      phone: user.value.phone,
     });
 
     const status = ref(false);
@@ -145,23 +144,18 @@ export default defineComponent({
       password: "",
     });
 
-    const user = computed(() => store.getters.getUser);
-
     const sendOrder = async () => {
-      console.log("123");
-      const result = await axios.post(
-        "http://localhost:5000/api/v1/client/send-order",
-        {
-          order: order,
-          client: user.value,
-        }
-      );
+      const result = user.value.id
+        ? await store.dispatch("addOrder", order)
+        : await store.dispatch("addOrderUnauthorized", order);
 
-      status.value = result.data.status;
-      if (!result.data.status) error.value = result.data.data;
+      console.log(result);
+      status.value = result.id ? true : false;
 
-      tempuser.login = result.data.client.login;
-      tempuser.password = result.data.client.password;
+      if (!user.value.id) {
+        tempuser.login = result.user.login;
+        tempuser.password = result.user.password;
+      }
 
       edited.value = true;
 
@@ -177,7 +171,7 @@ export default defineComponent({
       edited: edited,
       order: order,
       tempuser: tempuser,
-      user: user
+      user: user,
     };
   },
 });

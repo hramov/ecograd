@@ -14,7 +14,7 @@
 import { computed, defineComponent } from "vue";
 import Intro from "./../components/landing/Intro.vue";
 import About from "./../components/landing/About.vue";
-import Team from "./../components/landing/Team.vue";
+import Team from "../components/experts/Team.vue";
 import Requisities from "./../components/landing/Requisities.vue";
 import Contacts from "./../components/landing/Contacts.vue";
 import LoginModal from "./../components/landing/LoginModal.vue";

@@ -1,6 +1,6 @@
-import axios from "axios";
 import { createRouter, createWebHistory, RouteRecordRaw } from "vue-router";
 import Landing from "../views/Landing.vue";
+import store from "./../store/index";
 
 const routes: Array<RouteRecordRaw> = [
   {
@@ -36,21 +36,11 @@ const router = createRouter({
 });
 
 router.beforeEach(async (to, from, next) => {
-  if (to.path == "/dashboard" && localStorage.getItem("jwt_token")) {
-    const result = await axios.post(
-      "http://localhost:5000/api/v1/admin/check-jwt",
-      {
-        token: localStorage.getItem("jwt_token"),
-        role: "admin",
-      }
-    );
-    if (result.data.status) next();
-    else next("/");
-  } else if (to.path == "/dashboard" && !localStorage.getItem("jwt_token")) {
-    next("/");
-  } else {
-    next();
+  if (to.path == "/dashboard") {
+    store.getters.getJWT ? next() : next("/");
+    return
   }
+  next();
 });
 
 export default router;

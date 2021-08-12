@@ -93,9 +93,8 @@ export default defineComponent({
     else isOrders.value = false;
 
     const getWork = async (order: any) => {
-      console.log(user.value);
       const result = await axios.post(
-        "http://localhost:5000/api/v1/admin/take-order",
+        "http://localhost:5000/api/v2/admin/take-order",
         {
           order: order,
           user: user.value,

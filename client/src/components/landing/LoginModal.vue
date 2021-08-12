@@ -57,7 +57,6 @@
 import { defineComponent, reactive, getCurrentInstance, ref } from "vue";
 import { useStore } from "vuex";
 import axios from "axios";
-import { IAuthResponse } from "./../../custom/interfaces";
 
 export default defineComponent({
   setup() {
@@ -71,25 +70,20 @@ export default defineComponent({
     const isLoggedIn = ref(true)
     const isTouched = ref(false)
 
-    let authResponse: IAuthResponse = reactive({
-      status: false,
-      jwt_token: "",
-      user: { id: 0, role: "" },
-    });
-
     async function loginMethod(): Promise<void> {
       isTouched.value = true
-      const result = await axios.post("http://localhost:5000/api/v1/login", {
-        login: login.value,
+      const result = await axios.post("http://localhost:5000/api/v2/auth/login", {
+        email: login.value,
         password: password.value,
       });
       if (result.data.status) {
-        authResponse = result.data;
-        localStorage.setItem("jwt_token", authResponse.jwt_token);
-        store.commit("setJWT", authResponse.jwt_token);
+        const res = result.data;
+        console.log(res)
+        localStorage.setItem("jwt_token", res.jwt_token);
+        store.commit("setJWT", res.jwt_token);
         document.getElementById("closeBtn")!.click();
-        store.commit("setUser", authResponse.user);
-        localStorage.setItem("user", JSON.stringify(authResponse.user));
+        store.commit("setUser", res.user);
+        localStorage.setItem("user", JSON.stringify(res.user));
         router!.push("/");
       } else {
         isLoggedIn.value = false

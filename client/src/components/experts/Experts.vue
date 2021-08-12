@@ -241,6 +241,7 @@
 </template>
 
 <script lang="ts">
+import { IExpert, IOrder, IUser } from "@/custom/interfaces";
 import axios from "axios";
 import { computed, defineComponent, onMounted, reactive, ref } from "vue";
 import { useStore } from "vuex";
@@ -252,20 +253,15 @@ export default defineComponent({
   },
 
   setup() {
-    let expert = reactive({
+    let expert: IExpert = reactive({
       id: 0,
-      last_name: "",
-      name: "",
-      second_name: "",
+      userid: 0,
       position: "",
-      birth_date: "",
-      email: "",
-      phone: "",
       cert: "",
       direction: "",
       misc: "",
-      image_url: "",
-      created_at: new Date(Date.now()),
+      orders: [] as IOrder[],
+      user: {} as IUser,
     });
 
     const isOpen = ref(false);
@@ -275,34 +271,14 @@ export default defineComponent({
     const file = ref(null);
 
     const getExperts = async () => {
-      const result = await axios.get("http://localhost:5000/api/v1/experts");
-      if (result.data.status) {
-        isExperts.value = true;
-        store.commit("setExperts", result.data.data);
-      }
+      await store.dispatch("getExpertsAction");
+      isExperts.value = true;
     };
 
     const addExpert = async () => {
-      const result = await axios.post(
-        "http://localhost:5000/api/v1/experts",
-        {
-          expert: expert,
-        },
-        {
-          headers: {
-            Authorization: `Bearer ${store.getters.getJWT}`,
-          },
-        }
-      );
-
-      if (result.data) {
-        if (result.data.status) {
-          document.getElementById("addExpertBtn")!.click();
-        }
-        await getExperts();
-      } else {
-        console.log("Error");
-      }
+      await store.dispatch("addExpertAction", expert);
+      document.getElementById("addExpertBtn")!.click();
+      await getExperts();
     };
 
     onMounted(async () => {
@@ -325,7 +301,7 @@ export default defineComponent({
       let formData = new FormData();
       formData.append("file", file.value!);
       await axios
-        .post("http://localhost:5000/api/v1/experts/import", formData, {
+        .post("http://localhost:5000/api/v2/experts/import", formData, {
           headers: {
             "Content-Type": "multipart/form-data",
           },
@@ -344,10 +320,8 @@ export default defineComponent({
     };
 
     const deleteExpert = async (id: number) => {
-      const result = await axios.delete(
-        `http://localhost:5000/api/v1/experts/${id}`
-      );
-      if (result.data.status) console.log("Success");
+      await store.dispatch("deleteExpertAction", id);
+      await getExperts();
     };
 
     return {

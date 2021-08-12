@@ -1,36 +1,48 @@
-export interface User {
-  status: boolean;
-  jwt_token: string;
+export interface IClient {
+  id: number;
+  orders_count: number;
+  orders: IOrder[];
+  userid: number;
+  user: IUser;
 }
 
 export interface IExpert {
-  id: number
-  name: string;
-  last_name: string;
-  second_name: string;
-  email: string;
-  phone: string;
-  created_at: Date;
+  id: number;
   position: string;
-  birth_date: string;
   cert: string;
   direction: string;
   misc: string;
+  orders: IOrder[];
+  userid: number;
+  user: IUser;
 }
 
 export interface IOrder {
   name: string;
   email: string;
-  company: string;
+  // company: string;
   object: string;
-  phone: number;
+  object_type: 1 | 2,
+  phone: string;
 }
 
-export interface IAuthResponse {
-  status: boolean;
-  jwt_token: string;
-  user: {
-    id: number,
-    role: ''
-  }
+export interface IRole {
+  id: number;
+  value: string;
+  description: string;
+  users: IUser[];
+}
+
+export interface IUser {
+  id: number;
+  last_name: string;
+  name: string;
+  second_name: string;
+  phone: string;
+  birth_date: Date;
+  email: string;
+  password: string;
+  roles: IRole[];
+  expert: IExpert;
+  client: IClient;
 }

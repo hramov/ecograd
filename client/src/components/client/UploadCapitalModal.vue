@@ -663,7 +663,7 @@ export default defineComponent({
       }
 
       const result = await axios.post(
-        `http://localhost:5000/api/v1/client/${user.value.id}/orders/${order.value.id}/upload`,
+        `http://localhost:5000/api/v2/client/${user.value.id}/orders/${order.value.id}/upload`,
         formData,
         {
           headers: {

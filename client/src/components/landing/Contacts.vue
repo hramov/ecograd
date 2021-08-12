@@ -110,7 +110,7 @@ export default defineComponent({
 
     const sendFeedback = async () => {
       feedback._touched = true;
-      const result = await axios.post("http://localhost:5000/api/v1/feedback", {
+      const result = await axios.post("http://localhost:5000/api/v2/feedback", {
         feedback: feedback,
       });
       if (result.data.status) {
