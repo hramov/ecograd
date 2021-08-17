@@ -88,7 +88,9 @@ export default defineComponent({
     onMounted(async () => {
       await getOrders();
     });
+
     const orders = computed(() => store.getters.getOrders);
+    console.log(orders.value)
     if (orders.value) isOrders.value = true;
     else isOrders.value = false;
 

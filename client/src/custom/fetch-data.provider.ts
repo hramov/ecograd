@@ -4,8 +4,10 @@ import store from "./../store/index";
 export class FetchDataProvider {
   private static _backendUrl = "http://localhost:5000/api/v2";
 
-  public static init() {
-    axios.defaults.headers.common["Authorization"] = `Bearer ${store.getters.getJWT}`;
+  constructor() {
+    axios.defaults.headers.common[
+      "Authorization"
+    ] = `Bearer ${store.getters.getJWT}`;
     axios.defaults.headers.post["Content-Type"] = "application/json";
   }
 
@@ -18,7 +20,7 @@ export class FetchDataProvider {
     return `${FetchDataProvider._backendUrl}/${url}`;
   }
 
-  public static async get(url: string, id?: number) {
+  public async get(url: string, id?: number) {
     try {
       const { data } = await axios.get(FetchDataProvider._makePath(url, id));
       return data;
@@ -31,8 +33,7 @@ export class FetchDataProvider {
     }
   }
 
-  public static async post(url: string, data: any) {
-    console.log(data)
+  public async post(url: string, data: any) {
     return await axios
       .post(FetchDataProvider._makePath(url), data)
       .then((response) => response.data)
@@ -41,7 +42,7 @@ export class FetchDataProvider {
       });
   }
 
-  public static async patch(
+  public async patch(
     url: string,
     id: number,
     data: any
@@ -54,7 +55,7 @@ export class FetchDataProvider {
       });
   }
 
-  public static async delete(url: string, id: number) {
+  public async delete(url: string, id: number) {
     return await axios
       .delete(FetchDataProvider._makePath(url, id))
       .then((response) => response.data)

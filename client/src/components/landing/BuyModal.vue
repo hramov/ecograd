@@ -57,16 +57,6 @@
                 required
               />
             </div>
-            <!-- <div class="form-group">
-              <input
-                id="company"
-                v-if="!user.id"
-                type="text"
-                class="form-control"
-                placeholder="Компания"
-                v-model="newOrder.company"
-              />
-            </div> -->
             <div class="form-group">
               <input
                 id="object"
@@ -86,7 +76,7 @@
                 <option :value="Number(1)">
                   Объект капитального строительства
                 </option>
-                <option :value="Number(1)">Линейный объект</option>
+                <option :value="Number(2)">Линейный объект</option>
               </select>
             </div>
             <div class="form-group">
@@ -127,9 +117,9 @@ export default defineComponent({
     const user = computed(() => store.getters.getUser);
 
     const order: IOrder = reactive({
+      id: user.value.id,
       name: user.value.name,
       email: user.value.email,
-      // company: user.value.company,
       object: "",
       object_type: 1,
       phone: user.value.phone,
@@ -149,7 +139,7 @@ export default defineComponent({
         ? await store.dispatch("addOrder", order)
         : await store.dispatch("addOrderUnauthorized", order);
 
-      console.log(result);
+      console.log(result)
       status.value = result.id ? true : false;
 
       if (!user.value.id) {

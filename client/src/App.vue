@@ -1,7 +1,7 @@
 <template>
   <div>
-    <Header :isUser="isUser" />
-    <router-view @authUser="isUser = $event" />
+    <Header :isUser="$store.getters.getJWT" />
+    <router-view />
     <NormatModal />
     <ObjectsModal />
     <DocumentsModal />
@@ -11,13 +11,13 @@
 </template>
 
 <script lang="ts">
-import { computed, defineComponent, getCurrentInstance, ref } from "vue";
+import { defineComponent, getCurrentInstance } from "vue";
 import Header from "./components/Header.vue";
 import Footer from "./components/Footer.vue";
 
-import NormatModal from './components/footerModals/Normat.vue'
-import ObjectsModal from './components/footerModals/Objects.vue'
-import DocumentsModal from './components/footerModals/Documents.vue'
+import NormatModal from "./components/footerModals/Normat.vue";
+import ObjectsModal from "./components/footerModals/Objects.vue";
+import DocumentsModal from "./components/footerModals/Documents.vue";
 
 import { useStore } from "vuex";
 export default defineComponent({
@@ -28,21 +28,14 @@ export default defineComponent({
     Footer,
     NormatModal,
     ObjectsModal,
-    DocumentsModal
+    DocumentsModal,
   },
 
   setup() {
-    let isUser = ref(false);
-
     const store = useStore();
     const instance = getCurrentInstance();
     const router = instance!.proxy?.$router;
-
     store.commit("setRouter", router);
-
-    return {
-      isUser: isUser
-    };
   },
 });
 </script>

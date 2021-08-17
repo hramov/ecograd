@@ -39,19 +39,10 @@
             <a class="nav-link item" href="/#contacts">Контакты</a>
           </li>
           <li class="nav-item item">
-            <a
-              type="button"
-              v-if="Object.values(user).length == 0"
-              class="nav-link item"
-              data-bs-toggle="modal"
-              data-bs-target="#exampleModal"
-            >
-              Войти
-            </a>
             <div
+              v-if="!!user.id"
               class="dropdown"
               style="margin-left: auto; margin-right: 0; max-width: 150px"
-              v-else
             >
               <button
                 class="nav-link item dropdown-toggle"
@@ -66,20 +57,35 @@
                 <li>
                   <a
                     class="dropdown-item"
-                    v-if="user.roles.some(role => role.id == 1)"
-                    @click="$router.push('/dashboard')"
+                    v-if="user.roles.some((role) => role.id == 1)"
+                    @click.prevent="$router.push('/dashboard')"
                     >Открыть</a
                   >
                   <a
                     class="dropdown-item"
                     v-if="user.role == 'client'"
-                    @click="$router.push('/client')"
+                    @click.prevent="$router.push('/client')"
                     >Открыть</a
                   >
                 </li>
-                <li><a class="dropdown-item" @click="logout">Выйти</a></li>
+                <li>
+                  <a
+                    class="dropdown-item"
+                    @click.prevent="$store.dispatch('logout')"
+                    >Выйти</a
+                  >
+                </li>
               </ul>
             </div>
+            <a
+              v-else
+              type="button"
+              class="nav-link item"
+              data-bs-toggle="modal"
+              data-bs-target="#loginModal"
+            >
+              Войти
+            </a>
           </li>
         </ul>
       </div>
@@ -92,22 +98,17 @@ import { defineComponent, computed } from "vue";
 import { useStore } from "vuex";
 
 export default defineComponent({
+  props: {
+    isUser: {
+      type: String,
+    },
+  },
   setup() {
     const store = useStore();
-    const router = store.getters.getRouter;
-    const computedUser = computed(() => store.getters.getUser);
-
-    const logout = async () => {
-      localStorage.setItem("jwt_token", "");
-      localStorage.setItem("user", JSON.stringify({}));
-      store.commit("setJWT", null);
-      store.commit("setUser", {});
-      router.push("/");
-    };
+    const user = computed(() => store.getters.getUser);
 
     return {
-      user: computedUser,
-      logout: logout,
+      user: user,
     };
   },
 });
