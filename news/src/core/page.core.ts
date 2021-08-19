@@ -1,17 +1,42 @@
-import { Browser } from "puppeteer";
+import { Browser, ElementHandle, Page } from "puppeteer";
+import { PageQuery } from "./ports/query-to-page.port";
 
-export type Url = string
+export class _Page implements PageQuery {
+  constructor(private readonly page: Page) {}
 
-export class Page {
-  constructor(private readonly _browser: Browser) {}
-
-  async openUrl(url: Url) {
-    const page = await this._browser.newPage()
-    await page.goto(url)
-    return this
+  public async goto(url: string) {
+    return await this.page.goto(url);
   }
 
-  async findById(id: string) {
+  public async hover(id: string) {
+    return await this.page.hover(id);
+  }
 
+  public async click(id: string) {
+    return await this.page.click(id);
+  }
+
+  public async waitForNode(id: string) {
+    return await this.page.waitForSelector(id);
+  }
+
+  public async waitForNavigation() {
+    return await this.page.waitForNavigation();
+  }
+
+  public async findOne(id: string) {
+    return await this.page.$(id);
+  }
+
+  public async findAll(id: string) {
+    return await this.page.$$(id);
+  }
+
+  public async getText(node: ElementHandle<Element>) {
+    return await this.page.evaluate((el) => el.textContent, node);
+  }
+
+  public async getAttribute(node: ElementHandle<Element>, attr: string) {
+    return await this.page.evaluate((el) => el.getAttribute("href"), node);
   }
 }
