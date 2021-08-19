@@ -16,7 +16,7 @@
             Ваш заказ успешно отправлен!
             <div v-if="!user.id">
               <p>Для входа на сайт используйте</p>
-              <p>логин: {{ tempuser.login }}</p>
+              <p>логин: {{ tempuser.email }}</p>
               <p>пароль: {{ tempuser.password }}</p>
             </div>
           </div>
@@ -106,8 +106,7 @@
 </template>
 
 <script lang="ts">
-import { FetchDataProvider } from "@/custom/fetch-data.provider";
-import { IOrder } from "@/custom/interfaces";
+import { IOrder } from './../../custom/interfaces'
 import { computed, defineComponent, reactive, ref } from "vue";
 import { useStore } from "vuex";
 
@@ -117,7 +116,7 @@ export default defineComponent({
     const user = computed(() => store.getters.getUser);
 
     const order: IOrder = reactive({
-      id: user.value.id,
+      userid: user.value.id,
       name: user.value.name,
       email: user.value.email,
       object: "",
@@ -130,7 +129,7 @@ export default defineComponent({
     const edited = ref(false);
 
     const tempuser = reactive({
-      login: "",
+      email: "",
       password: "",
     });
 
@@ -140,10 +139,10 @@ export default defineComponent({
         : await store.dispatch("addOrderUnauthorized", order);
 
       console.log(result)
-      status.value = result.id ? true : false;
+      status.value = result.order?.id ? true : false;
 
       if (!user.value.id) {
-        tempuser.login = result.user.login;
+        tempuser.email = result.user.email;
         tempuser.password = result.user.password;
       }
 

@@ -5,7 +5,6 @@ import { SequelizeModule } from '@nestjs/sequelize';
 import { Role } from 'src/roles/models/role.model';
 import { User } from './models/user.model';
 import { UserRole } from './models/user-role.model';
-import { Client } from 'src/clients/models/client.model';
 import { Expert } from 'src/experts/models/expert.model';
 import { RolesModule } from 'src/roles/roles.module';
 import { AuthModule } from 'src/auth/auth.module';
@@ -17,7 +16,7 @@ import { AuthModule } from 'src/auth/auth.module';
     forwardRef(() => AuthModule),
     RolesModule,
     SequelizeModule.forFeature([
-      Role, User, UserRole, Client, Expert
+      Role, User, UserRole, Expert
     ])
   ],
   exports: [UsersService]

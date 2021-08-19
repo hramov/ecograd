@@ -57,13 +57,13 @@
                 <li>
                   <a
                     class="dropdown-item"
-                    v-if="user.roles.some((role) => role.id == 1)"
+                    v-if="user.roles.some((role) => role.id === 1)"
                     @click.prevent="$router.push('/dashboard')"
                     >Открыть</a
                   >
                   <a
                     class="dropdown-item"
-                    v-if="user.role == 'client'"
+                    v-if="user.roles.some((role) => role.id === 3)"
                     @click.prevent="$router.push('/client')"
                     >Открыть</a
                   >

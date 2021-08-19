@@ -46,6 +46,14 @@ export class OrdersController {
 
   @Roles(RolesEnum.Admin, RolesEnum.Expert, RolesEnum.Client)
   @UseGuards(RolesGuard)
+  @Get('client/:clientid')
+  async findByClientId(@Param('clientid') clientid: number) {
+    console.log(123)
+    return await this.ordersService.findByClientId(clientid);
+  }
+
+  @Roles(RolesEnum.Admin, RolesEnum.Expert, RolesEnum.Client)
+  @UseGuards(RolesGuard)
   @Patch(':id')
   async update(
     @Param('id') id: number,
@@ -68,10 +76,4 @@ export class OrdersController {
     return await this.ordersService.addExpert(id, expertid);
   }
 
-  @Roles(RolesEnum.Admin, RolesEnum.Client)
-  @UseGuards(RolesGuard)
-  @Patch('client/:id')
-  async addClient(@Param('id') id: number, @Body('clientid') clientid: number) {
-    return await this.ordersService.addClient(id, clientid);
-  }
 }

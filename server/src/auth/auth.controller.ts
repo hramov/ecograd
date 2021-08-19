@@ -1,4 +1,4 @@
-import { Body, Controller, Post, Req, UseGuards } from '@nestjs/common';
+import { Body, Controller, Get, Post, Req, UseGuards } from '@nestjs/common';
 import { Request } from 'express';
 import { CreateUserDto } from 'src/users/dto/create-user.dto';
 import { LoginUserDto } from 'src/users/dto/login-user.dto';
@@ -25,11 +25,10 @@ export class AuthController {
   }
 
   @UseGuards(JwtAuthGuard)
-  @Post('check-jwt')
-  validateJwt(@Req() req: Request, @Body('userid') userid: number) {
+  @Get('check-jwt')
+  validateJwt(@Req() req: Request) {
     return this.authService.validateJwt(
       req.headers.authorization.split(' ')[1],
-      userid,
     );
   }
 }

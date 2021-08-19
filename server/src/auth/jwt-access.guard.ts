@@ -23,7 +23,7 @@ export class JwtAccessGuard implements CanActivate {
 
       if (bearer != 'Bearer' || !token)
         throw new UnauthorizedException('Unauthorized');
-      if (!this.authService.validateJwt(token, userid))
+      if (!this.authService.validateJwt(token))
         throw new UnauthorizedException('Unauthorized');
 
       return true;

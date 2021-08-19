@@ -8,6 +8,7 @@ const state = {
   user: null || (JSON.parse(localStorage.getItem("user")!) as IUser),
   isLoggedIn:
     false || (!!JSON.parse(localStorage.getItem("user")!).id as boolean),
+  isAdmin: false,
 };
 
 const mutations = {
@@ -23,6 +24,9 @@ const mutations = {
   },
   setIsLoggedIn(state: any, data: boolean) {
     state.isLoggedIn = data;
+  },
+  setIsAdmin(state: any, data: boolean) {
+    state.isAdmin = data;
   },
 };
 const actions = {
@@ -51,24 +55,15 @@ const actions = {
     router.push("/");
     return true;
   },
+  async isAdminAction({ commit }: any) {
+    const fdProvider = new FetchDataProvider();
+    commit("setIsAdmin", await fdProvider.get("auth/check-jwt"));
+  },
 };
 const getters = {
   getJWT: (state: any) =>
     state.jwt_token || (localStorage.getItem("jwt_token") as string),
-
-  // getValidJWT: async (state: any) => {
-  //   if (localStorage.getItem("user")) {
-  //     const fdProvider = new FetchDataProvider()
-  //     const result = await fdProvider.post("auth/check-jwt", {
-  //       userid: JSON.parse(localStorage.getItem("user") as string).id,
-  //     });
-  //     if (result.error) {
-  //       state.jwt_token = "";
-  //       localStorage.setItem("jwt_token", "");
-  //     }
-  //   }
-  // },
-
+  getIsAdmin: (state: any) => state.isAdmin,
   getUser: (state: any) =>
     state.user || JSON.parse(localStorage.getItem("user")!),
   getIsLoggedIn: (state: any) => state.isLoggedIn,

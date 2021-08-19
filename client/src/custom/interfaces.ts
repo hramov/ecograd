@@ -18,12 +18,11 @@ export interface IExpert {
 }
 
 export interface IOrder {
-  name: string;
-  email: string;
-  // company: string;
+  name?: string;
+  email?: string;
   object: string;
   object_type: 1 | 2,
-  phone: string;
+  phone?: string;
 }
 
 export interface IRole {

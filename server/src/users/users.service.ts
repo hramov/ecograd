@@ -13,7 +13,6 @@ import { User } from './models/user.model';
 import { RolesService } from 'src/roles/roles.service';
 import { AddRoleDto } from './dto/add-role.dto';
 import { hash } from 'bcryptjs';
-import { VueResponseException } from 'src/exceptions/vue-response.exception';
 
 @Injectable()
 export class UsersService {
@@ -21,7 +20,7 @@ export class UsersService {
 
   constructor(
     @InjectModel(User) private userRepository: typeof User,
-    private rolesService: RolesService,
+    private rolesService: RolesService
   ) {}
 
   async create(createUserDto: CreateUserDto) {
@@ -95,6 +94,7 @@ export class UsersService {
         throw new BadRequestException('User already has this role');
 
       await user.$add('role', role.id);
+
       user.roles.push(role);
       return user;
     }

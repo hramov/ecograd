@@ -37,7 +37,7 @@ const router = createRouter({
 
 router.beforeEach(async (to, from, next) => {
   if (to.path == "/dashboard") {
-    store.getters.getJWT ? next() : next("/");
+    store.getters.getIsAdmin ? next() : next("/");
     return
   }
   next();

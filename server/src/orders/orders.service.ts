@@ -4,7 +4,8 @@ import {
   NotFoundException,
 } from '@nestjs/common';
 import { InjectModel } from '@nestjs/sequelize';
-import { ClientsService } from 'src/clients/clients.service';
+import { AuthService } from 'src/auth/auth.service';
+import { RolesEnum } from 'src/auth/roles-enum';
 import { ExpertsService } from 'src/experts/experts.service';
 import { UsersService } from 'src/users/users.service';
 import { CreateOrderUnauthorizedDto } from './dto/create-order-unauthorized.dto';
@@ -17,44 +18,66 @@ export class OrdersService {
   constructor(
     @InjectModel(Order) private orderRepository: typeof Order,
     private expertService: ExpertsService,
-    private clientService: ClientsService,
     private userService: UsersService,
+    private authService: AuthService,
   ) {}
 
   async create(createOrderDto: CreateOrderDto) {
-    const client = await this.clientService.findByUserId(createOrderDto.id);
-    if (client) {
-      const order = await this.orderRepository.create(createOrderDto);
-      order.$set('client', client.id);
-      order.client = client;
-      return order;
+    try {
+      const user = await this.userService.findOne(createOrderDto.userid);
+      if (user && user.roles.some((role) => role.id === 3 || role.id === 1)) {
+
+        const order = await this.orderRepository.create(createOrderDto);
+        order.$set('client', user.id);
+        order.client = user;
+        return order;
+      }
+    } catch (err) {
+      console.log(err);
     }
     return `You should be a client to make orders`;
   }
 
   async createOrderUnauthorized(orderDto: CreateOrderUnauthorizedDto) {
-    const userData = {
-      name: orderDto.name,
-      email: orderDto.email,
-      phone: orderDto.phone,
-      password: Date.now().toString(),
-    };
+    try {
+      const userData = {
+        name: orderDto.name.split(' ')[0],
+        phone: orderDto.phone,
+        birth_date: new Date('1970-01-01'),
+        email: orderDto.email,
+        password: Date.now().toString(),
+      };
 
-    const orderData = {
-      object: orderDto.object,
-      object_type: orderDto.object_type,
-    };
+      const orderData = {
+        object: orderDto.object,
+        object_type: orderDto.object_type,
+      };
 
-    const order = await this.orderRepository.create(orderData);
-    if (!order) throw new BadRequestException('Cannot create order');
+      let user = (await this.authService.register(userData)).user;
+      if (!user) console.log('Cannot create user');
+      user = await this.userService.addRole({
+        roleid: RolesEnum.Client,
+        userid: user.id,
+      });
 
-    const user = await this.userService.create(userData);
-    if (!user) throw new BadRequestException('Cannot create user');
+      if (user && user.roles.some((role) => role.id === 3 || role.id === 1)) {
+        const order = await this.orderRepository.create(orderData);
+        if (!order) console.log('Cannot create order');
+        order.$set('client', user.id);
+        order.client = user;
 
-    return {
-      order: order,
-      user: user,
-    };
+        user.password = userData.password;
+
+        return {
+          order: order,
+          user: user,
+        };
+      }
+    } catch (err) {
+      console.log(err);
+    }
+
+    return `Something went wrong`;
   }
 
   async findAll() {
@@ -94,12 +117,9 @@ export class OrdersService {
     return order;
   }
 
-  async addClient(id: number, clientid: number) {
-    const order = await this.findOne(id);
-    if (order.client)
-      throw new BadRequestException('Order already has a client');
-    order.$set('client', clientid);
-    order.client = await this.clientService.findOne(clientid);
-    return order;
+  async findByClientId(clientid: number) {
+    return await this.orderRepository.findAll({
+      where: { clientid: clientid },
+    });
   }
 }

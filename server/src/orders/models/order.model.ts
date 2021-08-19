@@ -6,8 +6,8 @@ import {
   Model,
   Table,
 } from 'sequelize-typescript';
-import { Client } from 'src/clients/models/client.model';
 import { Expert } from 'src/experts/models/expert.model';
+import { User } from 'src/users/models/user.model';
 
 interface OrderCreationAttrs {
   object: string;
@@ -42,12 +42,12 @@ export class Order extends Model<Order, OrderCreationAttrs> {
   @Column({ type: DataType.STRING, allowNull: false, defaultValue: 'new' })
   status: 'new' | 'inWork' | 'done';
 
-  @ForeignKey(() => Client)
-  @Column({ type: DataType.INTEGER })
-  clientid: number;
-  
-  @BelongsTo(() => Client, { onDelete: 'CASCADE'})
-  client: Client;
+  @ForeignKey(() => User)
+  @Column({ type: DataType.INTEGER, unique: false})
+  clientid: number
+
+  @BelongsTo(() => User, { onDelete: 'CASCADE'})
+  client: User;
 
   @ForeignKey(() => Expert)
   @Column({ type: DataType.INTEGER })

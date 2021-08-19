@@ -5,9 +5,10 @@ import {
   DataType,
   BelongsToMany,
   HasOne,
+  HasMany,
 } from 'sequelize-typescript';
-import { Client } from 'src/clients/models/client.model';
 import { Expert } from 'src/experts/models/expert.model';
+import { Order } from 'src/orders/models/order.model';
 import { Role } from 'src/roles/models/role.model';
 import { UserRole } from './user-role.model';
 
@@ -31,19 +32,19 @@ export class User extends Model<User, UserCreationAttrs> {
   })
   id: number;
 
-  @Column({ type: DataType.STRING, unique: false, allowNull: false })
+  @Column({ type: DataType.STRING, unique: false, allowNull: true })
   last_name: string;
 
   @Column({ type: DataType.STRING, unique: false, allowNull: false })
   name: string;
 
-  @Column({ type: DataType.STRING, unique: false, allowNull: false })
+  @Column({ type: DataType.STRING, unique: false, allowNull: true })
   second_name: string;
 
   @Column({ type: DataType.STRING, unique: true, allowNull: false })
   phone: string;
 
-  @Column({ type: DataType.DATE, unique: false, allowNull: false })
+  @Column({ type: DataType.DATE, unique: false, allowNull: true })
   birth_date: Date;
 
   @Column({ type: DataType.STRING, unique: true, allowNull: false })
@@ -52,12 +53,12 @@ export class User extends Model<User, UserCreationAttrs> {
   @Column({ type: DataType.STRING, unique: false, allowNull: false })
   password: string;
 
+  @HasMany(() => Order)
+  orders: Order[];
+
   @BelongsToMany(() => Role, () => UserRole)
   roles: Role[];
 
   @HasOne(() => Expert, { onDelete: 'CASCADE' })
   expert: Expert;
-
-  @HasOne(() => Client, { onDelete: 'CASCADE' })
-  client: Client;
 }

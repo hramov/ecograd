@@ -5,6 +5,7 @@ import { Router } from "vue-router";
 import expert from './expert.store'
 import order from './order.store'
 import auth from './auth.store'
+import client from './client.store'
 
 export default createStore({
   state: {
@@ -26,6 +27,7 @@ export default createStore({
   modules: {
     expert,
     order,
-    auth
+    auth,
+    client
   }
 });

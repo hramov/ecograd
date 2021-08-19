@@ -50,12 +50,15 @@ export class AuthService {
       birth_date: new Date(createUserDto.birth_date),
     });
 
-    user = await this.userService.addRole({
-      roleid: 1,
-      userid: user.id,
-    });
+    // user = await this.userService.addRole({
+    //   roleid: 1,
+    //   userid: user.id,
+    // });
 
-    return this.generateToken(user);
+    return {
+      user: user,
+      token: this.generateToken(user),
+    };
   }
 
   private generateToken(user: User) {
@@ -78,11 +81,11 @@ export class AuthService {
     throw new UnauthorizedException('Incorrect credentials');
   }
 
-  validateJwt(jwt_token: string, userid: number) {
+  validateJwt(jwt_token: string) {
     try {
       const user: VerifyJwt = this.jwtService.verify(jwt_token);
       const admin = user.roles.some((role) => role.id == RolesEnum.Admin);
-      if (user.id == userid || admin) {
+      if (admin) {
         return true;
       }
       return false;

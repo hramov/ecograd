@@ -17,20 +17,22 @@ const mutations = {
 
 const actions = {
   async getOrdersAction({ commit }: any) {
-    const fdProvider = new FetchDataProvider()
+    const fdProvider = new FetchDataProvider();
     commit("setOrders", await fdProvider.get("orders"));
   },
   async getOrderAction({ commit }: any, id: number) {
-    const fdProvider = new FetchDataProvider()
+    const fdProvider = new FetchDataProvider();
     commit("setOrders", await fdProvider.get("orders", id));
   },
   async addOrderUnauthorized(_: any, order: any) {
-    const fdProvider = new FetchDataProvider()
+    const fdProvider = new FetchDataProvider();
     return fdProvider.post("orders/unauthorized", order);
   },
   async addOrder(_: any, order: any) {
-    const fdProvider = new FetchDataProvider()
-    return fdProvider.post("orders", order);
+    const fdProvider = new FetchDataProvider();
+    return {
+      order: await fdProvider.post("orders", order),
+    };
   },
 };
 

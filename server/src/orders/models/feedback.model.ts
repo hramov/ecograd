@@ -6,7 +6,6 @@ import {
   Model,
   Table,
 } from 'sequelize-typescript';
-import { Client } from 'src/clients/models/client.model';
 
 interface FeedbackCreationAttrs {
   name: string;
@@ -32,11 +31,4 @@ export class Feedback extends Model<Feedback, FeedbackCreationAttrs> {
 
   @Column({ type: DataType.BOOLEAN, allowNull: false, defaultValue: false })
   feedback: string;
-
-  @ForeignKey(() => Client)
-  @Column({ type: DataType.INTEGER })
-  clientid: number;
-
-  @BelongsTo(() => Client, { onDelete: 'CASCADE' })
-  client: Client;
 }

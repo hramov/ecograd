@@ -1,7 +1,7 @@
 import { IsString, IsNumber } from 'class-validator';
 
 export class CreateOrderDto {
-  id: number;
+  userid: number;
   // @IsString({ message: 'Should be a string' })
   object: string;
 
