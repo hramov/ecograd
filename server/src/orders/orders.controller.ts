@@ -7,6 +7,9 @@ import {
   Param,
   Delete,
   UseGuards,
+  UseInterceptors,
+  UploadedFile,
+  UploadedFiles,
 } from '@nestjs/common';
 import { OrdersService } from './orders.service';
 import { CreateOrderDto } from './dto/create-order.dto';
@@ -15,6 +18,8 @@ import { RolesGuard } from 'src/auth/roles.guard';
 import { Roles } from 'src/auth/roles-auth.decorator';
 import { RolesEnum } from 'src/auth/roles-enum';
 import { CreateOrderUnauthorizedDto } from './dto/create-order-unauthorized.dto';
+import { AnyFilesInterceptor, FileInterceptor } from '@nestjs/platform-express';
+import { Try } from 'src/decorators/try.decorator';
 
 @Controller('orders')
 export class OrdersController {
@@ -48,7 +53,7 @@ export class OrdersController {
   @UseGuards(RolesGuard)
   @Get('client/:clientid')
   async findByClientId(@Param('clientid') clientid: number) {
-    console.log(123)
+    console.log(123);
     return await this.ordersService.findByClientId(clientid);
   }
 
@@ -76,4 +81,14 @@ export class OrdersController {
     return await this.ordersService.addExpert(id, expertid);
   }
 
+  @Roles(RolesEnum.Admin, RolesEnum.Expert, RolesEnum.Client)
+  @UseGuards(RolesGuard)
+  @Patch('upload/:id')
+  @UseInterceptors(AnyFilesInterceptor())
+  async uploadDocs(
+    @Param('id') id: number,
+    @UploadedFiles() files: Array<Express.Multer.File>,
+  ) {
+    return await this.ordersService.uploadDocs(id, files);
+  }
 }

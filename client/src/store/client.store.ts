@@ -21,6 +21,17 @@ const actions = {
     commit("setOrders", orders);
     return orders;
   },
+
+  async uploadDocsAction({ commit }: any, data: any) {
+    const fd = new FetchDataProvider();
+    const result = await fd.patch(
+      `orders/upload`,
+      data.id,
+      data.formData,
+      true
+    );
+    return result;
+  },
 };
 
 const getters = {

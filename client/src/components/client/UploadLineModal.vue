@@ -46,6 +46,7 @@
                     type="file"
                     class="form-control"
                     placeholder="Файл"
+                    @change="changeFile"
                     ref="file"
                   />
                 </div>
@@ -67,6 +68,7 @@
                     class="form-control"
                     placeholder="Файл"
                     ref="file"
+                    @change="changeFile"
                   />
                 </div>
               </div>
@@ -401,7 +403,13 @@
 
           <hr />
           <div class="text-center">
-            <button type="button" class="btn btn-success">Отправить</button>
+            <button
+              type="button"
+              class="btn btn-success"
+              @click.prevent="uploadFiles"
+            >
+              Отправить
+            </button>
           </div>
         </div>
       </div>
@@ -410,12 +418,41 @@
 </template>
 
 <script lang="ts">
-import { defineComponent } from "vue";
+import { computed, defineComponent, ref } from "vue";
+import { useStore } from "vuex";
 
 export default defineComponent({
-  //   setup() {
-  //     return {
-  //     };
-  //   },
+  setup() {
+    const store = useStore();
+    const files: any[] = [];
+    const disabled = ref(true);
+    const status = ref(false);
+    const order = computed(() => store.getters.getOrder);
+
+    const changeFile = (e: any) => {
+      if (e.target.files[0]) {
+        files.push(e.target.files[0]);
+        if (files.length > 2) disabled.value = false;
+      }
+    };
+
+    const uploadFiles = async () => {
+      const formData = new FormData();
+      for (const file of files) {
+        formData.append("file", file);
+      }
+
+      status.value = await store.dispatch("uploadDocsAction", {
+        id: order.value.id,
+        formData: formData,
+      });
+    };
+
+    return {
+      changeFile,
+      uploadFiles,
+      status: status,
+    };
+  },
 });
 </script>

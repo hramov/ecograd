@@ -9,6 +9,7 @@ async function bootstrap() {
   app.setGlobalPrefix('api/v2');
   app.useGlobalPipes(new ValidationPipe());
   app.enableCors()
+
   const port = process.env.APP_PORT;
   await app.listen(port || 3000, () => {
     logger.debug(`Server started at port ${port}`);

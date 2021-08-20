@@ -45,13 +45,25 @@ export class FetchDataProvider {
   public async patch(
     url: string,
     id: number,
-    data: any
+    data: any,
+    isFile?: boolean
   ): Promise<AxiosResponse<any>> {
+    if (isFile)
+      return await axios
+        .patch(FetchDataProvider._makePath(url, id), data, {
+          headers: {
+            "Content-Type": "multipart/form-data",
+          },
+        })
+        .then((response) => response.data)
+        .catch((error) => {
+          console.log(error);
+        });
     return await axios
       .patch(FetchDataProvider._makePath(url, id), data)
       .then((response) => response.data)
       .catch((error) => {
-        throw new Error(error);
+        console.log(error);
       });
   }
 

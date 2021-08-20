@@ -18,10 +18,16 @@
             <tr v-for="order in orders" :key="order.id">
               <th scope="row">{{ order.id }}</th>
               <td>{{ order.object }}</td>
-              <td>{{ order.object_type }}</td>
-              <td>{{ new Date(order.created_at).toLocaleDateString() }}</td>
+              <td v-if="order.object_type == '1'">Линейный объект</td>
+              <td v-else-if="order.object_type == '2'">
+                Объект капитального строительства
+              </td>
               <td>
-                <div v-if="!order.files_url">
+                {{ new Date(order.createdAt).toLocaleDateString() }} в
+                {{ new Date(order.createdAt).toLocaleTimeString() }}
+              </td>
+              <td>
+                <div v-if="!order.docs_url">
                   <button
                     v-if="order.object_type == 2"
                     type="button"
@@ -39,6 +45,7 @@
                     class="btn btn-warning"
                     data-bs-toggle="modal"
                     data-bs-target="#uploadLineModal"
+                    @click.prevent="getOrder(order.id)"
                   >
                     Загрузить
                   </button>
@@ -46,7 +53,7 @@
                 <a
                   v-else
                   :href="
-                    'http://localhost:5000/api/v2/static' + order.files_url
+                    'http://localhost:5000/' + order.docs_url
                   "
                   class="btn btn-success"
                   >Скачать</a
@@ -72,21 +79,20 @@ export default defineComponent({
   setup() {
     const store = useStore();
     const client = computed(() => store.getters.getUser);
-    const orders = computed(() => {
-      return store.getters.getClientOrders; /**.map((order) => {
-        if (order.object_type == "1") order.object_type = "Линейный объект";
-        else if (order.object_type == "2")
-          order.object_type = "Объект капитального строительства";
-      }); **/
-    });
+    const orders = computed(() => store.getters.getClientOrders);
 
     onMounted(async () => {
-      await store.dispatch("getOrdersForClient", store.getters.getUser.id);
+      await store.dispatch("getOrdersForClient", client.value.id);
     });
+
+    const getOrder = async (id) => {
+      await store.dispatch("getOrderAction", id);
+    };
 
     return {
       client: client,
       orders: orders,
+      getOrder: getOrder,
     };
   },
 });

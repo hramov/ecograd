@@ -13,6 +13,10 @@ import { CreateOrderDto } from './dto/create-order.dto';
 import { UpdateOrderDto } from './dto/update-order.dto';
 import { Order } from './models/order.model';
 
+import archiver from 'archiver';
+import rootPath from 'app-root-path';
+import { createWriteStream, exists, existsSync, mkdir, mkdirSync } from 'fs';
+
 @Injectable()
 export class OrdersService {
   constructor(
@@ -26,7 +30,6 @@ export class OrdersService {
     try {
       const user = await this.userService.findOne(createOrderDto.userid);
       if (user && user.roles.some((role) => role.id === 3 || role.id === 1)) {
-
         const order = await this.orderRepository.create(createOrderDto);
         order.$set('client', user.id);
         order.client = user;
@@ -121,5 +124,25 @@ export class OrdersService {
     return await this.orderRepository.findAll({
       where: { clientid: clientid },
     });
+  }
+
+  async uploadDocs(id: number, files: Array<Express.Multer.File>) {
+    const order = await this.findOne(id);
+    const path = `uploads/orders/${id}_${Date.now().toString()}.zip`;
+    const url = `orders/${id}_${Date.now().toString()}.zip`;
+    const output = createWriteStream(path);
+    const archive = archiver('zip', {
+      zlib: { level: 9 },
+    });
+    archive.pipe(output);
+
+    for (let i = 0; i < files.length; i++) {
+      archive.append(files[i].buffer, { name: files[i].originalname });
+    }
+    archive.finalize();
+
+    order.docs_url = url;
+    order.save();
+    return true;
   }
 }

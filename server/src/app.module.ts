@@ -18,6 +18,9 @@ import { Expert } from './experts/models/expert.model';
 import { Order } from './orders/models/order.model';
 import { EmailModule } from './email/email.module';
 import { Feedback } from './orders/models/feedback.model';
+import { MulterModule } from '@nestjs/platform-express';
+import { ServeStaticModule } from '@nestjs/serve-static';
+import { join } from 'path/posix';
 
 @Module({
   imports: [
@@ -26,6 +29,14 @@ import { Feedback } from './orders/models/feedback.model';
     OrdersModule,
     ExpertsModule,
     AuthModule,
+
+    MulterModule.register({
+      dest: '@/upload',
+    }),
+
+    ServeStaticModule.forRoot({
+      rootPath: join(__dirname, '..', 'uploads'),
+    }),
 
     /** ENV configuration */
     ConfigModule.forRoot({
