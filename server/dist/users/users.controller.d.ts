@@ -12,7 +12,7 @@ export declare class UsersController {
     findUsersForExperts(): Promise<any[]>;
     findUExperts(): Promise<any[]>;
     addRole(dto: AddRoleDto): Promise<import("./models/user.model").User>;
-    removeRole(dto: AddRoleDto): Promise<import("../roles/models/role.model").Role[] | "User does not has this role" | "User or role not found">;
+    removeRole(dto: AddRoleDto): Promise<import("../roles/models/role.model").Role[] | "User or role not found" | "User does not has this role">;
     findOne(req: Request, id: number): Promise<import("./models/user.model").User>;
     update(req: Request, id: number, updateUserDto: UpdateUserDto): Promise<import("./models/user.model").User>;
     remove(req: Request, id: number): Promise<import("./models/user.model").User>;
