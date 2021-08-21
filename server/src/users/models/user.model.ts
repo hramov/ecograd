@@ -53,6 +53,9 @@ export class User extends Model<User, UserCreationAttrs> {
   @Column({ type: DataType.STRING, unique: false, allowNull: false })
   password: string;
 
+  @Column({ type: DataType.STRING, unique: true, allowNull: true })
+  image_url: string
+
   @HasMany(() => Order)
   orders: Order[];
 

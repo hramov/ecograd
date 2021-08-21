@@ -11,7 +11,6 @@ import {
   ParseIntPipe,
 } from '@nestjs/common';
 import { UsersService } from './users.service';
-import { AuthService } from './../auth/auth.service';
 import { CreateUserDto } from './dto/create-user.dto';
 import { UpdateUserDto } from './dto/update-user.dto';
 import { Roles } from 'src/auth/roles-auth.decorator';
@@ -25,7 +24,6 @@ import { JwtAccessGuard } from 'src/auth/jwt-access.guard';
 export class UsersController {
   constructor(
     private readonly usersService: UsersService,
-    private readonly authService: AuthService,
   ) {}
 
   @Roles(RolesEnum.Admin)
@@ -40,6 +38,20 @@ export class UsersController {
   @Get()
   async findAll() {
     return await this.usersService.findAll();
+  }
+
+  @Roles(RolesEnum.Admin)
+  @UseGuards(RolesGuard)
+  @Get('expert')
+  async findUsersForExperts() {
+    return await this.usersService.findUsersForExperts();
+  }
+
+  @Roles(RolesEnum.Admin)
+  @UseGuards(RolesGuard)
+  @Get('uexpert')
+  async findUExperts() {
+    return await this.usersService.findUExperts();
   }
 
   @Roles(RolesEnum.Admin)

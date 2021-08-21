@@ -16,44 +16,9 @@
           <p v-if="!isOpen">Добавить</p>
           <p v-else>Скрыть</p>
         </button>
-        <button
-          style="margin-left: 10px"
-          class="btn btn-warning"
-          type="button"
-          data-bs-toggle="collapse"
-          data-bs-target="#collapseFile"
-          aria-expanded="false"
-          aria-controls="collapseFile"
-        >
-          Из файла
-        </button>
       </h1>
     </div>
     <br />
-
-    <div
-      class="collapse"
-      id="collapseFile"
-      style="width: 50%; margin: 10px auto"
-    >
-      <div class="card card-body text-center">
-        <form enctype="multipart/form-data">
-          <div class="mb-3">
-            <input
-              type="file"
-              class="form-control"
-              placeholder="Выбрать"
-              accept=".csv"
-              ref="file"
-              @change="changeUploadCSV"
-            />
-          </div>
-          <button class="btn btn-success" @click.prevent="uploadCSV">
-            Загрузить
-          </button>
-        </form>
-      </div>
-    </div>
     <div
       class="collapse"
       id="collapseExample"
@@ -61,29 +26,16 @@
     >
       <div class="card card-body text-center">
         <form>
-          <div class="mb-3">
-            <input
-              type="text"
-              class="form-control"
-              placeholder="Фамилия"
-              v-model="expert.last_name"
-            />
-          </div>
-          <div class="mb-3">
-            <input
-              type="text"
-              class="form-control"
-              placeholder="Имя"
-              v-model="expert.name"
-            />
-          </div>
-          <div class="mb-3">
-            <input
-              type="text"
-              class="form-control"
-              placeholder="Отчество"
-              v-model="expert.second_name"
-            />
+          <div class="form-group">
+            <select
+              class="form-select"
+              aria-label="Default select example"
+              v-model="expert.userid"
+            >
+              <option v-for="user in users" :key="user.id" :value="user.id">
+                {{ user.last_name }} {{ user.name }}
+              </option>
+            </select>
           </div>
           <div class="mb-3">
             <input
@@ -93,31 +45,6 @@
               v-model="expert.position"
             />
           </div>
-          <div class="mb-3">
-            <input
-              type="date"
-              class="form-control"
-              placeholder="Дата рождения"
-              v-model="expert.birth_date"
-            />
-          </div>
-          <div class="mb-3">
-            <input
-              type="email"
-              class="form-control"
-              placeholder="Email"
-              v-model="expert.email"
-            />
-          </div>
-          <div class="mb-3">
-            <input
-              type="phone"
-              class="form-control"
-              placeholder="Телефон"
-              v-model="expert.phone"
-            />
-          </div>
-
           <div class="form-floating mb-3">
             <textarea
               class="form-control"
@@ -160,39 +87,41 @@
     <div class="row" v-if="isExperts">
       <div
         class="col-md-6 col-lg-4 col-sm-12 col-xl-4"
-        v-for="expert in experts"
-        :key="expert.id"
+        v-for="uexpert in uexperts"
+        :key="uexpert.id"
       >
         <div class="card">
           <img
-            v-if="expert.image_url"
-            :src="`http://localhost:5000/static/` + expert.image_url"
+            v-if="uexpert.image_url"
+            :src="`http://localhost:5000/` + uexpert.image_url"
             class="card-img-top"
             alt="..."
           />
           <img
             v-else
-            :src="`http://localhost:5000/static/users/img/dummy.png`"
+            :src="`http://localhost:5000/users/img/dummy.png`"
             class="card-img-top"
             alt="..."
           />
           <div class="card-body text-left">
-            <h5 class="card-title">{{ expert.last_name }} {{ expert.name }}</h5>
+            <h5 class="card-title">
+              {{ uexpert.last_name }} {{ uexpert.name }}
+            </h5>
             <h6 class="card-subtitle mb-2 text-muted">
-              <i class="fa fa-male"></i>{{ expert.position }}
+              <i class="fa fa-male"></i>{{ uexpert.expert.position }}
             </h6>
             <hr />
             <h6 class="card-subtitle mb-2 text-muted">
-              <i class="fa fa-envelope-square"></i>{{ expert.email }}
+              <i class="fa fa-envelope-square"></i>{{ uexpert.email }}
             </h6>
             <hr />
             <h6 class="card-subtitle mb-2 text-muted">
-              <i class="fa fa-phone"></i>{{ expert.phone }}
+              <i class="fa fa-phone"></i>{{ uexpert.phone }}
             </h6>
             <hr />
             <h6
               class="card-subtitle mb-2 text-muted"
-              v-for="c in expert.cert.split(';')"
+              v-for="c in uexpert.expert.cert.split(';')"
               :key="c"
             >
               <i class="fa fa-certificate"></i>{{ c }}
@@ -200,26 +129,30 @@
             <hr />
             <h6
               class="card-subtitle mb-2 text-muted"
-              v-for="dir in expert.direction.split(';')"
+              v-for="dir in uexpert.expert.direction.split(';')"
               :key="dir"
             >
               <i class="fa fa-compass"></i>{{ dir }}
             </h6>
             <hr />
+            <h6 class="card-subtitle mb-2 text-muted">
+              <i class="fa fa-compass"></i>{{ uexpert.expert.misc }}
+            </h6>
+            <hr />
             <div style="display: flex; justify-content: space-around">
-              <button
+              <!-- <button
                 type="button"
                 class="btn btn-warning"
                 data-bs-toggle="modal"
                 data-bs-target="#editExpertModal"
-                @click="editExpert(expert.id)"
+                @click="editExpert(uexpert.id)"
               >
                 Изменить
-              </button>
+              </button> -->
               <button
                 type="button"
                 class="btn btn-danger"
-                @click.prevent="deleteExpert(expert.id)"
+                @click.prevent="deleteExpert(uexpert.id)"
               >
                 Удалить
               </button>
@@ -241,8 +174,7 @@
 </template>
 
 <script lang="ts">
-import { IExpert, IOrder, IUser } from "@/custom/interfaces";
-import axios from "axios";
+import { IExpert, IOrder, IUser } from "./../../custom/interfaces";
 import { computed, defineComponent, onMounted, reactive, ref } from "vue";
 import { useStore } from "vuex";
 import EditExpertModal from "./EditExpertModal.vue";
@@ -269,13 +201,18 @@ export default defineComponent({
     const isOpenEditExpert = ref(false);
     const store = useStore();
     const file = ref(null);
+    const users = computed(() => store.getters.getUsers);
+    const uexperts = computed(() => store.getters.getUExperts);
 
     const getExperts = async () => {
       await store.dispatch("getExpertsAction");
+      await store.dispatch("getUsersAction");
+      await store.dispatch("getUExpertsAction");
       isExperts.value = true;
     };
 
     const addExpert = async () => {
+      console.log(expert);
       await store.dispatch("addExpertAction", expert);
       document.getElementById("addExpertBtn")!.click();
       await getExperts();
@@ -291,32 +228,9 @@ export default defineComponent({
     if (experts.value.length > 0) isExperts.value = true;
     else isExperts.value = false;
 
-    const changeUploadCSV = (e: any) => {
-      var files = e.target.files || e.dataTransfer.files;
-      if (!files.length) return;
-      file.value = files[0];
-    };
-
-    const uploadCSV = async () => {
-      let formData = new FormData();
-      formData.append("file", file.value!);
-      await axios
-        .post("http://localhost:5000/api/v2/experts/import", formData, {
-          headers: {
-            "Content-Type": "multipart/form-data",
-          },
-        })
-        .then(function () {
-          console.log("SUCCESS!!");
-        })
-        .catch(function () {
-          console.log("FAILURE!!");
-        });
-    };
-
     const editExpert = async (id: number) => {
       isOpenEditExpert.value = true;
-      await store.dispatch("getSingleExpertAction", id);
+      await store.dispatch("getUExpertAction", id);
     };
 
     const deleteExpert = async (id: number) => {
@@ -325,15 +239,15 @@ export default defineComponent({
     };
 
     return {
+      users: users,
       experts: experts,
+      uexperts: uexperts,
       isExperts: isExperts,
       expert: expert,
       isOpen: isOpen,
       editedExpert: editedExpert,
       addExpert: addExpert,
       editExpert: editExpert,
-      uploadCSV: uploadCSV,
-      changeUploadCSV: changeUploadCSV,
       deleteExpert: deleteExpert,
     };
   },

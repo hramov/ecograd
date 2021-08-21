@@ -9,20 +9,20 @@
       <br />
       <div class="row">
         <div
-          class="col-md-6 col-lg-4 col-sm-12 col-xl-4"
+          class="col-md-4 col-lg-4 col-sm-6 col-xl-3"
           v-for="expert in experts"
-          :key="expert.id"
+          :key="expert.expert.id"
         >
           <div class="card">
             <img
               v-if="expert.image_url"
-              :src="`http://localhost:5000/static/` + expert.image_url"
+              :src="`http://localhost:5000/` + expert.image_url"
               class="card-img-top"
               alt="..."
             />
             <img
               v-else
-              :src="`http://localhost:5000/static/users/img/dummy.png`"
+              :src="`http://localhost:5000/users/img/dummy.png`"
               class="card-img-top"
               alt="..."
             />
@@ -31,12 +31,12 @@
                 {{ expert.last_name }} {{ expert.name }}
               </h5>
               <h6 class="card-subtitle mb-2 text-muted">
-                <i class="fa fa-male"></i>{{ expert.position }}
+                <i class="fa fa-male"></i>{{ expert.expert.position }}
               </h6>
               <hr />
               <h6
                 class="card-subtitle mb-2 text-muted"
-                v-for="c in expert.cert.split(';')"
+                v-for="c in expert.expert.cert.split(';')"
                 :key="c"
               >
                 <i class="fa fa-certificate"></i>{{ c }}
@@ -44,7 +44,7 @@
               <hr />
               <h6
                 class="card-subtitle mb-2 text-muted"
-                v-for="dir in expert.direction.split(';')"
+                v-for="dir in expert.expert.direction.split(';')"
                 :key="dir"
               >
                 <i class="fa fa-compass"></i>{{ dir }}
@@ -64,10 +64,10 @@ import { useStore } from "vuex";
 export default defineComponent({
   setup() {
     const store = useStore();
-    const experts = computed(() => store.getters.getExperts);
+    const experts = computed(() => store.getters.getUExperts);
 
     onMounted(async () => {
-      await store.dispatch("getExpertsAction");
+      await store.dispatch("getUExpertsAction");
     });
 
     return {

@@ -6,9 +6,12 @@ import store from "./index";
 const state = {
   jwt_token: "" || (localStorage.getItem("jwt_token") as string),
   user: null || (JSON.parse(localStorage.getItem("user")!) as IUser),
+  users: [] as IUser[],
   isLoggedIn:
     false || (!!JSON.parse(localStorage.getItem("user")!).id as boolean),
   isAdmin: false,
+  uexperts: [],
+  uexpert: {}
 };
 
 const mutations = {
@@ -27,6 +30,15 @@ const mutations = {
   },
   setIsAdmin(state: any, data: boolean) {
     state.isAdmin = data;
+  },
+  setUsers(state: any, data: any) {
+    state.users = data;
+  },
+  setUExperts(state: any, data: any) {
+    state.uexperts = data;
+  },
+  setUExpert(state: any, data: any) {
+    state.uexpert = data;
   },
 };
 const actions = {
@@ -59,6 +71,18 @@ const actions = {
     const fdProvider = new FetchDataProvider();
     commit("setIsAdmin", await fdProvider.get("auth/check-jwt"));
   },
+  async getUsersAction({ commit }: any) {
+    const fdProvider = new FetchDataProvider();
+    commit("setUsers", await fdProvider.get("users/expert"));
+  },
+  async getUExpertsAction({ commit }: any) {
+    const fdProvider = new FetchDataProvider();
+    commit("setUExperts", await fdProvider.get("users/uexpert"));
+  },
+  async getUExpertAction({ commit }: any, id: number) {
+    const fdProvider = new FetchDataProvider();
+    commit("setUExpert", await fdProvider.get(`users/${id}`));
+  },
 };
 const getters = {
   getJWT: (state: any) =>
@@ -67,6 +91,9 @@ const getters = {
   getUser: (state: any) =>
     state.user || JSON.parse(localStorage.getItem("user")!),
   getIsLoggedIn: (state: any) => state.isLoggedIn,
+  getUsers: (state: any) => state.users,
+  getUExperts: (state: any) => state.uexperts,
+  getUExpert: (state: any) => state.uexpert,
 };
 
 export default {

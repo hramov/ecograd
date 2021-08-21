@@ -6,7 +6,7 @@
     aria-labelledby="editExpertModalLable"
     aria-hidden="true"
   >
-    <div class="modal-dialog">
+    <!-- <div class="modal-dialog">
       <div class="modal-content">
         <div v-if="isUpdated.touched" class="text-center">
           <div v-if="!isUpdated.status" class="alert alert-danger" role="alert">
@@ -31,7 +31,7 @@
 
         <div class="modal-body">
           <form>
-            <div v-if="!isImage" class="form-group">
+            <div v-if="!expert.image_url" class="form-group">
               <input
                 id="image_url"
                 type="file"
@@ -43,12 +43,10 @@
             </div>
             <div v-else class="form-group text-center">
               <img
-                :src="`http://localhost:5000/static/` + expert.image_url"
+                :src="`http://localhost:5000/` + expert.image_url"
                 style="width: 100%; margin-bottom: 10px"
               />
-              <button class="btn btn-warning" @click="isImage = false">
-                Изменить аватар
-              </button>
+              <button class="btn btn-warning">Изменить аватар</button>
             </div>
 
             <div class="form-group">
@@ -102,7 +100,7 @@
                 type="text"
                 class="form-control"
                 placeholder="Должность"
-                v-model="expert.position"
+                v-model="expert.expert.position"
               />
             </div>
             <div class="form-group">
@@ -121,7 +119,7 @@
                 class="form-control"
                 rows="3"
                 style="height: 100%"
-                v-model="expert.cert"
+                v-model="expert.expert.cert"
               ></textarea>
               <label for="floatingTextarea">Квалификационный аттестат</label>
             </div>
@@ -131,7 +129,7 @@
                 class="form-control"
                 rows="3"
                 style="height: 100%"
-                v-model="expert.direction"
+                v-model="expert.expert.direction"
               ></textarea>
               <label for="floatingTextarea">Направления исследований</label>
             </div>
@@ -141,7 +139,7 @@
                 class="form-control"
                 rows="3"
                 style="height: 100%"
-                v-model="expert.misc"
+                v-model="expert.expert.misc"
               ></textarea>
               <label for="floatingTextarea">Примечания</label>
             </div>
@@ -157,7 +155,7 @@
           >
         </div>
       </div>
-    </div>
+    </div> -->
   </div>
 </template>
 
@@ -168,6 +166,8 @@ import { useStore } from "vuex";
 
 export default defineComponent({
   setup() {
+    const expert = computed(() => store.getters.getUExpert);
+  
     const store = useStore();
     const isLoaded = ref(false);
     const isUpdated = reactive({
@@ -176,8 +176,6 @@ export default defineComponent({
     });
     const file = ref(null);
     const isImage = ref(false);
-
-    const expert = computed(() => store.getters.getExpert);
 
     watch(expert, (val) => {
       if (val.image_url != "") {
@@ -202,9 +200,8 @@ export default defineComponent({
           },
         }
       );
-      // store.commit("setExpert", expert.value);
 
-      await store.dispatch('getExpertsAction')
+      await store.dispatch("getExpertsAction");
 
       isUpdated.status = result.data.status;
       isUpdated.touched = true;

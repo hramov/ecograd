@@ -23,7 +23,6 @@ export class ValidationPipe implements PipeTransform<any> {
             ',',
           )}`;
         });
-        // console.log(message);
         throw new HttpException(message, HttpStatus.OK);
       }
       return value;

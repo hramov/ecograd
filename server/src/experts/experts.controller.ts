@@ -23,6 +23,7 @@ export class ExpertsController {
   @UseGuards(RolesGuard)
   @Post()
   async create(@Body() createExpertDto: CreateExpertDto) {
+    console.log(createExpertDto)
     return await this.expertsService.create(createExpertDto);
   }
 

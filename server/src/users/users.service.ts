@@ -13,6 +13,9 @@ import { User } from './models/user.model';
 import { RolesService } from 'src/roles/roles.service';
 import { AddRoleDto } from './dto/add-role.dto';
 import { hash } from 'bcryptjs';
+import { UserRole } from './models/user-role.model';
+import { Op } from 'sequelize';
+import { RolesEnum } from 'src/auth/roles-enum';
 
 @Injectable()
 export class UsersService {
@@ -20,7 +23,8 @@ export class UsersService {
 
   constructor(
     @InjectModel(User) private userRepository: typeof User,
-    private rolesService: RolesService
+    @InjectModel(UserRole) private userRoleRepository: typeof UserRole,
+    private rolesService: RolesService,
   ) {}
 
   async create(createUserDto: CreateUserDto) {
@@ -37,7 +41,7 @@ export class UsersService {
 
   async findAll() {
     const users = await this.userRepository.findAll({ include: { all: true } });
-    if (users.length == 0) throw new NotFoundException('User not found')
+    if (users.length == 0) throw new NotFoundException('User not found');
     return users;
   }
 
@@ -113,5 +117,34 @@ export class UsersService {
       throw new BadRequestException('User does not has this role');
     }
     throw new HttpException('User or role not found', HttpStatus.NOT_FOUND);
+  }
+
+  async findUsersForExperts() {
+    const ids = await this.userRoleRepository.findAll({
+      where: { roleid: { [Op.ne]: RolesEnum.Client } },
+    });
+    const users = [];
+    for await (const id of ids) {
+      const user = await this.userRepository.findByPk(id.userid, {
+        include: { all: true },
+      });
+      if (!users.includes(user)) users.push(user);
+    }
+    console.log(users.length);
+    return users;
+  }
+
+  async findUExperts() {
+    const ids = await this.userRoleRepository.findAll({
+      where: { roleid: RolesEnum.Expert },
+    });
+    const users = [];
+    for await (const id of ids) {
+      const user = await this.userRepository.findByPk(id.userid, {
+        include: { all: true },
+      });
+      users.push(user);
+    }
+    return users;
   }
 }
