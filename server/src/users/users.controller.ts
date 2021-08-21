@@ -9,6 +9,8 @@ import {
   UseGuards,
   Req,
   ParseIntPipe,
+  UseInterceptors,
+  UploadedFiles,
 } from '@nestjs/common';
 import { UsersService } from './users.service';
 import { CreateUserDto } from './dto/create-user.dto';
@@ -19,6 +21,7 @@ import { RolesEnum } from 'src/auth/roles-enum';
 import { AddRoleDto } from './dto/add-role.dto';
 import { Request } from 'express';
 import { JwtAccessGuard } from 'src/auth/jwt-access.guard';
+import { AnyFilesInterceptor } from '@nestjs/platform-express';
 
 @Controller('users')
 export class UsersController {
@@ -47,8 +50,8 @@ export class UsersController {
     return await this.usersService.findUsersForExperts();
   }
 
-  @Roles(RolesEnum.Admin)
-  @UseGuards(RolesGuard)
+  // @Roles(RolesEnum.Admin)
+  // @UseGuards(RolesGuard)
   @Get('uexpert')
   async findUExperts() {
     return await this.usersService.findUExperts();
@@ -88,5 +91,16 @@ export class UsersController {
   @Delete(':id')
   async remove(@Req() req: Request, @Param('id', ParseIntPipe) id: number) {
     return await this.usersService.remove(id);
+  }
+
+  @Roles(RolesEnum.Admin)
+  @UseGuards(RolesGuard)
+  @Patch('image/:id')
+  @UseInterceptors(AnyFilesInterceptor())
+  async appendImage(
+    @Param('id') id: number,
+    @UploadedFiles() file: Express.Multer.File,
+  ) {
+    return await this.usersService.appendImage(id, file[0]);
   }
 }

@@ -1,5 +1,6 @@
 import { BadRequestException, Injectable } from '@nestjs/common';
 import { InjectModel } from '@nestjs/sequelize';
+import { writeFileSync } from 'fs';
 import { UsersService } from 'src/users/users.service';
 import { CreateExpertDto } from './dto/create-expert.dto';
 import { UpdateExpertDto } from './dto/update-expert.dto';
@@ -13,7 +14,11 @@ export class ExpertsService {
   ) {}
 
   async create(createExpertDto: CreateExpertDto) {
-    return await this.expertRepository.create(createExpertDto);
+    const user = await this.userService.findOne(createExpertDto.userid);
+    const expert = await this.expertRepository.create(createExpertDto);
+    expert.user = user;
+    expert.save();
+    return expert;
   }
 
   async findAll() {

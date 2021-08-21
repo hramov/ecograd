@@ -13,7 +13,7 @@
           aria-controls="collapseExample"
           @click="isOpen = !isOpen"
         >
-          <p v-if="!isOpen">Добавить</p>
+          <p v-if="!isOpen">Добавить / Изменить</p>
           <p v-else>Скрыть</p>
         </button>
       </h1>
@@ -27,15 +27,38 @@
       <div class="card card-body text-center">
         <form>
           <div class="form-group">
+            <label for="select_user">Пользователь</label>
             <select
+              id="select_user"
               class="form-select"
               aria-label="Default select example"
               v-model="expert.userid"
+              @change="getExpert(expert.userid)"
             >
-              <option v-for="user in users" :key="user.id" :value="user.id">
-                {{ user.last_name }} {{ user.name }}
+              <option
+                v-for="uexpert in uexperts"
+                :key="uexpert.id"
+                :value="uexpert.id"
+              >
+                {{ uexpert.last_name }} {{ uexpert.name }}
               </option>
             </select>
+          </div>
+          <div v-if="!uexpert.image_url" class="form-group">
+            <input
+              id="image_url"
+              type="file"
+              class="form-control"
+              placeholder="Ссылка на аватар"
+              ref="file"
+              @change="changeUploadImage"
+            />
+          </div>
+          <div v-else class="form-group">
+            <img
+              :src="`http://localhost:5000/` + uexpert.image_url"
+              style="width: 100%; margin-bottom: 10px"
+            />
           </div>
           <div class="mb-3">
             <input
@@ -77,7 +100,10 @@
           <a
             style="margin: 0 auto; cursor: pointer"
             class="btn-get-started"
-            @click.prevent="addExpert"
+            @click.prevent="
+              isTouched = true;
+              addExpert();
+            "
             >Сохранить</a
           >
         </form>
@@ -140,15 +166,6 @@
             </h6>
             <hr />
             <div style="display: flex; justify-content: space-around">
-              <!-- <button
-                type="button"
-                class="btn btn-warning"
-                data-bs-toggle="modal"
-                data-bs-target="#editExpertModal"
-                @click="editExpert(uexpert.id)"
-              >
-                Изменить
-              </button> -->
               <button
                 type="button"
                 class="btn btn-danger"
@@ -169,7 +186,6 @@
     >
       Экспертов нет!
     </div>
-    <EditExpertModal />
   </section>
 </template>
 
@@ -177,15 +193,10 @@
 import { IExpert, IOrder, IUser } from "./../../custom/interfaces";
 import { computed, defineComponent, onMounted, reactive, ref } from "vue";
 import { useStore } from "vuex";
-import EditExpertModal from "./EditExpertModal.vue";
 
 export default defineComponent({
-  components: {
-    EditExpertModal,
-  },
-
   setup() {
-    let expert: IExpert = reactive({
+    const expert: IExpert = reactive({
       id: 0,
       userid: 0,
       position: "",
@@ -198,11 +209,23 @@ export default defineComponent({
 
     const isOpen = ref(false);
     const isExperts = ref(false);
-    const isOpenEditExpert = ref(false);
     const store = useStore();
-    const file = ref(null);
+    let file: any = null;
     const users = computed(() => store.getters.getUsers);
     const uexperts = computed(() => store.getters.getUExperts);
+    const uexpert = computed(() => store.getters.getUExpert);
+    const status = ref(false);
+    const isTouched = ref(false);
+
+    onMounted(async () => {
+      await getExperts();
+    });
+
+    const changeUploadImage = async (e: any) => {
+      var files = e.target.files || e.dataTransfer.files;
+      if (!files.length) return;
+      file = files[0];
+    };
 
     const getExperts = async () => {
       await store.dispatch("getExpertsAction");
@@ -212,43 +235,52 @@ export default defineComponent({
     };
 
     const addExpert = async () => {
-      console.log(expert);
-      await store.dispatch("addExpertAction", expert);
+      let formData = null
+      if (file != null) {
+        formData = new FormData();
+        formData.append("file", file);
+      }
+
+      status.value = await store.dispatch("addExpertAction", {
+        expert: expert,
+        formData: formData,
+      });
+
       document.getElementById("addExpertBtn")!.click();
       await getExperts();
     };
 
-    onMounted(async () => {
-      await getExperts();
-    });
-
     const experts = computed(() => store.getters.getExperts);
-    const editedExpert = computed(() => store.getters.getExpert);
 
     if (experts.value.length > 0) isExperts.value = true;
     else isExperts.value = false;
-
-    const editExpert = async (id: number) => {
-      isOpenEditExpert.value = true;
-      await store.dispatch("getUExpertAction", id);
-    };
 
     const deleteExpert = async (id: number) => {
       await store.dispatch("deleteExpertAction", id);
       await getExperts();
     };
 
+    const getExpert = async (id: number) => {
+      await store.dispatch("getUserForExpertAction", id);
+      expert.position = uexpert.value.expert.position || "";
+      expert.cert = uexpert.value.expert.cert || "";
+      expert.direction = uexpert.value.expert.direction || "";
+      expert.misc = uexpert.value.expert.misc || "";
+    };
+
     return {
       users: users,
       experts: experts,
       uexperts: uexperts,
+      uexpert: uexpert,
       isExperts: isExperts,
       expert: expert,
       isOpen: isOpen,
-      editedExpert: editedExpert,
+      isTouched: isTouched,
+      getExpert: getExpert,
       addExpert: addExpert,
-      editExpert: editExpert,
       deleteExpert: deleteExpert,
+      changeUploadImage: changeUploadImage,
     };
   },
 });

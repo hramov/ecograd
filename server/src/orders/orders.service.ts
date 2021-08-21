@@ -27,16 +27,12 @@ export class OrdersService {
   ) {}
 
   async create(createOrderDto: CreateOrderDto) {
-    try {
-      const user = await this.userService.findOne(createOrderDto.userid);
-      if (user && user.roles.some((role) => role.id === 3 || role.id === 1)) {
-        const order = await this.orderRepository.create(createOrderDto);
-        order.$set('client', user.id);
-        order.client = user;
-        return order;
-      }
-    } catch (err) {
-      console.log(err);
+    const user = await this.userService.findOne(createOrderDto.userid);
+    if (user && user.roles.some((role) => role.id === 3 || role.id === 1)) {
+      const order = await this.orderRepository.create(createOrderDto);
+      order.$set('client', user.id);
+      order.client = user;
+      return order;
     }
     return `You should be a client to make orders`;
   }
@@ -113,10 +109,8 @@ export class OrdersService {
 
   async addExpert(id: number, expertid: number) {
     const order = await this.findOne(id);
-    if (order.expert)
-      throw new BadRequestException('Order already has an expert');
+    if (order.expert) return 'Order already has an expert';
     order.$set('expert', expertid);
-    order.expert = await this.expertService.findOne(expertid);
     return order;
   }
 

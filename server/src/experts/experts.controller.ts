@@ -7,6 +7,8 @@ import {
   Param,
   Delete,
   UseGuards,
+  UseInterceptors,
+  UploadedFiles,
 } from '@nestjs/common';
 import { ExpertsService } from './experts.service';
 import { CreateExpertDto } from './dto/create-expert.dto';
@@ -14,6 +16,7 @@ import { UpdateExpertDto } from './dto/update-expert.dto';
 import { RolesEnum } from 'src/auth/roles-enum';
 import { RolesGuard } from 'src/auth/roles.guard';
 import { Roles } from 'src/auth/roles-auth.decorator';
+import { AnyFilesInterceptor } from '@nestjs/platform-express';
 
 @Controller('experts')
 export class ExpertsController {
@@ -23,7 +26,6 @@ export class ExpertsController {
   @UseGuards(RolesGuard)
   @Post()
   async create(@Body() createExpertDto: CreateExpertDto) {
-    console.log(createExpertDto)
     return await this.expertsService.create(createExpertDto);
   }
 
@@ -34,8 +36,8 @@ export class ExpertsController {
     return await this.expertsService.findAll();
   }
 
-  // @Roles(RolesEnum.Admin, RolesEnum.Expert)
-  // @UseGuards(RolesGuard)
+  @Roles(RolesEnum.Admin, RolesEnum.Expert)
+  @UseGuards(RolesGuard)
   @Get(':id')
   async findOne(@Param('id') id: number) {
     return await this.expertsService.findOne(id);

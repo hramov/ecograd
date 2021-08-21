@@ -36,8 +36,8 @@ const router = createRouter({
 });
 
 router.beforeEach(async (to, from, next) => {
-  await store.dispatch("isAdminAction");
   if (to.path == "/dashboard") {
+    await store.dispatch("isAdminAction");
     store.getters.getIsAdmin ? next() : next("/");
     return;
   }

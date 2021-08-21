@@ -53,7 +53,6 @@ export class OrdersController {
   @UseGuards(RolesGuard)
   @Get('client/:clientid')
   async findByClientId(@Param('clientid') clientid: number) {
-    console.log(123);
     return await this.ordersService.findByClientId(clientid);
   }
 

@@ -16,6 +16,7 @@ import { hash } from 'bcryptjs';
 import { UserRole } from './models/user-role.model';
 import { Op } from 'sequelize';
 import { RolesEnum } from 'src/auth/roles-enum';
+import { writeFileSync } from 'fs';
 
 @Injectable()
 export class UsersService {
@@ -94,8 +95,10 @@ export class UsersService {
     const role = await this.rolesService.findOne(dto.roleid);
 
     if (role && user) {
-      if (user.roles.some((r) => r.id == role.id))
-        throw new BadRequestException('User already has this role');
+      if (user.roles.some((r) => r.id == role.id)) {
+        console.log('User already has this role');
+        return;
+      }
 
       await user.$add('role', role.id);
 
@@ -114,9 +117,9 @@ export class UsersService {
         await user.$remove('role', role.id);
         return user.roles.filter((r) => r.id != role.id);
       }
-      throw new BadRequestException('User does not has this role');
+      return 'User does not has this role';
     }
-    throw new HttpException('User or role not found', HttpStatus.NOT_FOUND);
+    return 'User or role not found';
   }
 
   async findUsersForExperts() {
@@ -130,7 +133,6 @@ export class UsersService {
       });
       if (!users.includes(user)) users.push(user);
     }
-    console.log(users.length);
     return users;
   }
 
@@ -146,5 +148,18 @@ export class UsersService {
       users.push(user);
     }
     return users;
+  }
+
+  async appendImage(id: number, file: Express.Multer.File) {
+    if (!file) return "No file"
+    const user = await this.findOne(id);
+    const path = `uploads/users/img/user_${id}.${
+      file.mimetype.toString().split('/')[1]
+    }`;
+    const url = `users/img/user_${id}.${file.mimetype.split('/')[1]}`;
+    writeFileSync(path, file.buffer);
+    user.image_url = url;
+    user.save();
+    return user;
   }
 }

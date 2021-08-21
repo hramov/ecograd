@@ -14,7 +14,6 @@ import { ROLES_KEY } from './roles-auth.decorator';
 export class RolesGuard implements CanActivate {
   constructor(private jwtService: JwtService, private reflector: Reflector) {}
 
-  // @Try
   canActivate(
     context: ExecutionContext,
   ): boolean | Promise<boolean> | Observable<boolean> {
@@ -24,8 +23,7 @@ export class RolesGuard implements CanActivate {
     );
 
     const req = context.switchToHttp().getRequest();
-    if (!req.headers.authorization)
-      throw new UnauthorizedException('Unauthorized');
+    if (!req.headers.authorization) return false;
 
     if (!requiredRoles) return true;
 
@@ -33,8 +31,7 @@ export class RolesGuard implements CanActivate {
     const bearer = authHeader.split(' ')[0];
     const token = authHeader.split(' ')[1];
 
-    if (bearer != 'Bearer' || !token)
-      throw new UnauthorizedException('Unauthorized');
+    if (bearer != 'Bearer' || !token) return false;
 
     const user = this.jwtService.verify(token);
     req.user = user;

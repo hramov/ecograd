@@ -138,7 +138,6 @@ export default defineComponent({
         ? await store.dispatch("addOrder", order)
         : await store.dispatch("addOrderUnauthorized", order);
 
-      console.log(result)
       status.value = result.order?.id ? true : false;
 
       if (!user.value.id) {

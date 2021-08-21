@@ -15,7 +15,7 @@
             <th scope="col">Объект</th>
             <th scope="col">E-mail</th>
             <th scope="col">Телефон</th>
-            <th scope="col">Исполнитель</th>
+            <th scope="col">Документы</th>
           </tr>
         </thead>
         <tbody>
@@ -29,7 +29,8 @@
               {{ order.exec.last_name }} {{ order.exec.name }}
               {{ order.exec.id }}
             </td>
-            <td v-if="order.exec && order.exec.id == user_id">
+            <!-- <td v-if="order.exec && order.exec.id == user_id"> -->
+              <td>
               <a
                 v-if="order.is_docs"
                 type="button"
@@ -40,15 +41,15 @@
               <p class="btn-danger" v-else>Документов пока нет</p>
             </td>
 
-            <td v-else>
+            <!-- <td v-else>
               <button
                 type="button"
                 class="btn btn-success"
-                @click="getWork(order)"
+                @click="getWork(order.id)"
               >
                 Взять
               </button>
-            </td>
+            </td> -->
           </tr>
         </tbody>
       </table>
@@ -90,16 +91,15 @@ export default defineComponent({
     });
 
     const orders = computed(() => store.getters.getOrders);
-    console.log(orders.value)
+    console.log(orders.value);
     if (orders.value) isOrders.value = true;
     else isOrders.value = false;
 
     const getWork = async (order: any) => {
-      const result = await axios.post(
-        "http://localhost:5000/api/v2/admin/take-order",
+      const result = await axios.patch(
+        `http://localhost:5000/api/v2/orders/expert/${order}`,
         {
-          order: order,
-          user: user.value,
+          expertid: user.value.id,
         },
         {
           headers: {

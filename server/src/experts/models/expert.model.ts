@@ -39,6 +39,9 @@ export class Expert extends Model<Expert, ExpertCreationAttrs> {
   @Column({ type: DataType.STRING, allowNull: true })
   misc: string;
 
+  @Column({ type: DataType.STRING, allowNull: true, defaultValue: '' })
+  image_url: string;
+
   @HasMany(() => Order, { onDelete: 'CASCADE' })
   orders: Order[];
 

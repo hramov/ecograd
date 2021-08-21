@@ -658,7 +658,6 @@ export default defineComponent({
     const uploadFiles = async () => {
       let formData = new FormData();
       for (const file of files) {
-        console.log(file)
         formData.append("file", file);
       }
 

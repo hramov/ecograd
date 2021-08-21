@@ -11,19 +11,15 @@ const state = {
     false || (!!JSON.parse(localStorage.getItem("user")!).id as boolean),
   isAdmin: false,
   uexperts: [],
-  uexpert: {}
+  uexpert: {},
 };
 
 const mutations = {
   setJWT(state: any, token: string) {
     state.jwt_token = token;
   },
-  setUser(state: any, data?: IUser) {
-    if (!data && localStorage.getItem("user")) {
-      state.user = JSON.parse(localStorage.getItem("user")!) as IUser;
-      return;
-    }
-    state.user = data;
+  setUserForExpert(state: any, data?: IUser) {
+    state.uexpert = data;
   },
   setIsLoggedIn(state: any, data: boolean) {
     state.isLoggedIn = data;
@@ -33,6 +29,9 @@ const mutations = {
   },
   setUsers(state: any, data: any) {
     state.users = data;
+  },
+  setUser(state: any, data: any) {
+    state.user = data;
   },
   setUExperts(state: any, data: any) {
     state.uexperts = data;
@@ -66,6 +65,10 @@ const actions = {
     commit("setUser", {});
     router.push("/");
     return true;
+  },
+  async getUserForExpertAction({ commit }: any, id: any) {
+    const fdProvider = new FetchDataProvider();
+    commit("setUserForExpert", await fdProvider.get(`users/${id}`));
   },
   async isAdminAction({ commit }: any) {
     const fdProvider = new FetchDataProvider();
