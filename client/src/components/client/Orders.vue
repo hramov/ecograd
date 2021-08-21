@@ -53,7 +53,7 @@
                 <a
                   v-else
                   :href="
-                    'http://localhost:5000/' + order.docs_url
+                    '' + order.docs_url
                   "
                   class="btn btn-success"
                   >Скачать</a

@@ -16,13 +16,13 @@
           <div class="card">
             <img
               v-if="expert.image_url"
-              :src="`http://localhost:5000/` + expert.image_url"
+              :src="`` + expert.image_url"
               class="card-img-top"
               alt="..."
             />
             <img
               v-else
-              :src="`http://localhost:5000/users/img/dummy.png`"
+              :src="`users/img/dummy.png`"
               class="card-img-top"
               alt="..."
             />

@@ -2,7 +2,7 @@ import axios, { AxiosResponse, AxiosError } from "axios";
 import store from "./../store/index";
 
 export class FetchDataProvider {
-  private static _backendUrl = "http://localhost:5000/api/v2";
+  private static _backendUrl = "api/v2";
 
   constructor() {
     axios.defaults.headers.common[

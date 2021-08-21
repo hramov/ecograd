@@ -79,25 +79,21 @@ export default defineComponent({
     const user_id = user.value.id;
 
     const getOrders = async () => {
-      if (await store.dispatch("getOrdersAction")) {
-        isLoaded.value = true;
-      } else {
-        isLoaded.value = false;
-      }
+      await store.dispatch("getOrdersAction")
     };
 
     onMounted(async () => {
       await getOrders();
+      isLoaded.value = true
     });
 
     const orders = computed(() => store.getters.getOrders);
-    console.log(orders.value);
     if (orders.value) isOrders.value = true;
     else isOrders.value = false;
 
     const getWork = async (order: any) => {
       const result = await axios.patch(
-        `http://localhost:5000/api/v2/orders/expert/${order}`,
+        `api/v2/orders/expert/${order}`,
         {
           expertid: user.value.id,
         },

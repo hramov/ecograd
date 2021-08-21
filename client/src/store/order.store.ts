@@ -23,6 +23,7 @@ const actions = {
   async getOrderAction({ commit }: any, id: number) {
     const fdProvider = new FetchDataProvider();
     commit("setOrder", await fdProvider.get("orders", id));
+    return true
   },
   async addOrderUnauthorized(_: any, order: any) {
     const fdProvider = new FetchDataProvider();

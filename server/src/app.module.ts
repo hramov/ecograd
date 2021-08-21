@@ -35,7 +35,7 @@ import { join } from 'path/posix';
     }),
 
     ServeStaticModule.forRoot({
-      rootPath: join(__dirname, '..', 'uploads'),
+      rootPath: join(__dirname, '..', 'public'),
     }),
 
     /** ENV configuration */

@@ -56,7 +56,7 @@
           </div>
           <div v-else class="form-group">
             <img
-              :src="`http://localhost:5000/` + uexpert.image_url"
+              :src="`` + uexpert.image_url"
               style="width: 100%; margin-bottom: 10px"
             />
           </div>
@@ -119,13 +119,13 @@
         <div class="card">
           <img
             v-if="uexpert.image_url"
-            :src="`http://localhost:5000/` + uexpert.image_url"
+            :src="`` + uexpert.image_url"
             class="card-img-top"
             alt="..."
           />
           <img
             v-else
-            :src="`http://localhost:5000/users/img/dummy.png`"
+            :src="`users/img/dummy.png`"
             class="card-img-top"
             alt="..."
           />

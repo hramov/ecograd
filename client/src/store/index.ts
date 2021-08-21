@@ -10,7 +10,7 @@ import client from './client.store'
 export default createStore({
   state: {
     router: {} as Router | null,
-    backendUrl: 'http://localhost:5000/api/v2'
+    backendUrl: 'api/v2'
   },
 
   mutations: {
