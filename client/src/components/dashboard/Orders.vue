@@ -41,7 +41,7 @@
               <p class="btn-danger" v-else>Документов пока нет</p>
             </td>
 
-            <td v-else-if="(user.role =='admin' || user.role =='expert') && order.status == 'new'">
+            <td v-else-if="user.role =='admin' || user.role =='expert' && order.status == 'new'">
               <button
                 type="button"
                 class="btn btn-success"

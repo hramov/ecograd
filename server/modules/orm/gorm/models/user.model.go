@@ -15,6 +15,6 @@ type User struct {
 	Cert       string   `json:"cert"`
 	Directions string   `json:"directions"`
 	Misc       string   `json:"misc"`
-	Works      []*Order `binding:"required" gorm:"foreignkey:ExpertID"`
-	Orders     []*Order `binding:"required" gorm:"foreignkey:ClientID"`
+	Works      []*Order `binding:"required" gorm:"foreignkey:ExpertID; constraint:OnUpdate:CASCADE,OnDelete:CASCADE;"`
+	Orders     []*Order `binding:"required" gorm:"foreignkey:ClientID; constraint:OnUpdate:CASCADE,OnDelete:CASCADE;"`
 }

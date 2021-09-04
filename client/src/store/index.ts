@@ -10,7 +10,7 @@ import client from './client.store'
 export default createStore({
   state: {
     router: {} as Router | null,
-    backendUrl: "http://localhost:5000"
+    backendUrl: process.env.VUE_APP_BACKEND
   },
 
   mutations: {

@@ -7,7 +7,6 @@
     aria-hidden="true"
   >
     <div class="modal-dialog">
-      {{ isLoggedIn }}
       <div class="modal-content">
         <div
           v-if="!isLoggedIn && isTouched"

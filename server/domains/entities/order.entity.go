@@ -105,6 +105,7 @@ func (oe *OrderEntity) AssignToExpert(id, expert_id uint64) (*dto.OrderDto, erro
 	}
 
 	order.ExpertID = &expert_id
+	order.Status = "taken"
 	order, err = oe.Provider.Save(order)
 	if err != nil {
 		return nil, err

@@ -30,14 +30,14 @@ func (uc *UserController) Login(c *gin.Context) {
 	loginDto := &dto.LoginDto{}
 	err = json.Unmarshal(loginData, &loginDto)
 	if err != nil {
-		c.AbortWithStatusJSON(200, gin.H{"data": nil, "error": err})
+		Abort(c.AbortWithStatusJSON, err)
 		return
 	}
 
 	user, token, err := userEntity.Login(loginDto)
 	if err != nil {
 		fmt.Println(err.Error())
-		c.AbortWithStatusJSON(200, gin.H{"data": nil, "error": err.Error()})
+		Abort(c.AbortWithStatusJSON, err)
 		return
 	}
 	c.JSON(200, gin.H{
@@ -60,7 +60,7 @@ func (uc *UserController) Register(c *gin.Context) {
 		err := json.Unmarshal([]byte(registerData), &registerDto)
 		user, token, err := userEntity.Register(&registerDto)
 		if err != nil {
-			abort(c, err)
+			Abort(c.AbortWithStatusJSON, err)
 			return
 		}
 		c.JSON(200, gin.H{
@@ -83,14 +83,14 @@ func (uc *UserController) Register(c *gin.Context) {
 
 	if err != nil {
 		fmt.Println(err)
-		abort(c, err)
+		Abort(c.AbortWithStatusJSON, err)
 		return
 	}
 
 	registerDto.ImageUrl = dst
 	user, token, err := userEntity.Register(&registerDto)
 	if err != nil {
-		abort(c, err)
+		Abort(c.AbortWithStatusJSON, err)
 		return
 	}
 	c.JSON(200, gin.H{
@@ -106,7 +106,7 @@ func (uc *UserController) Get(c *gin.Context) {
 
 	users, err := userEntity.Get()
 	if err != nil {
-		abort(c, err)
+		Abort(c.AbortWithStatusJSON, err)
 		return
 	}
 
@@ -121,7 +121,7 @@ func (uc *UserController) GetExperts(c *gin.Context) {
 
 	experts, err := userEntity.GetExperts()
 	if err != nil {
-		abort(c, err)
+		Abort(c.AbortWithStatusJSON, err)
 		return
 	}
 
@@ -136,20 +136,16 @@ func (uc *UserController) CheckJwt(c *gin.Context) {
 
 	token, err := jwt.GetTokenFromHeader(c.Request.Header.Get("Authorization"))
 	if err != nil {
-		abort(c, err)
+		Abort(c.AbortWithStatusJSON, err)
 		return
 	}
 	_, err = userEntity.CheckJwt(token)
 	if err != nil {
-		abort(c, err)
+		Abort(c.AbortWithStatusJSON, err)
 		return
 	}
 
 	c.JSON(200, gin.H{"data": true, "error": nil})
-}
-
-func abort(c *gin.Context, err error) {
-	c.AbortWithStatusJSON(200, gin.H{"data": nil, "error": err.Error()})
 }
 
 func (uc *UserController) DeleteExpert(c *gin.Context) {
@@ -159,7 +155,7 @@ func (uc *UserController) DeleteExpert(c *gin.Context) {
 	expert_id, err := strconv.ParseUint(c.Param("id"), 10, 64)
 	expert, err := userEntity.DeleteExpert(expert_id)
 	if err != nil {
-		abort(c, err)
+		Abort(c.AbortWithStatusJSON, err)
 	}
 	c.JSON(200, gin.H{"data": expert, "error": nil})
 }

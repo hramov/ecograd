@@ -88,7 +88,7 @@ func (ua *UserAccess) Delete(id uint64) (*dto.RegisterDto, error) {
 	}
 
 	if user.ID > 0 {
-		ua.DB.Delete("id=?", id)
+		ua.DB.Delete(&ua.User, "id=?", id)
 		return user, nil
 	}
 
