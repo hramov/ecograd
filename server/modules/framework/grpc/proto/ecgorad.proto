@@ -1,0 +1,10 @@
+syntax = "proto3"
+
+package grpc;
+
+option go_package = "github.com/hramov/gin_ecograd;go_ecograd_grpc";
+
+service Ecograd {
+    rpc Login () returns ()
+    rpc Register () returns ()
+}

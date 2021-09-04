@@ -1,0 +1,10 @@
+{
+    "title": "Google News",
+    "url": "https://golang.org/pkg/time/",
+    "selectors": {
+        "footer": "body > footer",
+        "click": "#pkg-examples > div",
+        "value": "#example_After .play .input textarea"
+    },
+    "data_type": "text"
+}
