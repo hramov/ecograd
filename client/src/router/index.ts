@@ -1,4 +1,4 @@
-import { createRouter, createWebHistory, RouteRecordRaw } from "vue-router";
+import { createRouter, createWebHashHistory, createWebHistory, RouteRecordRaw } from "vue-router";
 import Landing from "../views/Landing.vue";
 import store from "./../store/index";
 
@@ -32,6 +32,7 @@ const routes: Array<RouteRecordRaw> = [
 
 const router = createRouter({
   history: createWebHistory(process.env.BASE_URL),
+  // history: createWebHashHistory(),
   routes,
 });
 

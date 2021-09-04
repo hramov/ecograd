@@ -42,7 +42,7 @@ export default defineComponent({
 
     const getOrders = async () => {
       const result = await axios.get(
-        `api/v2/client/${client.id}/orders`
+        `${process.env.VUE_APP_SERVER}/client/${client.id}/orders`
       );
       if (result.data.status) {
         orders.values = result.data.data;

@@ -10,15 +10,15 @@ const mutations = {
   setOrders(state: any, orders: IOrder[]) {
     state.orders = orders;
   },
-  setOrder(state: any, order: IOrder) {
-    state.order = order;
+  setOrder(state: any, order: any) {
+    state.order = order.data.order;
   },
 };
 
 const actions = {
   async getOrdersAction({ commit }: any) {
     const fdProvider = new FetchDataProvider();
-    commit("setOrders", await fdProvider.get("orders"));
+    commit("setOrders", (await fdProvider.get("orders/")).data);
   },
   async getOrderAction({ commit }: any, id: number) {
     const fdProvider = new FetchDataProvider();
@@ -27,14 +27,22 @@ const actions = {
   },
   async addOrderUnauthorized(_: any, order: any) {
     const fdProvider = new FetchDataProvider();
-    return fdProvider.post("orders/unauthorized", order);
+    return fdProvider.post("orders/unauth", order);
   },
   async addOrder(_: any, order: any) {
     const fdProvider = new FetchDataProvider();
     return {
-      order: await fdProvider.post("orders", order),
+      order: await fdProvider.post("orders/", order),
     };
   },
+  async getWorkAction(_: any, order_id: any) {
+    const fdProvider = new FetchDataProvider()
+    return fdProvider.patch("orders/expert", order_id, null)
+  },
+  async deleteOrderDocsAction(_: any, order_id: any) {
+    const fdProvider = new FetchDataProvider()
+    return fdProvider.patch("orders/delete", order_id, null)
+  }
 };
 
 const getters = {

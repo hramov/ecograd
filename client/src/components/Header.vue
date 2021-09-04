@@ -57,13 +57,13 @@
                 <li>
                   <a
                     class="dropdown-item"
-                    v-if="user.roles.some((role) => role.id === 1)"
+                    v-if="user.role == 'admin' || user.role == 'expert'"
                     @click.prevent="$router.push('/dashboard')"
                     >Открыть</a
                   >
                   <a
                     class="dropdown-item"
-                    v-if="user.roles.some((role) => role.id === 3)"
+                    v-if="user.role == 'client'"
                     @click.prevent="$router.push('/client')"
                     >Открыть</a
                   >
@@ -106,7 +106,6 @@ export default defineComponent({
   setup() {
     const store = useStore();
     const user = computed(() => store.getters.getUser);
-
     return {
       user: user,
     };

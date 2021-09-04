@@ -39,7 +39,7 @@ AppModule = __decorate([
                 dest: '@/upload',
             }),
             serve_static_1.ServeStaticModule.forRoot({
-                rootPath: posix_1.join(__dirname, '..', 'public'),
+                rootPath: posix_1.join(__dirname, '..', 'uploads'),
             }),
             config_1.ConfigModule.forRoot({
                 envFilePath: '.env',

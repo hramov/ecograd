@@ -15,20 +15,20 @@ const mutations = {
 };
 
 const actions = {
-  async getOrdersForClient({ commit }: any, clientid: number) {
+  async getOrdersForClient({ commit }: any) {
     const fd = new FetchDataProvider();
-    const orders = await fd.get(`orders/client/${clientid}`);
-    commit("setOrders", orders);
-    return orders;
+    const result = await fd.get(`orders/client`);
+    console.log(result)
+    commit("setOrders", result.data.orders);
+    return result.data.orders;
   },
 
   async uploadDocsAction({ commit }: any, data: any) {
     const fd = new FetchDataProvider();
-    const result = await fd.patch(
-      `orders/upload`,
+    const result = await fd.uploadFile(
+      'orders/upload',
       data.id,
       data.formData,
-      true
     );
     return result;
   },

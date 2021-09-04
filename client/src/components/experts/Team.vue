@@ -11,18 +11,18 @@
         <div
           class="col-md-4 col-lg-4 col-sm-6 col-xl-3"
           v-for="expert in experts"
-          :key="expert.expert.id"
+          :key="expert.id"
         >
           <div class="card">
             <img
               v-if="expert.image_url"
-              :src="`` + expert.image_url"
+              :src="backEndUrl + expert.image_url"
               class="card-img-top"
               alt="..."
             />
             <img
               v-else
-              :src="`users/img/dummy.png`"
+              :src="backEndUrl + `/uploads/avatars/dummy.jpg`"
               class="card-img-top"
               alt="..."
             />
@@ -31,23 +31,18 @@
                 {{ expert.last_name }} {{ expert.name }}
               </h5>
               <h6 class="card-subtitle mb-2 text-muted">
-                <i class="fa fa-male"></i>{{ expert.expert.position }}
+                <i class="fa fa-male"></i>{{ expert.position }}
+              </h6>
+              <hr />
+              <h6
+                class="card-subtitle mb-2 text-muted">
+                <i class="fa fa-certificate"></i>{{ expert.cert }}
               </h6>
               <hr />
               <h6
                 class="card-subtitle mb-2 text-muted"
-                v-for="c in expert.expert.cert.split(';')"
-                :key="c"
               >
-                <i class="fa fa-certificate"></i>{{ c }}
-              </h6>
-              <hr />
-              <h6
-                class="card-subtitle mb-2 text-muted"
-                v-for="dir in expert.expert.direction.split(';')"
-                :key="dir"
-              >
-                <i class="fa fa-compass"></i>{{ dir }}
+                <i class="fa fa-compass"></i>{{ expert.misc }}
               </h6>
             </div>
           </div>
@@ -64,14 +59,16 @@ import { useStore } from "vuex";
 export default defineComponent({
   setup() {
     const store = useStore();
-    const experts = computed(() => store.getters.getUExperts);
+    const experts = computed(() => store.getters.getExperts);
+    const backEndUrl = computed(() => store.getters.getBackendUrl)
 
     onMounted(async () => {
-      await store.dispatch("getUExpertsAction");
+      await store.dispatch("getExpertsAction");
     });
 
     return {
       experts: experts,
+      backEndUrl: backEndUrl
     };
   },
 });

@@ -1,18 +1,18 @@
 version: "3"
 services:
     server:
-        build: '.'
-        container_name: server_newser
+        image: ecograd_server
+        container_name: ecograd_server
         restart: always
         ports:
             - "5000:5000"
-	environment:
-	  - APP_PORT=5000
-	  - APP_NAME=
-	  - APP_DESCRIPTION=
-	  - DB_HOST=localhost
-	  - DB_PORT=5432
-	  - DB_USER=admin
-	  - DB_PASSWORD=admin
-	  - DB_DATABASE=ecograd
-	  - PRIVATE_KEY=sec!rE$
+        environment:
+          - APP_PORT=5000
+          - APP_NAME=Ecograd
+          - APP_DESCRIPTION=Ecograd
+          - DB_HOST=localhost
+          - DB_PORT=5432
+          - DB_USER=admin
+          - DB_PASSWORD=admin
+          - DB_DATABASE=ecograd
+          - PRIVATE_KEY=secret

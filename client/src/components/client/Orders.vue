@@ -4,7 +4,7 @@
       <div class="text-center">
         <h1>Мои заказы</h1>
         <BuyButton />
-        <table class="table">
+        <table class="table" v-if="orders.length > 0">
           <thead>
             <tr>
               <th scope="col">ID</th>
@@ -22,10 +22,11 @@
               <td v-else-if="order.object_type == '2'">
                 Объект капитального строительства
               </td>
-              <td>
-                {{ new Date(order.createdAt).toLocaleDateString() }} в
-                {{ new Date(order.createdAt).toLocaleTimeString() }}
+              <td v-if="order.created_at">
+                {{ new Date(order.created_at).toLocaleDateString() }} в
+                {{ new Date(order.created_at).toLocaleTimeString() }}
               </td>
+              <td v-else>Нет данных</td>
               <td>
                 <div v-if="!order.docs_url">
                   <button
@@ -50,14 +51,17 @@
                     Загрузить
                   </button>
                 </div>
-                <a
-                  v-else
-                  :href="
-                    '' + order.docs_url
-                  "
-                  class="btn btn-success"
-                  >Скачать</a
-                >
+                <div v-else>
+                  <a
+                    style="margin-right: 10px"
+                    :href="'' + order.docs_url"
+                    class="btn btn-success"
+                    >Скачать</a
+                  >
+                  <button @click.prevent="deleteDocs(order.id)" class="btn btn-danger">
+                    Удалить
+                  </button>
+                </div>
               </td>
             </tr>
           </tbody>
@@ -82,17 +86,23 @@ export default defineComponent({
     const orders = computed(() => store.getters.getClientOrders);
 
     onMounted(async () => {
-      await store.dispatch("getOrdersForClient", client.value.id);
+      await store.dispatch("getOrdersForClient");
     });
 
     const getOrder = async (id) => {
       await store.dispatch("getOrderAction", id);
     };
 
+    const deleteDocs = async (id) => {
+      await store.dispatch("deleteOrderDocsAction", id);
+      await store.dispatch("getOrdersForClient");
+    };
+
     return {
       client: client,
       orders: orders,
       getOrder: getOrder,
+      deleteDocs: deleteDocs,
     };
   },
 });

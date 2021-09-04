@@ -26,25 +26,8 @@
     >
       <div class="card card-body text-center">
         <form>
-          <div class="form-group">
-            <label for="select_user">Пользователь</label>
-            <select
-              id="select_user"
-              class="form-select"
-              aria-label="Default select example"
-              v-model="expert.userid"
-              @change="getExpert(expert.userid)"
-            >
-              <option
-                v-for="uexpert in uexperts"
-                :key="uexpert.id"
-                :value="uexpert.id"
-              >
-                {{ uexpert.last_name }} {{ uexpert.name }}
-              </option>
-            </select>
-          </div>
-          <div v-if="!uexpert.image_url" class="form-group">
+          <div v-if="!expert.image_url" class="form-group">
+            <label for="image_url" class="label">Аватар</label>
             <input
               id="image_url"
               type="file"
@@ -56,17 +39,89 @@
           </div>
           <div v-else class="form-group">
             <img
-              :src="`` + uexpert.image_url"
+              :src="`` + expert.image_url"
               style="width: 100%; margin-bottom: 10px"
             />
           </div>
-          <div class="mb-3">
-            <input
-              type="text"
-              class="form-control"
-              placeholder="Должность"
-              v-model="expert.position"
-            />
+          <div class="form-group">
+            <div class="mb-3">
+              <input
+                type="text"
+                class="form-control"
+                placeholder="Фамилия"
+                v-model="expert.last_name"
+              />
+            </div>
+          </div>
+          <div class="form-group">
+            <div class="mb-3">
+              <input
+                type="text"
+                class="form-control"
+                placeholder="Имя"
+                v-model="expert.name"
+              />
+            </div>
+          </div>
+          <div class="form-group">
+            <div class="mb-3">
+              <input
+                type="text"
+                class="form-control"
+                placeholder="Отчество"
+                v-model="expert.second_name"
+              />
+            </div>
+          </div>
+          <div class="form-group">
+            <div class="mb-3">
+              <input
+                type="date"
+                class="form-control"
+                placeholder="Дата рождения"
+                v-model="expert.birth_date"
+              />
+            </div>
+          </div>
+          <div class="form-group">
+            <div class="mb-3">
+              <input
+                type="email"
+                class="form-control"
+                placeholder="Email"
+                v-model="expert.email"
+              />
+            </div>
+          </div>
+          <div class="form-group">
+            <div class="mb-3">
+              <input
+                type="password"
+                class="form-control"
+                placeholder="Пароль"
+                v-model="expert.password"
+              />
+            </div>
+          </div>
+          <div class="form-group">
+            <div class="mb-3">
+              <input
+                type="text"
+                class="form-control"
+                placeholder="Телефон"
+                v-model="expert.phone"
+              />
+            </div>
+          </div>
+          <div class="form-group">
+            <div class="mb-3">
+              <input
+                type="text"
+                class="form-control"
+                placeholder="Должность"
+                v-model="expert.position"
+              />
+            </div>
           </div>
           <div class="form-floating mb-3">
             <textarea
@@ -113,63 +168,59 @@
     <div class="row" v-if="isExperts">
       <div
         class="col-md-6 col-lg-4 col-sm-12 col-xl-4"
-        v-for="uexpert in uexperts"
-        :key="uexpert.id"
+        v-for="expert in experts"
+        :key="expert.id"
       >
         <div class="card">
           <img
-            v-if="uexpert.image_url"
-            :src="`` + uexpert.image_url"
+            v-if="expert.image_url"
+            :src="backEndUrl + expert.image_url"
             class="card-img-top"
             alt="..."
           />
           <img
             v-else
-            :src="`users/img/dummy.png`"
+            :src="`${backEndUrl}/uploads/avatars/dummy.jpg`"
             class="card-img-top"
             alt="..."
           />
           <div class="card-body text-left">
             <h5 class="card-title">
-              {{ uexpert.last_name }} {{ uexpert.name }}
+              {{ expert.last_name }} {{ expert.name }}
             </h5>
             <h6 class="card-subtitle mb-2 text-muted">
-              <i class="fa fa-male"></i>{{ uexpert.expert.position }}
+              <i class="fa fa-male"></i>{{ expert.position }}
             </h6>
             <hr />
             <h6 class="card-subtitle mb-2 text-muted">
-              <i class="fa fa-envelope-square"></i>{{ uexpert.email }}
+              <i class="fa fa-envelope-square"></i>{{ expert.email }}
             </h6>
             <hr />
             <h6 class="card-subtitle mb-2 text-muted">
-              <i class="fa fa-phone"></i>{{ uexpert.phone }}
+              <i class="fa fa-phone"></i>{{ expert.phone }}
             </h6>
             <hr />
             <h6
               class="card-subtitle mb-2 text-muted"
-              v-for="c in uexpert.expert.cert.split(';')"
-              :key="c"
             >
-              <i class="fa fa-certificate"></i>{{ c }}
+              <i class="fa fa-certificate"></i>{{ expert.cert }}
             </h6>
             <hr />
             <h6
               class="card-subtitle mb-2 text-muted"
-              v-for="dir in uexpert.expert.direction.split(';')"
-              :key="dir"
             >
-              <i class="fa fa-compass"></i>{{ dir }}
+              <i class="fa fa-compass"></i>{{ expert.directions }}
             </h6>
             <hr />
             <h6 class="card-subtitle mb-2 text-muted">
-              <i class="fa fa-compass"></i>{{ uexpert.expert.misc }}
+              <i class="fa fa-compass"></i>{{ expert.misc }}
             </h6>
             <hr />
             <div style="display: flex; justify-content: space-around">
               <button
                 type="button"
                 class="btn btn-danger"
-                @click.prevent="deleteExpert(uexpert.id)"
+                @click.prevent="deleteExpert(expert.id)"
               >
                 Удалить
               </button>
@@ -196,24 +247,24 @@ import { useStore } from "vuex";
 
 export default defineComponent({
   setup() {
-    const expert: IExpert = reactive({
-      id: 0,
-      userid: 0,
+    const expert = reactive({
+      last_name: "",
+      name: "",
+      second_name: "",
+      birth_date: "",
+      phone: "",
+      email: "",
+      password: "",
       position: "",
       cert: "",
       direction: "",
-      misc: "",
-      orders: [] as IOrder[],
-      user: {} as IUser,
+      misc: ""
     });
 
     const isOpen = ref(false);
     const isExperts = ref(false);
     const store = useStore();
     let file: any = null;
-    const users = computed(() => store.getters.getUsers);
-    const uexperts = computed(() => store.getters.getUExperts);
-    const uexpert = computed(() => store.getters.getUExpert);
     const status = ref(false);
     const isTouched = ref(false);
 
@@ -229,22 +280,18 @@ export default defineComponent({
 
     const getExperts = async () => {
       await store.dispatch("getExpertsAction");
-      await store.dispatch("getUsersAction");
-      await store.dispatch("getUExpertsAction");
       isExperts.value = true;
     };
 
     const addExpert = async () => {
-      let formData = null
+      let formData = null;
       if (file != null) {
         formData = new FormData();
         formData.append("file", file);
+        formData.append("expert", JSON.stringify(expert))
       }
 
-      status.value = await store.dispatch("addExpertAction", {
-        expert: expert,
-        formData: formData,
-      });
+      status.value = await store.dispatch("addExpertAction", formData);
 
       document.getElementById("addExpertBtn")!.click();
       await getExperts();
@@ -260,27 +307,18 @@ export default defineComponent({
       await getExperts();
     };
 
-    const getExpert = async (id: number) => {
-      await store.dispatch("getUserForExpertAction", id);
-      expert.position = uexpert.value.expert.position || "";
-      expert.cert = uexpert.value.expert.cert || "";
-      expert.direction = uexpert.value.expert.direction || "";
-      expert.misc = uexpert.value.expert.misc || "";
-    };
+    const backEndUrl = computed(() => store.getters.getBackendUrl)
 
     return {
-      users: users,
       experts: experts,
-      uexperts: uexperts,
-      uexpert: uexpert,
       isExperts: isExperts,
       expert: expert,
       isOpen: isOpen,
       isTouched: isTouched,
-      getExpert: getExpert,
       addExpert: addExpert,
       deleteExpert: deleteExpert,
       changeUploadImage: changeUploadImage,
+      backEndUrl: backEndUrl
     };
   },
 });

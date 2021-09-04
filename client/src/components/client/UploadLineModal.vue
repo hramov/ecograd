@@ -10,7 +10,7 @@
       <div class="modal-content">
         <div class="modal-header">
           <h5 class="modal-title" id="buyModalLable">
-            Форма добавления документов линейного объекта
+            Форма добавления документов линейного объекта {{ order.object }}
           </h5>
           <button
             id="closeBtn"
@@ -22,16 +22,6 @@
         </div>
         <div class="modal-body text-left">
           <form>
-            <div class="form-group">
-              <input
-                id="name"
-                type="text"
-                class="form-control"
-                placeholder="Адрес объекта"
-                required
-              />
-            </div>
-            <hr />
             <h5 class="text-muted">Разрешительные документы</h5>
 
             <div
@@ -87,6 +77,7 @@
                     class="form-control"
                     placeholder="Файл"
                     ref="file"
+                    @change="changeFile"
                   />
                 </div>
               </div>
@@ -108,6 +99,7 @@
                     class="form-control"
                     placeholder="Файл"
                     ref="file"
+                    @change="changeFile"
                   />
                 </div>
               </div>
@@ -126,6 +118,7 @@
                     class="form-control"
                     placeholder="Файл"
                     ref="file"
+                    @change="changeFile"
                   />
                 </div>
               </div>
@@ -144,6 +137,7 @@
                     class="form-control"
                     placeholder="Файл"
                     ref="file"
+                    @change="changeFile"
                   />
                 </div>
               </div>
@@ -165,6 +159,7 @@
                     class="form-control"
                     placeholder="Файл"
                     ref="file"
+                    @change="changeFile"
                   />
                 </div>
               </div>
@@ -183,6 +178,7 @@
                     class="form-control"
                     placeholder="Файл"
                     ref="file"
+                    @change="changeFile"
                   />
                 </div>
               </div>
@@ -201,6 +197,7 @@
                     class="form-control"
                     placeholder="Файл"
                     ref="file"
+                    @change="changeFile"
                   />
                 </div>
               </div>
@@ -221,6 +218,7 @@
                     class="form-control"
                     placeholder="Файл"
                     ref="file"
+                    @change="changeFile"
                   />
                 </div>
               </div>
@@ -243,6 +241,7 @@
                     class="form-control"
                     placeholder="Файл"
                     ref="file"
+                    @change="changeFile"
                   />
                 </div>
               </div>
@@ -267,6 +266,7 @@
                     class="form-control"
                     placeholder="Файл"
                     ref="file"
+                    @change="changeFile"
                   />
                 </div>
               </div>
@@ -287,6 +287,7 @@
                     class="form-control"
                     placeholder="Файл"
                     ref="file"
+                    @change="changeFile"
                   />
                 </div>
               </div>
@@ -304,6 +305,7 @@
                     class="form-control"
                     placeholder="Файл"
                     ref="file"
+                    @change="changeFile"
                   />
                 </div>
               </div>
@@ -321,6 +323,7 @@
                     class="form-control"
                     placeholder="Файл"
                     ref="file"
+                    @change="changeFile"
                   />
                 </div>
               </div>
@@ -338,6 +341,7 @@
                     class="form-control"
                     placeholder="Файл"
                     ref="file"
+                    @change="changeFile"
                   />
                 </div>
               </div>
@@ -355,6 +359,7 @@
                     class="form-control"
                     placeholder="Файл"
                     ref="file"
+                    @change="changeFile"
                   />
                 </div>
               </div>
@@ -374,6 +379,7 @@
                     class="form-control"
                     placeholder="Файл"
                     ref="file"
+                    @change="changeFile"
                   />
                 </div>
               </div>
@@ -395,6 +401,7 @@
                     class="form-control"
                     placeholder="Файл"
                     ref="file"
+                    @change="changeFile"
                   />
                 </div>
               </div>
@@ -418,7 +425,7 @@
 </template>
 
 <script lang="ts">
-import { computed, defineComponent, ref } from "vue";
+import { computed, defineComponent, onMounted, ref } from "vue";
 import { useStore } from "vuex";
 
 export default defineComponent({
@@ -439,19 +446,28 @@ export default defineComponent({
     const uploadFiles = async () => {
       const formData = new FormData();
       for (const file of files) {
-        formData.append("file", file);
+        formData.append("files", file);
       }
+
+      console.log(order.value)
 
       status.value = await store.dispatch("uploadDocsAction", {
         id: order.value.id,
         formData: formData,
       });
+
+      await store.dispatch("getOrdersAction");
+
+      setTimeout(() => {
+        document.getElementById("closeBtn")!.click();
+      }, 2000);
     };
 
     return {
       changeFile,
       uploadFiles,
       status: status,
+      order: order
     };
   },
 });

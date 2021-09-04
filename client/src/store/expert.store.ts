@@ -7,8 +7,8 @@ const state = {
 };
 
 const mutations = {
-  setExperts(state: any, data: IExpert[]) {
-    state.experts = data;
+  setExperts(state: any, data: any) {
+    state.experts = data.experts;
   },
   setExpert(state: any, data: IExpert) {
     state.expert = data;
@@ -18,7 +18,7 @@ const mutations = {
 const actions = {
   async getExpertsAction({ commit }: any) {
     const fdProvider = new FetchDataProvider();
-    commit("setExperts", await fdProvider.get("experts"));
+    commit("setExperts", await fdProvider.get("experts/"));
   },
   async getSingleExpertAction({ commit }: any, id: number) {
     const fdProvider = new FetchDataProvider();
@@ -27,17 +27,16 @@ const actions = {
 
   async addExpertAction(_: any, data: any) {
     const fdProvider = new FetchDataProvider();
-    await fdProvider.post("experts", data.expert);
-    await fdProvider.post("users/add-role", {
-      roleid: 2,
-      userid: data.expert.userid,
-    });
-    if (data.formData) await fdProvider.patch(`users/image`, data.expert.userid, data.formData);
+    await fdProvider.post("auth/register", data, true);
   },
 
   async updateExpertAction(_: any, id: any) {
     const fdProvider = new FetchDataProvider();
     return fdProvider.patch("experts", id, state.expert);
+  },
+  async deleteExpertAction(_: any, id: any) {
+    const fdProvider = new FetchDataProvider();
+    return fdProvider.delete("experts", id);
   },
 };
 

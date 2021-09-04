@@ -1,18 +1,16 @@
-import axios, { AxiosResponse, AxiosError } from "axios";
+import axios, { AxiosResponse } from "axios";
 import store from "./../store/index";
 
 export class FetchDataProvider {
-  private static _backendUrl = "api/v2";
+
+  private static _backendUrl: string;
 
   constructor() {
+    FetchDataProvider._backendUrl = store.getters.getBackendUrl
     axios.defaults.headers.common[
       "Authorization"
     ] = `Bearer ${store.getters.getJWT}`;
     axios.defaults.headers.post["Content-Type"] = "application/json";
-  }
-
-  private static _handleAxiosError(error: AxiosError<any>) {
-    console.log(error.response!.status);
   }
 
   private static _makePath(url: string, id?: number): string {
@@ -21,19 +19,23 @@ export class FetchDataProvider {
   }
 
   public async get(url: string, id?: number) {
-    try {
-      const { data } = await axios.get(FetchDataProvider._makePath(url, id));
-      return data;
-    } catch (error) {
-      if (axios.isAxiosError(error)) {
-        FetchDataProvider._handleAxiosError(error);
-      } else {
-        throw new Error(error as string);
-      }
-    }
+    const { data } = await axios.get(FetchDataProvider._makePath(url, id));
+    return data;
   }
 
-  public async post(url: string, data: any) {
+  public async post(url: string, data: any, isFile?: any) {
+    if (isFile) {
+      return await axios
+      .post(FetchDataProvider._makePath(url), data, {
+        headers: {
+          "Content-Type": "multipart/form-data",
+        },
+      })
+      .then((response) => response.data)
+      .catch((error) => {
+        console.log(error);
+      });
+    }
     return await axios
       .post(FetchDataProvider._makePath(url), data)
       .then((response) => response.data)
@@ -42,23 +44,29 @@ export class FetchDataProvider {
       });
   }
 
+  public async uploadFile(
+    url: string,
+    id: number,
+    data: any
+  ): Promise<AxiosResponse<any>> {
+    console.log(id)
+    return await axios
+      .patch(FetchDataProvider._makePath(url, id), data, {
+        headers: {
+          "Content-Type": "multipart/form-data",
+        },
+      })
+      .then((response) => response.data)
+      .catch((error) => {
+        console.log(error);
+      });
+  }
+
   public async patch(
     url: string,
     id: number,
-    data: any,
-    isFile?: boolean
+    data: any
   ): Promise<AxiosResponse<any>> {
-    if (isFile)
-      return await axios
-        .patch(FetchDataProvider._makePath(url, id), data, {
-          headers: {
-            "Content-Type": "multipart/form-data",
-          },
-        })
-        .then((response) => response.data)
-        .catch((error) => {
-          console.log(error);
-        });
     return await axios
       .patch(FetchDataProvider._makePath(url, id), data)
       .then((response) => response.data)

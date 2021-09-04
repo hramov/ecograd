@@ -21,15 +21,9 @@ export interface IOrder {
   name?: string;
   email?: string;
   object: string;
+  address: string;
   object_type: 1 | 2,
   phone?: string;
-}
-
-export interface IRole {
-  id: number;
-  value: string;
-  description: string;
-  users: IUser[];
 }
 
 export interface IUser {
@@ -41,7 +35,8 @@ export interface IUser {
   birth_date: Date;
   email: string;
   password: string;
-  roles: IRole[];
-  expert: IExpert;
-  client: IClient;
+  role: string;
+  cert: string
+  directions: string;
+  misc: string
 }

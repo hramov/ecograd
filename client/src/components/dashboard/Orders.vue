@@ -16,32 +16,32 @@
             <th scope="col">E-mail</th>
             <th scope="col">Телефон</th>
             <th scope="col">Документы</th>
+            <th scope="col">Статус</th>
           </tr>
         </thead>
         <tbody>
           <tr v-for="order in orders" :key="order.id">
-            <td v-if="order.client">{{ order.client.name }}</td>
+            <td v-if="order.Client">{{ order.Client.name }}</td>
             <td>{{ order.object }}</td>
-            <td v-if="order.client">{{ order.client.email }}</td>
-            <td v-if="order.client">{{ order.client.phone }}</td>
+            <td v-if="order.Client">{{ order.Client.email }}</td>
+            <td v-if="order.Client">{{ order.Client.phone }}</td>
 
-            <td v-if="order.exec && order.exec.id != user_id">
-              {{ order.exec.last_name }} {{ order.exec.name }}
-              {{ order.exec.id }}
+            <td v-if="order.Expert && order.Expert.ID != user_id">
+              {{ order.Expert.last_name }} {{ order.Expert.name }}
+              {{ order.Expert.id }}
             </td>
-            <!-- <td v-if="order.exec && order.exec.id == user_id"> -->
-              <td>
+            <td v-if="order.Expert && order.Expert.ID == user_id">
               <a
                 v-if="order.is_docs"
                 type="button"
                 class="btn btn-warning"
-                href="#"
+                :href="`${$store.getters.getBackendUrl}/uploads/docs/${order.id}.zip`"
                 >Скачать документы</a
               >
               <p class="btn-danger" v-else>Документов пока нет</p>
             </td>
 
-            <!-- <td v-else>
+            <td v-else-if="(user.role =='admin' || user.role =='expert') && order.status == 'new'">
               <button
                 type="button"
                 class="btn btn-success"
@@ -49,7 +49,13 @@
               >
                 Взять
               </button>
-            </td> -->
+            </td>
+            <td v-if="order.status =='new'">Зарегистрирован</td>
+            <td v-else-if="order.status =='taken'">Взят в работу</td>
+            <td v-else-if="order.status =='done'"><a :href="`${$store.getters.getBackendUrl}/uploads/finals/${order.id}.zip`">Скачать</a></td>
+            <td v-if="order.Expert && order.Expert.ID == user_id">
+              <button type="button" class="btn-success" @click.prevent="">Загрузить заключение</button>
+            </td>
           </tr>
         </tbody>
       </table>
@@ -91,19 +97,12 @@ export default defineComponent({
     if (orders.value) isOrders.value = true;
     else isOrders.value = false;
 
-    const getWork = async (order: any) => {
-      const result = await axios.patch(
-        `api/v2/orders/expert/${order}`,
-        {
-          expertid: user.value.id,
-        },
-        {
-          headers: {
-            Authorization: `Bearer ${store.getters.getJWT}`,
-          },
-        }
-      );
-      if (result.status) await getOrders();
+    const getWork = async (order_id: number) => {
+      const result = await store.dispatch('getWorkAction', order_id)
+      if (!result.error) await getOrders();
+      else {
+        console.log(result.error)
+      }
     };
 
     return {

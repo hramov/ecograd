@@ -36,6 +36,7 @@ export default defineComponent({
     const instance = getCurrentInstance();
     const router = instance!.proxy?.$router;
     store.commit("setRouter", router);
+    localStorage.getItem("user") ? null : localStorage.setItem("user", JSON.stringify(""))
   },
 });
 </script>

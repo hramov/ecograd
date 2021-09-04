@@ -13,6 +13,7 @@
             Форма добавления документов объекта капитального строительства {{ order.object }}
           </h5>
           <button
+            id="closeBtn"
             type="button"
             class="btn-close"
             data-bs-dismiss="modal"
@@ -21,16 +22,6 @@
         </div>
         <div class="modal-body text-left">
           <form>
-            <div class="form-group">
-              <input
-                id="name"
-                type="text"
-                class="form-control"
-                placeholder="Адрес объекта"
-                required
-              />
-            </div>
-            <hr />
             <h5 class="text-muted">Разрешительные документы</h5>
 
             <div
@@ -636,7 +627,6 @@
 </template>
 
 <script lang="ts">
-import axios from "axios";
 import { computed, defineComponent, ref } from "vue";
 import { useStore } from "vuex";
 
@@ -645,8 +635,8 @@ export default defineComponent({
     const files: any[] = [];
     const disabled = ref(true);
     const store = useStore()
-    const user = computed(() => store.getters.getUser)
-    const order = computed(() => store.getters.getOrder)
+    const status = ref(false);
+    const order = computed(() => store.getters.getOrder);
 
     const changeFile = (e: any) => {
       if (e.target.files[0]) {
@@ -656,21 +646,18 @@ export default defineComponent({
     };
 
     const uploadFiles = async () => {
-      let formData = new FormData();
+      const formData = new FormData();
       for (const file of files) {
-        formData.append("file", file);
+        formData.append("files", file);
       }
 
-      const result = await axios.post(
-        `api/v2/client/${user.value.id}/orders/${order.value.id}/upload`,
-        formData,
-        {
-          headers: {
-            "Content-Type": "multipart/form-data",
-            Authorization: `Bearer ${store.getters.getJWT}`,
-          },
-        }
-      );
+      status.value = await store.dispatch("uploadDocsAction", {
+        id: order.value.id,
+        formData: formData,
+      });
+
+      document.getElementById("closeBtn")!.click();
+      await store.dispatch("getOrdersAction")
     };
 
     return {

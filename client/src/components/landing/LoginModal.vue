@@ -7,13 +7,14 @@
     aria-hidden="true"
   >
     <div class="modal-dialog">
+      {{ isLoggedIn }}
       <div class="modal-content">
         <div
           v-if="!isLoggedIn && isTouched"
           class="alert alert-danger"
           role="alert"
         >
-          Ошибка авторизации!
+          Ошибка авторизации! {{ status }}
         </div>
         <div
           v-if="isLoggedIn && isTouched"
@@ -73,11 +74,12 @@ export default defineComponent({
     const store = useStore();
     const email = ref("");
     const password = ref("");
+    const status = ref("")
     const isLoggedIn = computed(() => store.getters.getIsLoggedIn);
     const isTouched = ref(false);
 
     const login = async () => {
-      await store.dispatch("login", {
+      status.value = await store.dispatch("login", {
         email: email.value,
         password: password.value,
       });
@@ -88,6 +90,7 @@ export default defineComponent({
       isLoggedIn: isLoggedIn,
       isTouched: isTouched,
       email: email,
+      status: status,
       password: password,
       login: login,
     };

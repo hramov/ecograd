@@ -106,7 +106,7 @@
 </template>
 
 <script lang="ts">
-import { IOrder } from './../../custom/interfaces'
+import { IOrder } from "./../../custom/interfaces";
 import { computed, defineComponent, reactive, ref } from "vue";
 import { useStore } from "vuex";
 
@@ -115,13 +115,13 @@ export default defineComponent({
     const store = useStore();
     const user = computed(() => store.getters.getUser);
 
-    const order: IOrder = reactive({
-      userid: user.value.id,
-      name: user.value.name,
-      email: user.value.email,
+    const order = reactive({
+      userid: user.value ? user.value.id : 0,
+      name: user.value ? user.value.name : "",
+      email: user.value ? user.value.email : "",
       object: "",
       object_type: 1,
-      phone: user.value.phone,
+      phone: user.value ? user.value.phone : null,
     });
 
     const status = ref(false);
@@ -135,14 +135,28 @@ export default defineComponent({
 
     const sendOrder = async () => {
       const result = user.value.id
-        ? await store.dispatch("addOrder", order)
-        : await store.dispatch("addOrderUnauthorized", order);
+        ? await store.dispatch("addOrder", {
+            client_id: user.value.id,
+            object: order.object,
+            object_type: order.object_type,
+          })
+        : await store.dispatch("addOrderUnauthorized", {
+            client: {
+              name: order.name,
+              email: order.email,
+              phone: order.phone,
+            },
+            order: {
+              object: order.object,
+              object_type: order.object_type,
+            },
+          });
 
-      status.value = result.order?.id ? true : false;
+      status.value = result.data.order?.id ? true : false;
 
       if (!user.value.id) {
-        tempuser.email = result.user.email;
-        tempuser.password = result.user.password;
+        tempuser.email = result.data.client.email;
+        tempuser.password = result.data.client.password;
       }
 
       edited.value = true;

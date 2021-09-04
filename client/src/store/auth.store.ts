@@ -4,11 +4,10 @@ import { IUser } from "@/custom/interfaces";
 import store from "./index";
 
 const state = {
-  jwt_token: "" || (localStorage.getItem("jwt_token") as string),
+  jwt_token: "" || (localStorage.getItem("token") as string),
   user: null || (JSON.parse(localStorage.getItem("user")!) as IUser),
   users: [] as IUser[],
-  isLoggedIn:
-    false || (!!JSON.parse(localStorage.getItem("user")!).id as boolean),
+  isLoggedIn: JSON.parse(localStorage.getItem("user") as string) ? JSON.parse(localStorage.getItem("user") as string).id : false,
   isAdmin: false,
   uexperts: [],
   uexpert: {},
@@ -24,8 +23,8 @@ const mutations = {
   setIsLoggedIn(state: any, data: boolean) {
     state.isLoggedIn = data;
   },
-  setIsAdmin(state: any, data: boolean) {
-    state.isAdmin = data;
+  setIsAdmin(state: any, data: any) {
+    state.isAdmin = !!data.data;
   },
   setUsers(state: any, data: any) {
     state.users = data;
@@ -45,22 +44,22 @@ const actions = {
     const router = store.state.router!;
     const fdProvider = new FetchDataProvider();
     const result = await fdProvider.post("auth/login", data);
-    if (result) {
-      commit("setIsLoggedIn", true);
-      commit("setUser", result.user);
-      commit("setJWT", result.jwt_token);
-      localStorage.setItem("jwt_token", result.jwt_token);
-      localStorage.setItem("user", JSON.stringify(result.user));
-      document.getElementById("closeBtn")!.click();
-      router.push("/");
-      return true;
+    if (result.error != null) {
+      return result.error;
     }
-    return false;
+    commit("setIsLoggedIn", true);
+    commit("setUser", result.data.user);
+    commit("setJWT", result.data.token);
+    localStorage.setItem("token", result.data.token);
+    localStorage.setItem("user", JSON.stringify(result.data.user));
+    document.getElementById("closeBtn")!.click();
+    router.push("/");
+    return true;
   },
   async logout({ commit }: any) {
     const router = store.state.router!;
-    localStorage.setItem("jwt_token", "");
-    localStorage.setItem("user", JSON.stringify({}));
+    localStorage.setItem("token", "");
+    localStorage.setItem("user", JSON.stringify(""));
     commit("setJWT", null);
     commit("setUser", {});
     router.push("/");
