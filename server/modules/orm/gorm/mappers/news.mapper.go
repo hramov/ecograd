@@ -14,8 +14,7 @@ func (nm *NewsMapper) DtoToModel() *model.News {
 	news := nm.Model
 	news.ID = nm.Dto.ID
 	news.Title = nm.Dto.Title
-	news.Description = nm.Dto.Description
-	news.ImageUrl = nm.Dto.ImageUrl
+	news.Description = nm.Dto.Desc
 	news.Href = nm.Dto.Href
 	news.Published = nm.Dto.Published
 	return &news
@@ -25,8 +24,7 @@ func (nm *NewsMapper) ModelToDto() *dto.NewsDto {
 	news := nm.Dto
 	news.ID = nm.Model.ID
 	news.Title = nm.Model.Title
-	news.Description = nm.Model.Description
-	news.ImageUrl = nm.Model.ImageUrl
+	news.Desc = nm.Model.Description
 	news.Href = nm.Model.Href
 	news.Published = nm.Model.Published
 	return &news

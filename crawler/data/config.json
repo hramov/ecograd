@@ -1,10 +1,14 @@
-{
-    "title": "Google News",
-    "url": "https://golang.org/pkg/time/",
-    "selectors": {
-        "footer": "body > footer",
-        "click": "#pkg-examples > div",
-        "value": "#example_After .play .input textarea"
-    },
-    "data_type": "text"
-}
+[
+    {
+        "service": "consultant",
+        "url": "http://www.consultant.ru/law/hotdocs/t11",
+        "selectors": {
+            "item": ".hditem",
+            "title": ".link > a",
+            "href": ".link > a",
+            "desc": ".ann",
+            "published": ".link > .date"
+        },
+        "data_type": "text"
+    }
+]

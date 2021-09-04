@@ -11,7 +11,7 @@ func Register(router *gin.Engine) {
 	userController := controller.UserController{}
 	feedbackController := controller.FeedbackController{}
 	telegramController := controller.TelegramController{}
-	renderController := controller.RenderController{}
+	apiController := controller.ApiController{}
 
 	auth := router.Group("/auth")
 	{
@@ -54,8 +54,8 @@ func Register(router *gin.Engine) {
 		telegram.GET("/news", telegramController.GetNews)
 	}
 
-	web := router.Group("/")
+	api := router.Group("/api")
 	{
-		web.GET("/", renderController.VueRenderer)
+		api.POST("/", apiController.StoreData)
 	}
 }
