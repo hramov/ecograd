@@ -1,3 +1,3 @@
 FROM scratch
-ADD telegram /
-cmd ["/telegram"]
+ADD ecograd_telegram /
+cmd ["/ecograd_telegram"]
