@@ -6,16 +6,16 @@ import (
 	"os"
 	"time"
 
-	"github.com/hramov/crawler/pkg/service"
+	service_core "github.com/hramov/crawler/pkg/service/core"
 	"github.com/streadway/amqp"
 )
 
 type Message struct {
-	Queue     string       `json:"queue"`
-	From      string       `json:"from"`
-	To        string       `json:"to"`
-	Body      service.News `json:"body"`
-	Published time.Time    `json:"published"`
+	Queue     string            `json:"queue"`
+	From      string            `json:"from"`
+	To        string            `json:"to"`
+	Body      service_core.News `json:"body"`
+	Published time.Time         `json:"published"`
 }
 
 func getConnection() (*amqp.Connection, error) {
@@ -39,6 +39,7 @@ func getChannel(conn *amqp.Connection) (*amqp.Channel, error) {
 }
 
 func getQueue(ch *amqp.Channel, queueName string) (*amqp.Queue, error) {
+	// err := ch.Qos(1, 0, false)
 	q, err := ch.QueueDeclare(
 		queueName, // name
 		false,     // durable

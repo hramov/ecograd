@@ -23,7 +23,7 @@ func (rr *RabbitReceiver) Receive(queueName string) {
 	msgs, err := rr.Channel.Consume(
 		rr.Queue.Name, // queue
 		"",            // consumer
-		true,          // auto-ack
+		false,         // auto-ack
 		false,         // exclusive
 		false,         // no-local
 		false,         // no-wait
@@ -40,6 +40,7 @@ func (rr *RabbitReceiver) Receive(queueName string) {
 		for d := range msgs {
 			log.Printf("Received a new message")
 			TestHandler(d)
+			d.Ack(false)
 		}
 	}()
 

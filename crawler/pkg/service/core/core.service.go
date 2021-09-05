@@ -1,10 +1,12 @@
-package service
+package service_core
 
 import (
 	"encoding/json"
 	"fmt"
 	"log"
 	"os"
+
+	"github.com/chromedp/chromedp"
 )
 
 func ParseConfig(fileName string) (Config, error) {
@@ -16,7 +18,7 @@ func ParseConfig(fileName string) (Config, error) {
 		return nil, err
 	}
 	defer rawData.Close()
-	fmt.Printf("Successfully opened %s.json\n", fileName)
+	log.Printf("Successfully opened %s.json\n", fileName)
 	n, err := rawData.Read(data)
 	if err != nil {
 		log.Println(err.Error())
@@ -34,6 +36,16 @@ func FindConfig(config Config, service string) (*ServiceConfig, error) {
 		}
 	}
 	return nil, fmt.Errorf("No such service in the config")
+}
+
+func CreateService(name string, config Config, service Service) (Service, error) {
+	service.Ctx, service.Cancel = chromedp.NewContext(
+		service.Ctx,
+		chromedp.WithLogf(log.Printf),
+	)
+	defer service.Cancel()
+	service.Config, _ = FindConfig(config, name)
+	return service, nil
 }
 
 func CountPages() {}

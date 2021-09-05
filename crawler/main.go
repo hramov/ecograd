@@ -7,7 +7,8 @@ import (
 
 	"github.com/chromedp/chromedp"
 	"github.com/hramov/crawler/pkg/queue"
-	service "github.com/hramov/crawler/pkg/service"
+	"github.com/hramov/crawler/pkg/service"
+	service_core "github.com/hramov/crawler/pkg/service/core"
 	"github.com/joho/godotenv"
 )
 
@@ -23,30 +24,34 @@ func main() {
 
 	opts := append(chromedp.DefaultExecAllocatorOptions[:],
 		chromedp.DisableGPU,
-		chromedp.Flag("headless", false),
+		chromedp.Flag("headless", true),
 	)
 
 	allocCtx, _ := chromedp.NewExecAllocator(context.Background(), opts...)
 
-	config, err := service.ParseConfig("config")
-	if err != nil {
-		log.Fatal(err)
+	services := make(map[string]service_core.IService)
+
+	// cs := service.ConsultantService{}
+	// cs.Register(allocCtx)
+	// services["consultant"] = &cs
+
+	es := service.EcoIndustryService{}
+	es.Register(allocCtx)
+	services["ecoindustry"] = &es
+
+	for _, service := range services {
+		news, err := service.GetData()
+		if err != nil {
+			log.Println(err.Error())
+		} else {
+			sender.SendMessage("news", &queue.Message{
+				Queue:     "news",
+				From:      "crawler",
+				To:        "server",
+				Body:      news,
+				Published: time.Now(),
+			})
+		}
+		service.Close()
 	}
-
-	cs := service.ConsultantService{Ctx: allocCtx}
-	cs.Ctx, cs.Cancel = chromedp.NewContext(
-		allocCtx,
-		chromedp.WithLogf(log.Printf),
-	)
-	defer cs.Cancel()
-	cs.Config, err = service.FindConfig(config, "consultant")
-	news, err := cs.GetData()
-
-	sender.SendMessage("news", &queue.Message{
-		Queue:     "news",
-		From:      "crawler",
-		To:        "server",
-		Body:      news,
-		Published: time.Now(),
-	})
 }

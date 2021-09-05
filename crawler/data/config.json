@@ -10,5 +10,17 @@
             "published": ".link > .date"
         },
         "data_type": "text"
+    },
+    {
+        "service": "ecoindustry",
+        "url": "https://news.ecoindustry.ru/category/law/",
+        "selectors": {
+            "item": "div.td_module_10",
+            "title": "div.entry-title",
+            "href": ".td-module-title > a",
+            "desc": "//*[@id='td-outer-wrap']/div[4]/div/div/div[1]/div/div[2]/div[2]/div[2]/text()",
+            "published": "time.entry-date"
+        },
+        "data_type": "text"
     }
 ]

@@ -1,4 +1,14 @@
-package service
+package service_core
+
+import "context"
+
+type Service struct {
+	Ctx     context.Context
+	Cancel  context.CancelFunc
+	Config  *ServiceConfig
+	Data    News
+	GetData func() (News, error)
+}
 
 type ServiceSelector struct {
 	Item      string `json:"item"`
@@ -25,3 +35,8 @@ type SingleNews struct {
 }
 
 type News []SingleNews
+
+type IService interface {
+	GetData() (News, error)
+	Close() error
+}

@@ -30,8 +30,9 @@ func (rs *RabbitSender) SendMessage(queueName string, message *Message) error {
 		false,         // mandatory
 		false,         // immediate
 		amqp.Publishing{
-			ContentType: "application/json",
-			Body:        data,
+			DeliveryMode: amqp.Persistent,
+			ContentType:  "application/json",
+			Body:         data,
 		})
 	if err != nil {
 		log.Printf("Cannot send message %s: error %s\n", message, err.Error())
