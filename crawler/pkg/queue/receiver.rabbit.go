@@ -39,11 +39,7 @@ func (rr *RabbitReceiver) Receive(queueName string) {
 	go func() {
 		for d := range msgs {
 			log.Printf("Received a new message")
-			switch queueName {
-			case "news":
-				NewsHandler(d)
-				break
-			}
+			TestHandler(d)
 		}
 	}()
 

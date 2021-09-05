@@ -2,18 +2,24 @@ package main
 
 import (
 	"context"
-	"fmt"
 	"log"
-	"os"
+	"time"
 
 	"github.com/chromedp/chromedp"
-	api "github.com/hramov/crawler/pkg/api"
+	"github.com/hramov/crawler/pkg/queue"
 	service "github.com/hramov/crawler/pkg/service"
 	"github.com/joho/godotenv"
 )
 
 func main() {
 	godotenv.Load()
+
+	sender := queue.RabbitSender{}
+	sender = sender.Connect()
+
+	receiver := queue.RabbitReceiver{}
+	receiver = receiver.Connect()
+	go receiver.Receive("query")
 
 	opts := append(chromedp.DefaultExecAllocatorOptions[:],
 		chromedp.DisableGPU,
@@ -34,12 +40,13 @@ func main() {
 	)
 	defer cs.Cancel()
 	cs.Config, err = service.FindConfig(config, "consultant")
-	data, err := cs.GetData()
+	news, err := cs.GetData()
 
-	fmt.Println(os.Getenv("SERVER_API_URL"))
-	api := api.ServerApi{Url: os.Getenv("SERVER_API_URL")}
-	result, err := api.SendData(&data)
-
-	fmt.Println(result)
-
+	sender.SendMessage("news", &queue.Message{
+		Queue:     "news",
+		From:      "crawler",
+		To:        "server",
+		Body:      news,
+		Published: time.Now(),
+	})
 }

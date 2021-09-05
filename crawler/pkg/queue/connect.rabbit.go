@@ -6,16 +6,16 @@ import (
 	"os"
 	"time"
 
-	"github.com/hramov/gin_ecograd/domains/dto"
+	"github.com/hramov/crawler/pkg/service"
 	"github.com/streadway/amqp"
 )
 
-type NewsMessage struct {
-	Queue     string         `json:"queue"`
-	From      string         `json:"from"`
-	To        string         `json:"to"`
-	Body      []*dto.NewsDto `json:"body"`
-	Published time.Time      `json:"published"`
+type Message struct {
+	Queue     string       `json:"queue"`
+	From      string       `json:"from"`
+	To        string       `json:"to"`
+	Body      service.News `json:"body"`
+	Published time.Time    `json:"published"`
 }
 
 func getConnection() (*amqp.Connection, error) {
