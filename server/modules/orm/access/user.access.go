@@ -5,8 +5,8 @@ import (
 
 	"github.com/hramov/gin_ecograd/domains/dto"
 	"github.com/hramov/gin_ecograd/domains/jwt"
-	mapper "github.com/hramov/gin_ecograd/modules/orm/gorm/mappers"
-	model "github.com/hramov/gin_ecograd/modules/orm/gorm/models"
+	mapper "github.com/hramov/gin_ecograd/modules/orm/mappers"
+	model "github.com/hramov/gin_ecograd/modules/orm/models"
 	"gorm.io/gorm"
 )
 

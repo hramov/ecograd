@@ -4,7 +4,7 @@ import (
 	"fmt"
 	"os"
 
-	model "github.com/hramov/gin_ecograd/modules/orm/gorm/models"
+	model "github.com/hramov/gin_ecograd/modules/orm/models"
 	"gorm.io/driver/postgres"
 	"gorm.io/gorm"
 )

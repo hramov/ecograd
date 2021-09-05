@@ -1,6 +1,6 @@
 package dto
 
-import model "github.com/hramov/gin_ecograd/modules/orm/gorm/models"
+import model "github.com/hramov/gin_ecograd/modules/orm/models"
 
 type RegisterDto struct {
 	ID         uint64 `json:"id"`

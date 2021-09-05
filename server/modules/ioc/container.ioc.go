@@ -6,7 +6,7 @@ import (
 	"github.com/golobby/container/v3"
 	entity "github.com/hramov/gin_ecograd/domains/entities"
 	"github.com/hramov/gin_ecograd/domains/ports"
-	"github.com/hramov/gin_ecograd/modules/orm/gorm/access"
+	"github.com/hramov/gin_ecograd/modules/orm/access"
 	"gorm.io/gorm"
 )
 

@@ -15,6 +15,7 @@ type Gin struct{}
 
 func (g *Gin) Start() {
 
+	gin.SetMode(gin.ReleaseMode)
 	router := gin.Default()
 	router.Static("/uploads", "./uploads")
 	router.Use(middleware.CORSMiddleware())

@@ -2,7 +2,7 @@ package mapper
 
 import (
 	"github.com/hramov/gin_ecograd/domains/dto"
-	model "github.com/hramov/gin_ecograd/modules/orm/gorm/models"
+	model "github.com/hramov/gin_ecograd/modules/orm/models"
 )
 
 type NewsMapper struct {

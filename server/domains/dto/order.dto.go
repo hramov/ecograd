@@ -3,7 +3,7 @@ package dto
 import (
 	"time"
 
-	model "github.com/hramov/gin_ecograd/modules/orm/gorm/models"
+	model "github.com/hramov/gin_ecograd/modules/orm/models"
 )
 
 type OrderDto struct {
