@@ -2,6 +2,7 @@ package main
 
 import (
 	"context"
+	"fmt"
 	"log"
 	"time"
 
@@ -24,23 +25,28 @@ func main() {
 
 	opts := append(chromedp.DefaultExecAllocatorOptions[:],
 		chromedp.DisableGPU,
-		chromedp.Flag("headless", true),
+		chromedp.Flag("headless", false),
 	)
 
 	allocCtx, _ := chromedp.NewExecAllocator(context.Background(), opts...)
 
 	services := make(map[string]service_core.IService)
 
-	// cs := service.ConsultantService{}
-	// cs.Register(allocCtx)
-	// services["consultant"] = &cs
+	cs := service.ConsultantService{}
+	cs.Register(allocCtx)
+	services["consultant"] = &cs
 
 	es := service.EcoIndustryService{}
 	es.Register(allocCtx)
 	services["ecoindustry"] = &es
 
 	for _, service := range services {
-		news, err := service.GetData()
+		news, err := service.Process(10)
+		if err != nil {
+			log.Println(err)
+		}
+		fmt.Println(news)
+
 		if err != nil {
 			log.Println(err.Error())
 		} else {
@@ -52,6 +58,6 @@ func main() {
 				Published: time.Now(),
 			})
 		}
-		service.Close()
+
 	}
 }

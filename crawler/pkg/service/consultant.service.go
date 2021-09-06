@@ -2,6 +2,7 @@ package service
 
 import (
 	"context"
+	"fmt"
 	"log"
 	"time"
 
@@ -31,49 +32,103 @@ func (cs *ConsultantService) Register(ctx context.Context) (*ConsultantService, 
 	return cs, nil
 }
 
-func (cs *ConsultantService) GetData() (service_core.News, error) {
-
-	log.Println("ConsultantService started to collect news")
+func (cs *ConsultantService) getData() (service_core.News, error) {
 
 	timeStart := time.Now()
 
-	var title string
-	var desc string
-	var published string
+	var titles []*cdp.Node
+	var hrefs []*cdp.Node
+	var descs []*cdp.Node
+	var publishes []*cdp.Node
 
-	var nodes []*cdp.Node
 	err := chromedp.Run(cs.Ctx,
-		/**/
-		chromedp.Navigate(cs.Config.Url),
-		chromedp.WaitVisible(cs.Config.Selectors.Item),
-		chromedp.Nodes(cs.Config.Selectors.Desc, &nodes, chromedp.BySearch),
-		/**/
+		chromedp.Nodes(cs.Config.Selectors.Title, &titles, chromedp.BySearch),
+		chromedp.Nodes(cs.Config.Selectors.Href, &hrefs, chromedp.BySearch),
+		chromedp.Nodes(cs.Config.Selectors.Desc, &descs, chromedp.BySearch),
+		chromedp.Nodes(cs.Config.Selectors.Published, &publishes, chromedp.BySearch),
 	)
-	for _, item := range nodes {
-		var singleNews service_core.SingleNews
-		cur := item.Attributes
+
+	for i := 0; i < len(titles); i++ {
+		singleNews := service_core.SingleNews{}
+
+		singleNews.Href = hrefs[i].AttributeValue("href")
 		chromedp.Run(cs.Ctx,
-			chromedp.Text([]cdp.NodeID{item.NodeID}, &title, chromedp.ByNodeID),
-			chromedp.Text(cs.Config.Selectors.Desc, &desc, chromedp.FromNode(item)),
-			chromedp.Text(cs.Config.Selectors.Published, &published, chromedp.FromNode(item)),
+			chromedp.Text([]cdp.NodeID{titles[i].NodeID}, &singleNews.Title, chromedp.ByNodeID),
+			chromedp.Text([]cdp.NodeID{descs[i].NodeID}, &singleNews.Desc, chromedp.ByNodeID),
+			chromedp.Text([]cdp.NodeID{publishes[i].NodeID}, &singleNews.Published, chromedp.ByNodeID),
 		)
-		singleNews.Title = title
-		singleNews.Href = cur[1]
-		singleNews.Desc = desc
-		singleNews.Published = published
+
 		cs.Data = append(cs.Data, singleNews)
 	}
 	if err != nil {
 		log.Println(err)
 		return nil, err
 	}
-	log.Printf("Go's time.After example:\n%s", []byte(title))
-	log.Printf("Time for query: %f seconds!\n", time.Since(timeStart).Seconds())
 
+	log.Printf("Time for query: %f seconds!\n", time.Since(timeStart).Seconds())
 	return cs.Data, err
 }
 
-func (cs *ConsultantService) Close() error {
+func (cs *ConsultantService) isNextPage() (bool, string, error) {
+	var nextPages []*cdp.Node
+	var nextPage *cdp.Node
+	var nextPageHref string
+
+	err := chromedp.Run(cs.Ctx,
+		chromedp.Nodes(cs.Config.Selectors.NextPage, &nextPages, chromedp.ByQueryAll),
+	)
+
+	fmt.Println(len(nextPages))
+
+	nextPage = nextPages[0]
+	// for _, node := range nextPages {
+	// 	fmt.Println(node)
+	// }
+	nextPageHref = nextPage.AttributeValue("href")
+	fmt.Println(nextPageHref)
+	if err != nil {
+		return false, "", err
+	}
+	return true, nextPageHref, nil
+}
+
+func (cs *ConsultantService) close() error {
 	cs.Cancel()
 	return nil
+}
+
+func (cs *ConsultantService) goToPage(url string) (bool, error) {
+	err := chromedp.Run(cs.Ctx,
+		chromedp.Navigate(url),
+	)
+	if err != nil {
+		return false, err
+	}
+	return true, nil
+}
+
+func (cs *ConsultantService) Process(pages int) (service_core.News, error) {
+	log.Println("ConsultantService started to collect news")
+	// pageUrl := ""
+	var serviceNews service_core.News
+
+	for i := 0; i < pages; i++ {
+		cs.goToPage(cs.Config.Url)
+		news, err := cs.getData()
+		if err != nil {
+			log.Println(err)
+			return nil, err
+		}
+		// _, pageUrl, err = cs.isNextPage()
+		// if err != nil {
+		// 	log.Println(err)
+		// 	return nil, err
+		// }
+		// cs.Config.Url = pageUrl
+		serviceNews = append(serviceNews, news...)
+		cs.close()
+		return serviceNews, nil
+	}
+	cs.close()
+	return serviceNews, nil
 }

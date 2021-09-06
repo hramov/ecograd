@@ -19,7 +19,7 @@ type Message struct {
 }
 
 func getConnection() (*amqp.Connection, error) {
-	conn, err := amqp.Dial(fmt.Sprintf("amqp://%s:%s@localhost:5672/", os.Getenv("RABBIT_USER"), os.Getenv("RABBIT_PASSWORD")))
+	conn, err := amqp.Dial(fmt.Sprintf("amqp://%s:%s@%s:%s/", os.Getenv("RABBIT_USER"), os.Getenv("RABBIT_PASSWORD"), os.Getenv("RABBIT_HOST"), os.Getenv("RABBIT_PORT")))
 	if err != nil {
 		log.Println(err.Error())
 		return nil, err

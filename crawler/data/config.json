@@ -15,11 +15,12 @@
         "service": "ecoindustry",
         "url": "https://news.ecoindustry.ru/category/law/",
         "selectors": {
-            "item": "div.td_module_10",
-            "title": "div.entry-title",
-            "href": ".td-module-title > a",
-            "desc": "//*[@id='td-outer-wrap']/div[4]/div/div/div[1]/div/div[2]/div[2]/div[2]/text()",
-            "published": "time.entry-date"
+            "item": "div.td-main-content > div > div",
+            "title": "div.td-main-content > div > div > div.item-details > h3 > a",
+            "href": "div.td-main-content > div > div > div.item-details > h3 > a",
+            "desc": "div.td-main-content > div > div > div.item-details > div.td-excerpt",
+            "published": "div.td-main-content > div > div > div.item-details > div.td-module-meta-info > span.td-post-date > time",
+            "next_page": "div > div.page-nav > a"
         },
         "data_type": "text"
     }

@@ -16,6 +16,7 @@ type ServiceSelector struct {
 	Href      string `json:"href"`
 	Desc      string `json:"desc"`
 	Published string `json:"published"`
+	NextPage  string `json:"next_page"`
 }
 
 type ServiceConfig struct {
@@ -37,6 +38,5 @@ type SingleNews struct {
 type News []SingleNews
 
 type IService interface {
-	GetData() (News, error)
-	Close() error
+	Process(pages int) (News, error)
 }

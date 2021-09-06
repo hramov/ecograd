@@ -10,8 +10,7 @@ import (
 )
 
 func ParseConfig(fileName string) (Config, error) {
-	data := make([]byte, 1000)
-	config := Config{}
+	data := make([]byte, 10000)
 	rawData, err := os.Open(fmt.Sprintf("data/%s.json", fileName))
 	if err != nil {
 		log.Println(err.Error())
@@ -25,7 +24,11 @@ func ParseConfig(fileName string) (Config, error) {
 		return nil, err
 	}
 	data = data[:n]
-	json.Unmarshal(data, &config)
+	config := Config{}
+	err = json.Unmarshal(data, &config)
+	if err != nil {
+		log.Fatal(err)
+	}
 	return config, nil
 }
 
@@ -47,7 +50,3 @@ func CreateService(name string, config Config, service Service) (Service, error)
 	service.Config, _ = FindConfig(config, name)
 	return service, nil
 }
-
-func CountPages() {}
-func IsNextPage() {}
-func NextPage()   {}
