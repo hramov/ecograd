@@ -18,6 +18,10 @@ type Message struct {
 	Published time.Time         `json:"published"`
 }
 
+var Services map[string]service_core.IService
+var Sender *RabbitSender
+var Receiver *RabbitReceiver
+
 func getConnection() (*amqp.Connection, error) {
 	conn, err := amqp.Dial(fmt.Sprintf("amqp://%s:%s@%s:%s/", os.Getenv("RABBIT_USER"), os.Getenv("RABBIT_PASSWORD"), os.Getenv("RABBIT_HOST"), os.Getenv("RABBIT_PORT")))
 	if err != nil {

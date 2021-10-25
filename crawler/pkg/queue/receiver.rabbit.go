@@ -39,7 +39,7 @@ func (rr *RabbitReceiver) Receive(queueName string) {
 	go func() {
 		for d := range msgs {
 			log.Printf("Received a new message")
-			TestHandler(d)
+			QueryHandler(d)
 			d.Ack(false)
 		}
 	}()

@@ -13,6 +13,8 @@ import (
 	"github.com/joho/godotenv"
 )
 
+type IServiceArray map[string]service_core.IService
+
 func main() {
 	godotenv.Load()
 
@@ -29,8 +31,7 @@ func main() {
 	)
 
 	allocCtx, _ := chromedp.NewExecAllocator(context.Background(), opts...)
-
-	services := make(map[string]service_core.IService)
+	services := make(IServiceArray)
 
 	cs := service.ConsultantService{}
 	cs.Register(allocCtx)

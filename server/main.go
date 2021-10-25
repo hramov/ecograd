@@ -7,7 +7,6 @@ import (
 	gin "github.com/hramov/gin_ecograd/modules/framework/gin"
 	"github.com/hramov/gin_ecograd/modules/ioc"
 	orm "github.com/hramov/gin_ecograd/modules/orm"
-	"github.com/hramov/gin_ecograd/modules/queue"
 	"github.com/joho/godotenv"
 )
 
@@ -23,9 +22,9 @@ func main() {
 		log.Fatal("Cannot use IoC container!")
 	}
 
-	rabbitReceiver := queue.RabbitReceiver{}
-	rabbitReceiver = rabbitReceiver.Connect()
-	go rabbitReceiver.Receive("news")
+	// rabbitReceiver := queue.RabbitReceiver{}
+	// rabbitReceiver = rabbitReceiver.Connect()
+	// go rabbitReceiver.Receive("news")
 
 	var gin gates.FrameworkGate = &gin.Gin{}
 	gin.Start()
