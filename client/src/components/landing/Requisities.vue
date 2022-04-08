@@ -4,9 +4,8 @@
       <h1>Реквизиты</h1>
     </div>
 
-    <div class="row" style="margin: 0 !important;">
-      <div class="col-md-12 col-lg-9 col-sm-12">
-        <ul class="list-group">
+    <div style="display: flex; justify-content: center">
+        <ul class="list-group" style="width: 60%">
           <li class="list-group-item">
             <p>
               Полное наименование организации: Общество с ограниченной
@@ -29,10 +28,7 @@
             </p>
           </li>
           <li class="list-group-item">
-            <p>
-              Фактический адрес: 656058, г.Барнаул, проспект Комсомольский, офис
-              205, 206, 207
-            </p>
+            <p>Фактический адрес: 656002б Барнаул, Октябрьский район, ул. ​Профинтерна, 46</p>
           </li>
           <li class="list-group-item">
             <p>Генеральный директор: Лавриненко Полина Викторовна</p>
@@ -50,31 +46,6 @@
             <p>КПП: 222201001</p>
           </li>
         </ul>
-      </div>
-
-      <div class="col-md-12 col-lg-3 col-sm-12 text-center mt-5">
-        <div>
-          <img
-            class="img_ved"
-            src="https://экоградъ22.рф/assets/images/pa_01.jpg"
-            alt="About"
-          />
-        </div>
-        <div>
-          <img
-            class="img_ved"
-            src="https://экоградъ22.рф/assets/images/2780_600.jpg"
-            alt="About"
-          />
-        </div>
-        <div>
-          <img
-            class="img_ved"
-            src="https://экоградъ22.рф/assets/images/min-stroy.png"
-            alt="About"
-          />
-        </div>
-      </div>
     </div>
   </section>
 </template>
@@ -83,7 +54,5 @@
 import { defineComponent } from "vue";
 
 export default defineComponent({
-  // setup() {
-  // },
 });
 </script>
