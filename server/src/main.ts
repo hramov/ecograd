@@ -1,12 +1,15 @@
+import 'reflect-metadata';
+import { container } from 'tsyringe';
 import { API } from './modules/api';
 import { Database } from './modules/database';
 
 class App {
-	bootstrap() {
+	async bootstrap() {
 		const db = new Database();
-		const instance = db.init();
-		const api = new API();
-		api.start(instance);
+		await db.init();
+
+		const api = container.resolve(API);
+		await api.start();
 	}
 }
 

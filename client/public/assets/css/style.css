@@ -42,7 +42,7 @@ p {
   margin: 0;
 }
 
-.intro_img > img {
+.intro_img>img {
   width: 100%;
   display: block;
   margin: 0 auto;
@@ -59,11 +59,6 @@ p {
 
 .item:hover {
   color: green !important;
-}
-
-.logo {
-  padding-left: 0px;
-  padding-top: 0px;
 }
 
 .small {
@@ -84,12 +79,12 @@ p {
   flex-grow: unset !important;
 }
 
-.card-img > img {
+.card-img>img {
   width: 60px;
   margin: 0 auto;
 }
 
-.team > img {
+.team>img {
   width: 100px !important;
 }
 

@@ -1,13 +1,25 @@
-import express from 'express';
+import express, { Response } from 'express';
 import fileUpload from 'express-fileupload';
 import cors from 'cors';
 import { APP } from '../../config/constant';
 import { Logger } from '../logger';
+import { autoInjectable } from 'tsyringe';
+import { APIRouter } from './router';
 
+export class APIReply<T> {
+	public status: boolean;
+	public data: T;
+	public error: string | null;
+}
+
+export async function SuccessAPIReply<T>(res: Response, data: APIReply<T>) {
+	res.status(200).json(data);
+}
+@autoInjectable()
 export class API {
 	constructor(private readonly logger?: Logger) {}
 
-	public async start(instance: any) {
+	public async start() {
 		const app = express();
 		app.disable('x-powered-by');
 
@@ -16,24 +28,11 @@ export class API {
 
 		app.use(fileUpload());
 
-		app.use(
-			cors({
-				allowedHeaders: [
-					'sessionId',
-					'Content-Type',
-					'X-Auth-Token',
-					'X-Gui-Version',
-				],
-				exposedHeaders: ['sessionId'],
-				origin: '*',
-				methods: 'GET,HEAD,PUT,PATCH,POST,DELETE',
-				preflightContinue: false,
-			}),
-		);
+		app.use(cors());
 
-		// const router = new ApiRouter();
+		const router = new APIRouter();
 
-		// app.use('/api', router.init());
+		app.use('/api', router.init());
 
 		// const authMiddleware = new AuthMiddleware();
 		// app.use((req: Request, res: Response, next: NextFunction) =>
