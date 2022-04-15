@@ -1,10 +1,10 @@
+import { sign } from 'jsonwebtoken';
 import { autoInjectable } from 'tsyringe';
 import { UserAccess } from '../../modules/database/access/user.access';
+import { User } from '../../modules/database/model/User.model';
 import { UserNotFoundError } from '../../modules/error/app/user-not-found.error';
 import { ValidationError } from '../../modules/error/app/validation.error';
-import { User } from '../user/user.entity';
 import { Auth } from './auth.entity';
-import * as jwt from 'jwt-hs256';
 
 export interface JWTTokenPayload {
 	sub: string;
@@ -20,19 +20,16 @@ export class AuthUseCase {
 	) {}
 
 	// Public interface
-	public async login(
-		username: string,
-		password: string,
-	): Promise<string | Error> {
-		if (this.auth.isValid(username) && this.auth.isValid(password)) {
-			const user = await this.authAccess.getUserByUsernameAndPassword(
-				username,
-				password,
+	public async login(dto: any): Promise<string | Error> {
+		if (this.auth.isValid(dto.email) && this.auth.isValid(dto.password)) {
+			const user = await this.authAccess.getUserByEmailAndPassword(
+				dto.email,
+				dto.password,
 			);
 			if (user instanceof User) {
-				return this.createToken(user);
+				return sign({ _id: user.id, email: user.email }, 'secret');
 			}
-			return new UserNotFoundError(username);
+			return new UserNotFoundError(dto.email);
 		}
 		return new ValidationError('username, password');
 	}
@@ -44,31 +41,4 @@ export class AuthUseCase {
 	}
 
 	public async logout(token: string) {}
-
-	public async updatePassword(
-		token: string,
-		oldPass: string,
-		newPass: string,
-	) {}
-	public async resetPassword(token: string) {}
-
-	// Private realization
-	private createToken(user: User): string {
-		const payload: JWTTokenPayload = {
-			sub: user.id,
-			name: user.name,
-			iat: Date.now(),
-		};
-		return jwt.generateHS256Token(payload, process.env.JWT_SECRET);
-	}
-
-	private toBase64(payload: string) {
-		return Buffer.from(payload).toString('base64');
-	}
-	private async checkIfTokenExpired(token: string): Promise<boolean> {
-		return true;
-	}
-	private async updateToken(): Promise<string> {
-		return '';
-	}
 }

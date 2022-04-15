@@ -1,5 +1,4 @@
 export class Role {
+	id: number;
 	public title: string;
-	public code: number;
-	public allowedRoutes: string[];
 }

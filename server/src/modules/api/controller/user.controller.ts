@@ -8,19 +8,17 @@ export class UserController {
 	constructor(private readonly authUseCase?: AuthUseCase) {}
 
 	public async login(req: Request, res: Response) {
-		if (!req.body || !req.body.username || !req.body.password) {
+		if (!req.body || !req.body.email || !req.body.password) {
 			return NoCredentialsError(res);
 		}
-		return await this.authUseCase.login(
-			req.body.username,
-			req.body.password,
-		);
+		console.log(req.user);
+		res.json(await this.authUseCase.login(req.user));
 	}
 
 	public async register(req: Request, res: Response) {
 		if (
 			!req.body ||
-			!req.body.username ||
+			!req.body.email ||
 			!req.body.password ||
 			!req.body.name
 		) {
@@ -29,5 +27,7 @@ export class UserController {
 		return await this.authUseCase.register(req.body);
 	}
 
-	public async getUserInfo(req: Request, res: Response) {}
+	public async getUserInfo(req: Request, res: Response) {
+		console.log(123);
+	}
 }
