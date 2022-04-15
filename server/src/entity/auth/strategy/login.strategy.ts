@@ -1,7 +1,6 @@
 import { IStrategyOptions, IVerifyOptions, Strategy } from 'passport-local';
 import { autoInjectable } from 'tsyringe';
 import { UserAccess } from '../../../modules/database/access/user.access';
-import { UserNotFoundError } from '../../../modules/error/app/user-not-found.error';
 
 const opts: IStrategyOptions = {
 	usernameField: 'email',
@@ -26,7 +25,6 @@ export class LoginStrategy extends Strategy {
 			email,
 			password,
 		);
-		if (user instanceof UserNotFoundError) return done(user, null);
 		return done(null, user);
 	}
 }

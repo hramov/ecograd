@@ -1,7 +1,7 @@
 import { Role } from '../auth/role.entity';
 
 export class User {
-	id: number;
+	id?: number;
 	password: string;
 	name: string;
 	email: string;

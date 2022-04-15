@@ -28,7 +28,6 @@ export class API {
 		app.use(express.json({ limit: '10mb' }));
 		app.use(express.urlencoded({ extended: false }));
 		app.use(passport.initialize());
-		// app.use(passport.session());
 		app.use(fileUpload());
 
 		app.use(cors());
@@ -36,16 +35,7 @@ export class API {
 		const router = new APIRouter();
 
 		app.use('/api', router.init());
-
-		// const authMiddleware = new AuthMiddleware();
-		// app.use((req: Request, res: Response, next: NextFunction) =>
-		// 	authMiddleware.canActivate(req, res, next),
-		// );
-
-		// passport config
 		passport.use(new JWTStrategy());
-		// passport.serializeUser(Account.serializeUser());
-		// passport.deserializeUser(Account.deserializeUser());
 
 		const port = Number(process.env.MTNK_APP_PORT) || APP.defaultPort;
 

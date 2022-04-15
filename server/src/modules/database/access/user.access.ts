@@ -14,35 +14,26 @@ export class UserAccess {
 		password: string,
 	): Promise<User | UserNotFoundError> {
 		console.log(Buffer.from(password).toString('base64'));
-		const candidate = await this.repository.findOneBy({
+		return await this.repository.findOneBy({
 			email: email,
 			password: Buffer.from(password).toString('base64'),
 		});
-		return candidate ? candidate : new UserNotFoundError(email);
 	}
 
 	public async checkIfUserExistsByEmail(email: string): Promise<boolean> {
 		const user = await this.repository.findOneBy({
 			email: email,
 		});
-		if (user) {
-			console.log(123);
-		}
-		return true;
+		return !!user;
 	}
 
 	public async getUserByID(id: number): Promise<User | UserNotFoundError> {
-		const user = await this.repository.findOneBy({ id: id });
-		return user ? user : new UserNotFoundError();
+		return await this.repository.findOneBy({ id: id });
 	}
 
-	public async createUser(user: User): Promise<number> {
+	public async createUser(user: User): Promise<User> {
 		user.password = Buffer.from(user.password).toString('base64');
-		const result = await this.repository.save(user);
-		if (result instanceof User) {
-			return result.id;
-		}
-		return null;
+		return await this.repository.save(user);
 	}
 
 	public async userCount() {

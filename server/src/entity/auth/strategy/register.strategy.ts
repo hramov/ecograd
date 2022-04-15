@@ -31,8 +31,9 @@ export class RegisterStrategy extends Strategy {
 		const user = await RegisterStrategy.access.checkIfUserExistsByEmail(
 			email,
 		);
-		if (!user) return done(new Error('User already exists'), null);
-		req.user = user;
-		return done(null, user);
+		if (user) {
+			return done('User already exists', user);
+		}
+		return done(null, await RegisterStrategy.access.createUser(req.body));
 	}
 }
