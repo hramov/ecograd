@@ -2,7 +2,7 @@ import { Repository } from 'typeorm';
 import { UserNotFoundError } from '../../error/app/user-not-found.error';
 import { AppDataSource } from '../data-source';
 import { User } from '../model/User.model';
-
+import { hashSync, compareSync } from 'bcrypt';
 export class UserAccess {
 	private repository: Repository<User>;
 	constructor() {
@@ -13,11 +13,14 @@ export class UserAccess {
 		email: string,
 		password: string,
 	): Promise<User | UserNotFoundError> {
-		console.log(Buffer.from(password).toString('base64'));
-		return await this.repository.findOneBy({
+		const user = await this.repository.findOneBy({
 			email: email,
-			password: Buffer.from(password).toString('base64'),
 		});
+
+		if (user && this.checkPassword(password, user.password)) {
+			return user;
+		}
+		return null;
 	}
 
 	public async checkIfUserExistsByEmail(email: string): Promise<boolean> {
@@ -32,11 +35,20 @@ export class UserAccess {
 	}
 
 	public async createUser(user: User): Promise<User> {
-		user.password = Buffer.from(user.password).toString('base64');
+		user.password = this.createHash(user.password);
 		return await this.repository.save(user);
 	}
 
 	public async userCount() {
 		return await this.repository.count();
+	}
+
+	private createHash(password: string) {
+		return hashSync(password, 10);
+	}
+
+	private checkPassword(password: string, passwordHash: string) {
+		const result = compareSync(password, passwordHash);
+		return result;
 	}
 }
