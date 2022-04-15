@@ -48,7 +48,7 @@
 					</li>
 					<li class="nav-item item">
 						<div
-							v-if="!!user.id"
+							v-if="!!getUser.id"
 							class="dropdown"
 							style="margin-left: auto; margin-right: 0; max-width: 150px"
 						>
@@ -59,7 +59,7 @@
 								data-bs-toggle="dropdown"
 								aria-expanded="false"
 							>
-								{{ user.name }} {{ user.last_name }}
+								{{ getUser.name }} {{ getUser.last_name }}
 							</button>
 							<ul
 								class="dropdown-menu"
@@ -68,10 +68,7 @@
 								<li>
 									<a
 										class="dropdown-item"
-										v-if="
-											user.role == 'admin' ||
-												user.role == 'expert'
-										"
+										v-if="getIsAdmin"
 										@click.prevent="
 											$router.push('/dashboard')
 										"
@@ -79,7 +76,7 @@
 									>
 									<a
 										class="dropdown-item"
-										v-if="user.role == 'client'"
+										v-if="getUser.role == 'client'"
 										@click.prevent="$router.push('/client')"
 										>Открыть</a
 									>
@@ -112,8 +109,8 @@
 </template>
 
 <script lang="ts">
-import { defineComponent, computed } from 'vue';
-import { useStore } from 'vuex';
+import { defineComponent } from 'vue';
+import { mapGetters } from 'vuex';
 
 export default defineComponent({
 	props: {
@@ -121,12 +118,8 @@ export default defineComponent({
 			type: String,
 		},
 	},
-	setup() {
-		const store = useStore();
-		const user = computed(() => store.getters.getUser);
-		return {
-			user: user,
-		};
+	computed: {
+		...mapGetters(['getUser', 'getIsAdmin']),
 	},
 });
 </script>

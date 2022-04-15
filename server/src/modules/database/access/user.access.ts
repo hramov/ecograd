@@ -24,14 +24,22 @@ export class UserAccess {
 	}
 
 	public async checkIfUserExistsByEmail(email: string): Promise<boolean> {
-		const user = await this.repository.findOneBy({
-			email: email,
+		const user = await this.repository.findOne({
+			where: {
+				email: email,
+			},
+			relations: ['role'],
 		});
 		return !!user;
 	}
 
 	public async getUserByID(id: number): Promise<User | UserNotFoundError> {
-		return await this.repository.findOneBy({ id: id });
+		return await this.repository.findOne({
+			where: {
+				id: id,
+			},
+			relations: ['roles'],
+		});
 	}
 
 	public async createUser(user: User): Promise<User> {

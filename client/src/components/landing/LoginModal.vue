@@ -69,34 +69,29 @@
 </template>
 
 <script lang="ts">
-import { computed, defineComponent, ref } from 'vue';
-import { useStore } from 'vuex';
+import { defineComponent } from 'vue';
+import { mapActions } from 'vuex';
 
 export default defineComponent({
-	setup() {
-		const store = useStore();
-		const email = ref('');
-		const password = ref('');
-		const status = ref('');
-		const isLoggedIn = computed(() => store.getters.getIsLoggedIn);
-		const isTouched = ref(false);
-
-		const login = async () => {
-			status.value = await store.dispatch('login', {
-				email: email.value,
-				password: password.value,
-			});
-			isTouched.value = true;
-		};
-
+	data() {
 		return {
-			isLoggedIn: isLoggedIn,
-			isTouched: isTouched,
-			email: email,
-			status: status,
-			password: password,
-			login: login,
+			email: '',
+			password: '',
+			isTouched: false,
+			isLoggedIn: false,
 		};
+	},
+	methods: {
+		...mapActions(['loginAction', 'getUserAction']),
+		async login() {
+			this.isTouched = true;
+			this.isLoggedIn = await this.loginAction({
+				email: this.email,
+				password: this.password,
+			});
+			await this.getUserAction();
+			this.$router.push('/dashboard');
+		},
 	},
 });
 </script>

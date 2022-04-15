@@ -17,12 +17,12 @@ const mutations = {
 
 const actions = {
 	async getExpertsAction({ commit }: any) {
-		commit('setExperts', await FetchDataProvider.get('common/experts'));
+		commit('setExperts', await FetchDataProvider.get('common/expert'));
 	},
 	async getSingleExpertAction({ commit }: any, id: number) {
 		commit(
 			'setExpert',
-			await FetchDataProvider.getByID('common/experts', id),
+			await FetchDataProvider.getByID('common/expert', id),
 		);
 	},
 

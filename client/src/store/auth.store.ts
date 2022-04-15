@@ -1,8 +1,6 @@
 import { FetchDataProvider } from '@/custom/fetch-data.provider';
 import { IUser } from '@/custom/interfaces';
 
-import store from './index';
-
 const state = {
 	jwt_token: '' || (localStorage.getItem('token') as string),
 	user: null || (JSON.parse(localStorage.getItem('user')!) as IUser),
@@ -10,7 +8,6 @@ const state = {
 	isLoggedIn: JSON.parse(localStorage.getItem('user') as string)
 		? JSON.parse(localStorage.getItem('user') as string).id
 		: false,
-	isAdmin: false,
 	uexperts: [],
 	uexpert: {},
 };
@@ -24,9 +21,6 @@ const mutations = {
 	},
 	setIsLoggedIn(state: any, data: boolean) {
 		state.isLoggedIn = data;
-	},
-	setIsAdmin(state: any, data: any) {
-		state.isAdmin = !!data.data;
 	},
 	setUsers(state: any, data: any) {
 		state.users = data;
@@ -42,36 +36,27 @@ const mutations = {
 	},
 };
 const actions = {
-	async login({ commit }: any, data: any) {
-		const router = store.state.router!;
+	async loginAction({ commit }: any, data: any) {
 		const result = await FetchDataProvider.post('user/login', data);
 		if (result.error != null) {
-			return result.error;
+			return false;
 		}
 		commit('setIsLoggedIn', true);
 		commit('setJWT', result.access_token);
 		localStorage.setItem('token', result.access_token);
-		document.getElementById('closeBtn')!.click();
-		router.push('/');
 		return true;
 	},
 
 	async logout({ commit }: any) {
-		const router = store.state.router!;
 		localStorage.setItem('token', '');
 		localStorage.setItem('user', JSON.stringify(''));
 		commit('setJWT', null);
 		commit('setUser', {});
-		router.push('/');
 		return true;
 	},
 
 	async getUserForExpertAction({ commit }: any, id: any) {
 		commit('setUserForExpert', await FetchDataProvider.get(`users/${id}`));
-	},
-
-	async isAdminAction({ commit }: any) {
-		commit('setIsAdmin', await FetchDataProvider.get('auth/check-jwt'));
 	},
 
 	async getUsersAction({ commit }: any) {
@@ -93,7 +78,9 @@ const actions = {
 const getters = {
 	getJWT: (state: any) =>
 		state.jwt_token || (localStorage.getItem('jwt_token') as string),
-	getIsAdmin: (state: any) => state.isAdmin,
+	getIsAdmin: (state: any) =>
+		state.user?.roles?.filter((role: any) => role.title == 'Администратор')
+			.length,
 	getUser: (state: any) =>
 		state.user || JSON.parse(localStorage.getItem('user')!),
 	getIsLoggedIn: (state: any) => state.isLoggedIn,

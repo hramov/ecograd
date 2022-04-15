@@ -1,33 +1,16 @@
-import { createStore } from "vuex";
-import { Router } from "vue-router";
+import { createStore } from 'vuex';
 
 /** Modules */
-import expert from './expert.store'
-import order from './order.store'
-import auth from './auth.store'
-import client from './client.store'
+import expert from './expert.store';
+import order from './order.store';
+import auth from './auth.store';
+import client from './client.store';
 
 export default createStore({
-  state: {
-    router: {} as Router | null,
-    backendUrl: process.env.VUE_APP_BACKEND
-  },
-
-  mutations: {
-    setRouter(state, router) {
-      state.router = router;
-    }
-  },
-  getters: {
-    getRouter: (state) => {
-      return state.router;
-    },
-    getBackendUrl: state => state.backendUrl
-  },
-  modules: {
-    expert,
-    order,
-    auth,
-    client
-  }
+	modules: {
+		expert,
+		order,
+		auth,
+		client,
+	},
 });

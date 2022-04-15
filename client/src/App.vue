@@ -1,6 +1,6 @@
 <template>
 	<div>
-		<!-- <Header :isUser="user.email" /> -->
+		<Header :isUser="getUser?.email" />
 		<router-view />
 		<NormatModal />
 		<ObjectsModal />
@@ -12,7 +12,7 @@
 
 <script lang="ts">
 import '@/assets/css/style.css';
-import { computed, defineComponent, getCurrentInstance } from 'vue';
+import { defineComponent } from 'vue';
 import Header from './components/Header.vue';
 import Footer from './components/Footer.vue';
 
@@ -20,7 +20,7 @@ import NormatModal from './components/footerModals/Normat.vue';
 import ObjectsModal from './components/footerModals/Objects.vue';
 import DocumentsModal from './components/footerModals/Documents.vue';
 
-import { useStore } from 'vuex';
+import { mapGetters } from 'vuex';
 export default defineComponent({
 	name: 'App',
 
@@ -31,20 +31,14 @@ export default defineComponent({
 		ObjectsModal,
 		DocumentsModal,
 	},
+	computed: {
+		...mapGetters(['getUser']),
+	},
 
-	async setup() {
-		const store = useStore();
-		const user = computed(() => store.getters.getUser);
-
-		if (!user.value) {
-			await store.dispatch('getUserAction');
+	async mounted() {
+		if (!this.getUser) {
+			await this.$store.dispatch('getUserAction');
 		}
-		const instance = getCurrentInstance();
-		const router = instance!.proxy?.$router;
-		store.commit('setRouter', router);
-		localStorage.getItem('user')
-			? null
-			: localStorage.setItem('user', JSON.stringify(''));
 	},
 });
 </script>

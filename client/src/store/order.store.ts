@@ -17,10 +17,10 @@ const mutations = {
 
 const actions = {
 	async getOrdersAction({ commit }: any) {
-		commit('setOrders', await FetchDataProvider.get('orders'));
+		commit('setOrders', await FetchDataProvider.get('order'));
 	},
 	async getOrderAction({ commit }: any, id: number) {
-		commit('setOrder', await FetchDataProvider.getByID('orders', id));
+		commit('setOrder', await FetchDataProvider.getByID('order', id));
 		return true;
 	},
 	async addOrderUnauthorized(_: any, order: any) {

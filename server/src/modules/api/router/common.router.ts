@@ -10,7 +10,7 @@ export class CommonRouter {
 	}
 
 	init() {
-		this.router.get('/experts', (req: Request, res: Response) =>
+		this.router.get('/expert', (req: Request, res: Response) =>
 			this.commonController.getExperts(req, res),
 		);
 
