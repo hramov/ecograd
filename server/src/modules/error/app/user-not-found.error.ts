@@ -1,5 +1,5 @@
 export class UserNotFoundError extends Error {
-	constructor(private readonly username?: string) {
+	constructor(private readonly email?: string) {
 		super('User not found');
 	}
 }

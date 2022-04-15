@@ -1,4 +1,4 @@
-import { User } from '../user/user.entity';
+import { User } from '../../modules/database/model/User.model';
 
 export class Auth {
 	public login: string;

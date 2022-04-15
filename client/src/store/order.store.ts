@@ -17,31 +17,25 @@ const mutations = {
 
 const actions = {
 	async getOrdersAction({ commit }: any) {
-		const fdProvider = new FetchDataProvider();
-		commit('setOrders', await fdProvider.get('orders'));
+		commit('setOrders', await FetchDataProvider.get('orders'));
 	},
 	async getOrderAction({ commit }: any, id: number) {
-		const fdProvider = new FetchDataProvider();
-		commit('setOrder', await fdProvider.getByID('orders', id));
+		commit('setOrder', await FetchDataProvider.getByID('orders', id));
 		return true;
 	},
 	async addOrderUnauthorized(_: any, order: any) {
-		const fdProvider = new FetchDataProvider();
-		return fdProvider.post('orders/unauth', order);
+		return FetchDataProvider.post('orders/unauth', order);
 	},
 	async addOrder(_: any, order: any) {
-		const fdProvider = new FetchDataProvider();
 		return {
-			order: await fdProvider.post('orders/', order),
+			order: await FetchDataProvider.post('orders/', order),
 		};
 	},
 	async getWorkAction(_: any, order_id: any) {
-		const fdProvider = new FetchDataProvider();
-		return fdProvider.patch('orders/expert', order_id, null);
+		return FetchDataProvider.patch('orders/expert', order_id, null);
 	},
 	async deleteOrderDocsAction(_: any, order_id: any) {
-		const fdProvider = new FetchDataProvider();
-		return fdProvider.patch('orders/delete', order_id, null);
+		return FetchDataProvider.patch('orders/delete', order_id, null);
 	},
 };
 

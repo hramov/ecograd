@@ -10,10 +10,12 @@ import { Role } from './Role.model';
 @Entity()
 export class User {
 	@PrimaryGeneratedColumn()
-	id: number;
+	id?: number;
 
-	@Column('text')
-	username: string;
+	@Column('text', {
+		unique: true,
+	})
+	email: string;
 
 	@Column('text')
 	password: string;

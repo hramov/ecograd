@@ -17,26 +17,24 @@ const mutations = {
 
 const actions = {
 	async getExpertsAction({ commit }: any) {
-		const fdProvider = new FetchDataProvider();
-		commit('setExperts', await fdProvider.get('common/experts'));
+		commit('setExperts', await FetchDataProvider.get('common/experts'));
 	},
 	async getSingleExpertAction({ commit }: any, id: number) {
-		const fdProvider = new FetchDataProvider();
-		commit('setExpert', await fdProvider.getByID('common/experts', id));
+		commit(
+			'setExpert',
+			await FetchDataProvider.getByID('common/experts', id),
+		);
 	},
 
 	async addExpertAction(_: any, data: any) {
-		const fdProvider = new FetchDataProvider();
-		await fdProvider.post('auth/register', data, true);
+		await FetchDataProvider.post('auth/register', data, true);
 	},
 
 	async updateExpertAction(_: any, id: any) {
-		const fdProvider = new FetchDataProvider();
-		return fdProvider.patch('experts', id, state.expert);
+		return FetchDataProvider.patch('experts', id, state.expert);
 	},
 	async deleteExpertAction(_: any, id: any) {
-		const fdProvider = new FetchDataProvider();
-		return fdProvider.delete('experts', id);
+		return FetchDataProvider.delete('experts', id);
 	},
 };
 

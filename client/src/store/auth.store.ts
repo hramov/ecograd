@@ -44,20 +44,18 @@ const mutations = {
 const actions = {
 	async login({ commit }: any, data: any) {
 		const router = store.state.router!;
-		const fdProvider = new FetchDataProvider();
-		const result = await fdProvider.post('auth/login', data);
+		const result = await FetchDataProvider.post('user/login', data);
 		if (result.error != null) {
 			return result.error;
 		}
 		commit('setIsLoggedIn', true);
-		commit('setUser', result.data.user);
-		commit('setJWT', result.data.token);
-		localStorage.setItem('token', result.data.token);
-		localStorage.setItem('user', JSON.stringify(result.data.user));
+		commit('setJWT', result.access_token);
+		localStorage.setItem('token', result.access_token);
 		document.getElementById('closeBtn')!.click();
 		router.push('/');
 		return true;
 	},
+
 	async logout({ commit }: any) {
 		const router = store.state.router!;
 		localStorage.setItem('token', '');
@@ -67,25 +65,29 @@ const actions = {
 		router.push('/');
 		return true;
 	},
+
 	async getUserForExpertAction({ commit }: any, id: any) {
-		const fdProvider = new FetchDataProvider();
-		commit('setUserForExpert', await fdProvider.get(`users/${id}`));
+		commit('setUserForExpert', await FetchDataProvider.get(`users/${id}`));
 	},
+
 	async isAdminAction({ commit }: any) {
-		const fdProvider = new FetchDataProvider();
-		commit('setIsAdmin', await fdProvider.get('auth/check-jwt'));
+		commit('setIsAdmin', await FetchDataProvider.get('auth/check-jwt'));
 	},
+
 	async getUsersAction({ commit }: any) {
-		const fdProvider = new FetchDataProvider();
-		commit('setUsers', await fdProvider.get('users/expert'));
+		commit('setUsers', await FetchDataProvider.get('users/expert'));
 	},
+
+	async getUserAction({ commit }: any) {
+		commit('setUser', await FetchDataProvider.get('user/info'));
+	},
+
 	async getUExpertsAction({ commit }: any) {
-		const fdProvider = new FetchDataProvider();
-		commit('setUExperts', await fdProvider.get('users/uexpert'));
+		commit('setUExperts', await FetchDataProvider.get('users/uexpert'));
 	},
+
 	async getUExpertAction({ commit }: any, id: number) {
-		const fdProvider = new FetchDataProvider();
-		commit('setUExpert', await fdProvider.get(`users/${id}`));
+		commit('setUExpert', await FetchDataProvider.get(`users/${id}`));
 	},
 };
 const getters = {

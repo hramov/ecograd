@@ -8,7 +8,6 @@ export class APIRouter {
 	init() {
 		this.router.use('/common', new CommonRouter().init());
 		this.router.use('/user', new UserRouter().init());
-
 		return this.router;
 	}
 }

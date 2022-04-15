@@ -1,6 +1,6 @@
 <template>
 	<div>
-		<Header :isUser="$store.getters.getJWT" />
+		<!-- <Header :isUser="user.email" /> -->
 		<router-view />
 		<NormatModal />
 		<ObjectsModal />
@@ -12,7 +12,7 @@
 
 <script lang="ts">
 import '@/assets/css/style.css';
-import { defineComponent, getCurrentInstance } from 'vue';
+import { computed, defineComponent, getCurrentInstance } from 'vue';
 import Header from './components/Header.vue';
 import Footer from './components/Footer.vue';
 
@@ -32,8 +32,13 @@ export default defineComponent({
 		DocumentsModal,
 	},
 
-	setup() {
+	async setup() {
 		const store = useStore();
+		const user = computed(() => store.getters.getUser);
+
+		if (!user.value) {
+			await store.dispatch('getUserAction');
+		}
 		const instance = getCurrentInstance();
 		const router = instance!.proxy?.$router;
 		store.commit('setRouter', router);

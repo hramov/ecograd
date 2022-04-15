@@ -5,6 +5,8 @@ import { APP } from '../../config/constant';
 import { Logger } from '../logger';
 import { autoInjectable } from 'tsyringe';
 import { APIRouter } from './router';
+import passport from 'passport';
+import { JWTStrategy } from '../../entity/auth/strategy/jwt.strategy';
 
 export class APIReply<T> {
 	public status: boolean;
@@ -25,7 +27,8 @@ export class API {
 
 		app.use(express.json({ limit: '10mb' }));
 		app.use(express.urlencoded({ extended: false }));
-
+		app.use(passport.initialize());
+		// app.use(passport.session());
 		app.use(fileUpload());
 
 		app.use(cors());
@@ -38,6 +41,11 @@ export class API {
 		// app.use((req: Request, res: Response, next: NextFunction) =>
 		// 	authMiddleware.canActivate(req, res, next),
 		// );
+
+		// passport config
+		passport.use(new JWTStrategy());
+		// passport.serializeUser(Account.serializeUser());
+		// passport.deserializeUser(Account.deserializeUser());
 
 		const port = Number(process.env.MTNK_APP_PORT) || APP.defaultPort;
 

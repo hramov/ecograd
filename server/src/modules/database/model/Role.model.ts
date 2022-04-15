@@ -8,7 +8,4 @@ export class Role {
 
 	@Column('text')
 	title: string;
-
-	@ManyToMany(() => User, (user) => user.id)
-	users: User;
 }
