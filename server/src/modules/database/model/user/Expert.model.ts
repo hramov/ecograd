@@ -1,4 +1,10 @@
-import { Column, Entity, OneToOne, PrimaryGeneratedColumn } from 'typeorm';
+import {
+	Column,
+	Entity,
+	JoinColumn,
+	OneToOne,
+	PrimaryGeneratedColumn,
+} from 'typeorm';
 import { User } from './User.model';
 
 @Entity({
@@ -8,7 +14,8 @@ export class Expert {
 	@PrimaryGeneratedColumn()
 	id: number;
 
-	@OneToOne(() => User, (user) => user.id)
+	@OneToOne(() => User)
+	@JoinColumn()
 	user: User;
 
 	@Column('text', { unique: true, nullable: true })

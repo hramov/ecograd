@@ -34,20 +34,14 @@ export class User {
 	})
 	profile: Profile;
 
-	@OneToOne(() => Expert, (expert) => expert.id, {
-		cascade: true,
-	})
+	@OneToOne(() => Admin)
+	admin: Admin;
+
+	@OneToOne(() => Expert)
 	expert: Expert;
 
-	@OneToOne(() => Client, (client) => client.id, {
-		cascade: true,
-	})
+	@OneToOne(() => Client)
 	client: Client;
-
-	@OneToOne(() => Admin, (admin) => admin.id, {
-		cascade: true,
-	})
-	admin: Admin;
 
 	@Column('timestamp with time zone', { default: () => 'CURRENT_TIMESTAMP' })
 	createdAt: Date;

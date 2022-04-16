@@ -28,7 +28,27 @@ export class UserAccess {
 	}
 
 	public async getAllUsers() {
-		return await this.repository.find({ relations: ['profile'] });
+		const users = await this.repository.find({ relations: ['profile'] });
+
+		for (let i = 0; i < users.length; i++) {
+			users[i].admin = (
+				await this.adminRepo.query(
+					`select * from "user"."admin" where "userId" = ${users[i].id}`,
+				)
+			)[0];
+			users[i].expert = (
+				await this.expertRepo.query(
+					`select * from "user"."expert" where "userId" = ${users[i].id}`,
+				)
+			)[0];
+			users[i].client = (
+				await this.clientRepo.query(
+					`select * from "user"."client" where "userId" = ${users[i].id}`,
+				)
+			)[0];
+		}
+
+		return users;
 	}
 
 	public async getUserByEmailAndPassword(
@@ -56,11 +76,37 @@ export class UserAccess {
 	}
 
 	public async getUserByID(id: number): Promise<User | UserNotFoundError> {
+		const result = await this.repository.findOne({
+			where: {
+				id: id,
+			},
+			relations: ['profile'],
+		});
+
+		const admin = await this.adminRepo.query(
+			`select * from "user"."admin" where "userId" = ${result.id}`,
+		);
+		const expert = await this.expertRepo.query(
+			`select * from "user"."expert" where "userId" = ${result.id}`,
+		);
+		const client = await this.clientRepo.query(
+			`select * from "user"."client" where "userId" = ${result.id}`,
+		);
+
+		return {
+			...result,
+			admin: admin[0],
+			expert: expert[0],
+			client: client[0],
+		};
+	}
+
+	public async getProfileByID(id: number): Promise<User | UserNotFoundError> {
 		return await this.repository.findOne({
 			where: {
 				id: id,
 			},
-			relations: ['profile', 'expert', 'admin', 'client'],
+			relations: ['profile'],
 		});
 	}
 
@@ -80,12 +126,13 @@ export class UserAccess {
 			(profile: Profile) => dto.profile === profile.title,
 		);
 
+		await this.repository.save(user);
+
 		switch (dto.profile) {
 			case ROLES.Admin:
 				const admin = new Admin();
+				admin.user = user;
 				await this.adminRepo.save(admin);
-				user.admin = admin;
-				await this.repository.save(user);
 				break;
 			case ROLES.Expert:
 				const expert = new Expert();
@@ -93,16 +140,14 @@ export class UserAccess {
 				expert.position = (profileDto as ExpertDto).position;
 				expert.certificate = (profileDto as ExpertDto).certificate;
 				expert.direction = (profileDto as ExpertDto).direction;
+				expert.user = user;
 				await this.expertRepo.save(expert);
-				user.expert = expert;
-				await this.repository.save(user);
 				break;
 			case ROLES.Client:
 				const client = new Client();
 				client.phone = (profileDto as ClientDto).phone;
+				client.user = user;
 				await this.clientRepo.save(client);
-				user.client = client;
-				await this.repository.save(user);
 				break;
 			default:
 				return new Error('Профиль не опознан');

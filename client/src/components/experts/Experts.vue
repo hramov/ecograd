@@ -195,7 +195,7 @@
 						</h5>
 						<h6
 							class="card-subtitle mb-2 text-muted"
-							v-if="user.profile?.title == 'Эксперт'"
+							v-if="user.profile?.title === 'Эксперт'"
 						>
 							<i class="fa fa-male"></i
 							>{{ user.expert?.position }}
@@ -226,11 +226,14 @@
 						>
 							<hr />
 							<i class="fa fa-compass"></i
-							>{{ user.expert?.directions }}
+							>{{ user.expert?.direction }}
 						</h6>
 						<h6
 							class="card-subtitle mb-2 text-muted"
-							v-if="user.profile?.title == 'Эксперт'"
+							v-if="
+								user.profile?.title == 'Эксперт' &&
+									user.profile?.misc
+							"
 						>
 							<hr />
 							<i class="fa fa-compass"></i>{{ user.expert?.misc }}
@@ -285,6 +288,9 @@ export interface User {
 	email: string;
 	password: string;
 	profile: string;
+	admin: Admin | null;
+	client: Client | null;
+	expert: Expert | null;
 }
 
 export default defineComponent({

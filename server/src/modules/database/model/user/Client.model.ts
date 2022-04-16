@@ -1,6 +1,7 @@
 import {
 	Column,
 	Entity,
+	JoinColumn,
 	OneToMany,
 	OneToOne,
 	PrimaryGeneratedColumn,
@@ -15,7 +16,8 @@ export class Client {
 	@PrimaryGeneratedColumn()
 	id: number;
 
-	@OneToOne(() => User, (user) => user.id)
+	@OneToOne(() => User)
+	@JoinColumn()
 	user: User;
 
 	@Column('text', { unique: true, nullable: false })

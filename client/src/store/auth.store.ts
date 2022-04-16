@@ -73,7 +73,7 @@ const actions = {
 	},
 
 	async getUsersAction({ commit }: any) {
-		commit('setUsers', await FetchDataProvider.get('user/all'));
+		commit('setUsers', await FetchDataProvider.get('user'));
 	},
 
 	async getUserAction({ commit }: any) {

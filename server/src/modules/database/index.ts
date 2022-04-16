@@ -7,9 +7,9 @@ export class Database {
 			await AppDataSource.initialize();
 			// await AppDataSource.query(`create schema "user"`);
 			// await AppDataSource.query(`create schema "order"`);
-			const dbInit = new DatabaseIniter();
+			// const dbInit = new DatabaseIniter();
 			// await dbInit.initProfile();
-			await dbInit.initUser();
+			// await dbInit.initUser();
 		} catch (_err) {
 			const err = _err as Error;
 			console.log(err.message);
