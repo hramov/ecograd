@@ -26,7 +26,7 @@
 		>
 			<div class="card card-body text-center">
 				<form>
-					<div v-if="!user.image_url" class="form-group">
+					<!-- <div v-if="!user.image_url" class="form-group">
 						<label for="image_url" class="label">Аватар</label>
 						<input
 							id="image_url"
@@ -36,30 +36,20 @@
 							ref="file"
 							@change="changeUploadImage"
 						/>
-					</div>
-					<div v-else class="form-group">
+					</div> -->
+					<!-- <div v-else class="form-group">
 						<img
 							:src="`` + user.image_url"
 							style="width: 100%; margin-bottom: 10px"
 						/>
-					</div>
+					</div> -->
 					<div class="form-group">
 						<div class="mb-3">
 							<input
 								type="text"
 								class="form-control"
 								placeholder="ФИО"
-								v-model="user.fio"
-							/>
-						</div>
-					</div>
-					<div class="form-group">
-						<div class="mb-3">
-							<input
-								type="date"
-								class="form-control"
-								placeholder="Дата рождения"
-								v-model="user.birth_date"
+								v-model="user.name"
 							/>
 						</div>
 					</div>
@@ -83,16 +73,6 @@
 							/>
 						</div>
 					</div>
-					<div class="form-group">
-						<div class="mb-3">
-							<input
-								type="text"
-								class="form-control"
-								placeholder="Телефон"
-								v-model="user.phone"
-							/>
-						</div>
-					</div>
 
 					<div class="form-group">
 						<div class="mb-3">
@@ -102,16 +82,27 @@
 								v-model="user.profile"
 							>
 								<option
-									v-for="profile in profiles"
-									:key="profile.id"
+									v-for="profile in getProfiles"
+									:key="profile?.id"
+									:value="profile?.title"
 								>
-									{{ profile.title }}
+									{{ profile?.title }}
 								</option>
 							</select>
 						</div>
 					</div>
 
-					<div v-if="user.profile == 2">
+					<div v-if="user.profile === 'Эксперт'">
+						<div class="form-group">
+							<div class="mb-3">
+								<input
+									type="text"
+									class="form-control"
+									placeholder="Телефон"
+									v-model="expert.phone"
+								/>
+							</div>
+						</div>
 						<div class="form-group">
 							<div class="mb-3">
 								<input
@@ -127,7 +118,7 @@
 								class="form-control"
 								rows="3"
 								style="height: 100%"
-								v-model="expert.cert"
+								v-model="expert.certificate"
 							></textarea>
 							<label for="floatingTextarea"
 								>Квалификационный аттестат</label
@@ -156,62 +147,93 @@
 							<label for="floatingTextarea">Примечание</label>
 						</div>
 					</div>
+
+					<div v-else-if="user.profile === 'Клиент'">
+						<div class="form-group">
+							<div class="mb-3">
+								<input
+									type="text"
+									class="form-control"
+									placeholder="Телефон"
+									v-model="client.phone"
+								/>
+							</div>
+						</div>
+					</div>
 					<a
 						style="margin: 0 auto; cursor: pointer"
 						class="btn-get-started"
-						@click.prevent="addExpert()"
+						@click.prevent="createUser"
 						>Сохранить</a
 					>
 				</form>
 			</div>
 		</div>
 
-		<div class="row" v-if="getExperts?.length">
+		<div class="row" v-if="getUsers?.length">
 			<div
 				class="col-md-6 col-lg-4 col-sm-12 col-xl-4"
-				v-for="expert in experts"
-				:key="expert.id"
+				v-for="user in getUsers"
+				:key="user.id"
 			>
 				<div class="card">
-					<img
-						v-if="expert.image_url"
+					<!-- <img
+						v-if="user.image_url"
 						:src="backEndUrl + expert.image_url"
 						class="card-img-top"
 						alt="..."
 					/>
 					<img
 						v-else
-						:src="`${backEndUrl}/uploads/avatars/dummy.jpg`"
+						:src="`${process.env.API_URL}/uploads/avatars/dummy.jpg`"
 						class="card-img-top"
 						alt="..."
-					/>
+					/> -->
 					<div class="card-body text-left">
 						<h5 class="card-title">
-							{{ expert.last_name }} {{ expert.name }}
+							{{ user.name }}
 						</h5>
-						<h6 class="card-subtitle mb-2 text-muted">
-							<i class="fa fa-male"></i>{{ expert.position }}
+						<h6
+							class="card-subtitle mb-2 text-muted"
+							v-if="user.profile?.title == 'Эксперт'"
+						>
+							<i class="fa fa-male"></i
+							>{{ user.expert?.position }}
 						</h6>
-						<hr />
 						<h6 class="card-subtitle mb-2 text-muted">
+							<hr />
 							<i class="fa fa-envelope-square"></i
-							>{{ expert.email }}
+							>{{ user.email }}
 						</h6>
-						<hr />
-						<h6 class="card-subtitle mb-2 text-muted">
-							<i class="fa fa-phone"></i>{{ expert.phone }}
+						<h6
+							class="card-subtitle mb-2 text-muted"
+							v-if="user.profile?.title == 'Эксперт'"
+						>
+							<hr />
+							<i class="fa fa-phone"></i>{{ user.expert?.phone }}
 						</h6>
-						<hr />
-						<h6 class="card-subtitle mb-2 text-muted">
-							<i class="fa fa-certificate"></i>{{ expert.cert }}
+						<h6
+							class="card-subtitle mb-2 text-muted"
+							v-if="user.profile?.title == 'Эксперт'"
+						>
+							<hr />
+							<i class="fa fa-certificate"></i
+							>{{ user.expert?.certificate }}
 						</h6>
-						<hr />
-						<h6 class="card-subtitle mb-2 text-muted">
-							<i class="fa fa-compass"></i>{{ expert.directions }}
+						<h6
+							class="card-subtitle mb-2 text-muted"
+							v-if="user.profile?.title == 'Эксперт'"
+						>
+							<hr />
+							<i class="fa fa-compass"></i
+							>{{ user.expert?.directions }}
 						</h6>
-						<hr />
-						<h6 class="card-subtitle mb-2 text-muted">
-							<i class="fa fa-compass"></i>{{ expert.misc }}
+						<h6
+							class="card-subtitle mb-2 text-muted"
+							v-if="user.profile?.title == 'Эксперт'"
+						>
+							<hr />
+							<i class="fa fa-compass"></i>{{ user.expert?.misc }}
 						</h6>
 						<hr />
 						<div
@@ -220,7 +242,7 @@
 							<button
 								type="button"
 								class="btn btn-danger"
-								@click.prevent="deleteExpert(expert.id)"
+								@click.prevent="deleteUser(user.id)"
 							>
 								Удалить
 							</button>
@@ -245,19 +267,24 @@ import { defineComponent } from 'vue';
 import { mapGetters } from 'vuex';
 
 export interface Expert {
+	phone: string;
 	position: string;
-	cert: string;
+	certificate: string;
 	direction: string;
 	misc: string;
 }
 
+export interface Client {
+	phone: string;
+}
+
+export interface Admin {}
+
 export interface User {
-	fio: string;
-	birth_date: Date;
+	name: string;
 	email: string;
 	password: string;
-	phone: string;
-	profile: number;
+	profile: string;
 }
 
 export default defineComponent({
@@ -265,16 +292,18 @@ export default defineComponent({
 		return {
 			user: {} as User,
 			expert: {} as Expert,
+			client: {} as Client,
+			admin: {},
 			file: '',
+			isOpen: false,
 		};
 	},
 	async mounted() {
-		await this.$store.dispatch('getExpertsAction');
 		await this.$store.dispatch('getUsersAction');
-		await this.$store.dispatch('getRolesAction');
+		await this.$store.dispatch('getProfilesAction');
 	},
 	computed: {
-		...mapGetters(['getExperts', 'getUsers']),
+		...mapGetters(['getUsers', 'getProfiles']),
 	},
 	methods: {
 		async changeUploadImage(e: any) {
@@ -282,22 +311,24 @@ export default defineComponent({
 			if (!files.length) return;
 			this.file = files[0];
 		},
-		async addExpert() {
-			let formData = null;
-			if (this.file != null) {
-				formData = new FormData();
-				formData.append('file', this.file);
-				formData.append('expert', JSON.stringify(this.expert));
-			}
+		async createUser() {
+			const profile =
+				this.user.profile == 'Администратор'
+					? this.admin
+					: this.user.profile == 'Эксперт'
+					? this.expert
+					: this.client;
 
-			const result = await this.$store.dispatch(
-				'addExpertAction',
-				formData,
-			);
+			const result = await this.$store.dispatch('addUserAction', {
+				user: this.user,
+				profile: profile,
+			});
 
 			document.getElementById('addExpertBtn')!.click();
-			await this.$store.dispatch('getExpertsAction');
+			await this.$store.dispatch('getUsersAction');
 		},
+
+		async deleteUser(user_id: number) {},
 	},
 });
 </script>

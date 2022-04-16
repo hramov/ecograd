@@ -19,7 +19,7 @@ import Requisities from './../components/landing/Requisities.vue';
 import Contacts from './../components/landing/Contacts.vue';
 import LoginModal from './../components/landing/LoginModal.vue';
 import BuyModal from '@/components/landing/BuyModal.vue';
-import { mapGetters, useStore } from 'vuex';
+import { mapGetters } from 'vuex';
 export default defineComponent({
 	components: {
 		Intro,
@@ -30,7 +30,7 @@ export default defineComponent({
 		LoginModal,
 		BuyModal,
 	},
-	compued: {
+	computed: {
 		...mapGetters(['getUser']),
 	},
 });

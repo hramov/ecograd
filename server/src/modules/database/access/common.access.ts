@@ -1,7 +1,7 @@
 import { Repository } from 'typeorm';
-import { ExpertDto } from '../../../entity/common/dto/expert.dto';
+import { ExpertDto } from '../../../entity/auth/dto/expert.dto';
 import { AppDataSource } from '../data-source';
-import { Expert } from '../model/Expert.model';
+import { Expert } from '../model/user/Expert.model';
 
 export class CommonAccess {
 	private repository: Repository<Expert>;

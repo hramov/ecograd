@@ -1,9 +1,12 @@
 import { DataSource } from 'typeorm';
-import { Expert } from './model/Expert.model';
-import { Order } from './model/Order.model';
-import { Profile } from './model/Profile.model';
-import { Role } from './model/Role.model';
-import { User } from './model/User.model';
+import { Attach } from './model/order/Attach.model';
+import { Order } from './model/order/Order.model';
+import { Section } from './model/order/Section.model';
+import { Admin } from './model/user/Admin.model';
+import { Client } from './model/user/Client.model';
+import { Expert } from './model/user/Expert.model';
+import { Profile } from './model/user/Profile.model';
+import { User } from './model/user/User.model';
 
 export const AppDataSource = new DataSource({
 	type: 'postgres',
@@ -14,7 +17,7 @@ export const AppDataSource = new DataSource({
 	database: 'ecograd',
 	synchronize: true,
 	logging: true,
-	entities: [User, Role, Expert, Order, Profile],
+	entities: [User, Expert, Order, Profile, Section, Attach, Client, Admin],
 	subscribers: [],
 	migrations: [],
 });

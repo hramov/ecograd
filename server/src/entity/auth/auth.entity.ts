@@ -1,4 +1,4 @@
-import { User } from '../../modules/database/model/User.model';
+import { User } from '../../modules/database/model/user/User.model';
 
 export class Auth {
 	public login: string;

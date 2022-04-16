@@ -6,7 +6,6 @@ import {
 } from 'passport-local';
 import { autoInjectable } from 'tsyringe';
 import { UserAccess } from '../../../modules/database/access/user.access';
-import { UserNotFoundError } from '../../../modules/error/app/user-not-found.error';
 
 const opts: IStrategyOptionsWithRequest = {
 	usernameField: 'email',
@@ -34,6 +33,12 @@ export class RegisterStrategy extends Strategy {
 		if (user) {
 			return done('User already exists', user);
 		}
-		return done(null, await RegisterStrategy.access.createUser(req.body));
+		return done(
+			null,
+			await RegisterStrategy.access.create(
+				req.body.user,
+				req.body.profile,
+			),
+		);
 	}
 }

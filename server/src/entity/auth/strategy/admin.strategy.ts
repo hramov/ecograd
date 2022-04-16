@@ -4,7 +4,6 @@ import { autoInjectable } from 'tsyringe';
 import { UserAccess } from '../../../modules/database/access/user.access';
 import { UserNotFoundError } from '../../../modules/error/app/user-not-found.error';
 import { ROLES } from '../config';
-import { Role } from '../role.entity';
 
 const opts: StrategyOptions = {
 	jwtFromRequest: ExtractJwt.fromAuthHeaderAsBearerToken(),
@@ -32,7 +31,7 @@ export class AdminStrategy extends Strategy {
 			return done(user, null);
 		}
 
-		if (user.roles.find((role: Role) => role.id === ROLES.Admin)) {
+		if (user.profile.title === ROLES.Admin) {
 			return done(null, user);
 		}
 		return done(new Error('User must be an admin', null));

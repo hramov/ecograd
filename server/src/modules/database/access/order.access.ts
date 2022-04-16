@@ -1,7 +1,6 @@
 import { Repository } from 'typeorm';
 import { AppDataSource } from '../data-source';
-import { Order } from '../model/Order.model';
-import { User } from '../model/User.model';
+import { Order } from '../model/order/Order.model';
 export class OrderAccess {
 	private repository: Repository<Order>;
 	constructor() {

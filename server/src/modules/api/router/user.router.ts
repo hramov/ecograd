@@ -43,10 +43,17 @@ export class UserRouter {
 		);
 
 		this.router.get(
-			'/roles',
+			'/profile',
 			passport.authenticate(new AdminStrategy(), { session: false }),
 			(req: Request, res: Response) =>
-				this.userController.getRoles(req, res),
+				this.userController.getProfiles(req, res),
+		);
+
+		this.router.post(
+			'/',
+			// passport.authenticate(new AdminStrategy(), { session: false }),
+			(req: Request, res: Response) =>
+				this.userController.create(req, res),
 		);
 
 		return this.router;

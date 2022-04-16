@@ -10,15 +10,15 @@ const state = {
 		: false,
 	uexperts: [],
 	uexpert: {},
-	roles: [],
+	profiles: [],
 };
 
 const mutations = {
 	setJWT(state: any, token: string) {
 		state.jwt_token = token;
 	},
-	setRoles(state: any, data: any) {
-		state.roles = data;
+	setProfiles(state: any, data: any) {
+		state.profiles = data;
 	},
 	setUserForExpert(state: any, data?: IUser) {
 		state.uexpert = data;
@@ -59,8 +59,13 @@ const actions = {
 		return true;
 	},
 
-	async getRolesAction({ commit }: any, id: any) {
-		commit('setRoles', await FetchDataProvider.get(`user/roles`));
+	async addUserAction({ commit }: any, data: any) {
+		console.log(data);
+		const result = await FetchDataProvider.post(`user`, data, false);
+	},
+
+	async getProfilesAction({ commit }: any, id: any) {
+		commit('setProfiles', await FetchDataProvider.get(`user/profile`));
 	},
 
 	async getUserForExpertAction({ commit }: any, id: any) {
@@ -86,13 +91,11 @@ const actions = {
 const getters = {
 	getJWT: (state: any) =>
 		state.jwt_token || (localStorage.getItem('jwt_token') as string),
-	getIsAdmin: (state: any) =>
-		state.user?.roles?.filter((role: any) => role.title == 'Администратор')
-			.length,
+	getIsAdmin: (state: any) => state.user?.profile?.title == 'Администратор',
 	getUser: (state: any) =>
 		state.user || JSON.parse(localStorage.getItem('user')!),
 
-	getRoles: (state: any) => state.roles,
+	getProfiles: (state: any) => state.profiles,
 	getIsLoggedIn: (state: any) => state.isLoggedIn,
 	getUsers: (state: any) => state.users,
 	getUExperts: (state: any) => state.uexperts,

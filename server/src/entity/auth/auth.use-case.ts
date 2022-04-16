@@ -2,7 +2,11 @@ import { sign } from 'jsonwebtoken';
 import { autoInjectable } from 'tsyringe';
 import { UserAccess } from '../../modules/database/access/user.access';
 import { Auth } from './auth.entity';
-import { User } from '../../modules/database/model/User.model';
+import { User } from '../../modules/database/model/user/User.model';
+import { Admin } from '../../modules/database/model/user/Admin.model';
+import { Client } from '../../modules/database/model/user/Client.model';
+import { Expert } from '../../modules/database/model/user/Expert.model';
+import { UserDto } from './dto/user.dto';
 
 export interface JWTTokenPayload {
 	sub: number;
@@ -20,9 +24,7 @@ export class AuthUseCase {
 		return sign({ sub: user.id, email: user.email }, 'secret');
 	}
 
-	public async register(user: User) {
-		if (this.auth.isValidUser(user)) {
-			return await this.authAccess.createUser(user);
-		}
+	public async register(user: UserDto, profile: Admin | Client | Expert) {
+		return await this.authAccess.create(user, profile);
 	}
 }

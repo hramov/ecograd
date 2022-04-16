@@ -19,12 +19,17 @@ export class FetchDataProvider {
 		return data;
 	}
 
-	public static async post(url: string, data: any, isFile?: any) {
+	public static async post(
+		url: string,
+		data: any,
+		isFile?: any,
+	): Promise<any> {
 		if (isFile) {
 			return await axios
 				.post(url, data, {
 					headers: {
 						'Content-Type': 'multipart/form-data',
+						Authorization: `Bearer ${store.getters.getJWT}`,
 					},
 				})
 				.then(response => response.data)

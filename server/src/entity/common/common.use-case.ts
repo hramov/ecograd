@@ -1,7 +1,7 @@
 import { autoInjectable } from 'tsyringe';
 import { APIReply } from '../../modules/api';
 import { CommonAccess } from '../../modules/database/access/common.access';
-import { Expert } from '../../modules/database/model/Expert.model';
+import { Expert } from '../../modules/database/model/user/Expert.modelmodel';
 
 @autoInjectable()
 export class CommonUseCase {
