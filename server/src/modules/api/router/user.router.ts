@@ -1,6 +1,7 @@
 import { Router, Request, Response } from 'express';
 import passport from 'passport';
 import { autoInjectable } from 'tsyringe';
+import { AdminStrategy } from '../../../entity/auth/strategy/admin.strategy';
 import { JWTStrategy } from '../../../entity/auth/strategy/jwt.strategy';
 import { LoginStrategy } from '../../../entity/auth/strategy/login.strategy';
 import { RegisterStrategy } from '../../../entity/auth/strategy/register.strategy';
@@ -32,6 +33,20 @@ export class UserRouter {
 			passport.authenticate(new JWTStrategy(), { session: false }),
 			(req: Request, res: Response) =>
 				this.userController.getUserInfo(req, res),
+		);
+
+		this.router.get(
+			'/all',
+			passport.authenticate(new AdminStrategy(), { session: false }),
+			(req: Request, res: Response) =>
+				this.userController.getAllUsers(req, res),
+		);
+
+		this.router.get(
+			'/roles',
+			passport.authenticate(new AdminStrategy(), { session: false }),
+			(req: Request, res: Response) =>
+				this.userController.getRoles(req, res),
 		);
 
 		return this.router;

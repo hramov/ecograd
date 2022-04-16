@@ -4,4 +4,6 @@ import { autoInjectable } from 'tsyringe';
 @autoInjectable()
 export class UserUseCase {
 	constructor(private readonly userAccess?: UserAccess) {}
+
+	addExpert() {}
 }

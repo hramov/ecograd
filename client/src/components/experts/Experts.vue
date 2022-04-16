@@ -2,7 +2,7 @@
 	<section class="dash-experts" id="dash-experts">
 		<div class="text-center">
 			<h1>
-				Эксперты /
+				Пользователи /
 				<button
 					class="btn btn-success"
 					type="button"
@@ -26,7 +26,7 @@
 		>
 			<div class="card card-body text-center">
 				<form>
-					<div v-if="!expert.image_url" class="form-group">
+					<div v-if="!user.image_url" class="form-group">
 						<label for="image_url" class="label">Аватар</label>
 						<input
 							id="image_url"
@@ -39,7 +39,7 @@
 					</div>
 					<div v-else class="form-group">
 						<img
-							:src="`` + expert.image_url"
+							:src="`` + user.image_url"
 							style="width: 100%; margin-bottom: 10px"
 						/>
 					</div>
@@ -48,28 +48,8 @@
 							<input
 								type="text"
 								class="form-control"
-								placeholder="Фамилия"
-								v-model="expert.last_name"
-							/>
-						</div>
-					</div>
-					<div class="form-group">
-						<div class="mb-3">
-							<input
-								type="text"
-								class="form-control"
-								placeholder="Имя"
-								v-model="expert.name"
-							/>
-						</div>
-					</div>
-					<div class="form-group">
-						<div class="mb-3">
-							<input
-								type="text"
-								class="form-control"
-								placeholder="Отчество"
-								v-model="expert.second_name"
+								placeholder="ФИО"
+								v-model="user.fio"
 							/>
 						</div>
 					</div>
@@ -79,7 +59,7 @@
 								type="date"
 								class="form-control"
 								placeholder="Дата рождения"
-								v-model="expert.birth_date"
+								v-model="user.birth_date"
 							/>
 						</div>
 					</div>
@@ -89,7 +69,7 @@
 								type="email"
 								class="form-control"
 								placeholder="Email"
-								v-model="expert.email"
+								v-model="user.email"
 							/>
 						</div>
 					</div>
@@ -99,7 +79,7 @@
 								type="password"
 								class="form-control"
 								placeholder="Пароль"
-								v-model="expert.password"
+								v-model="user.password"
 							/>
 						</div>
 					</div>
@@ -109,67 +89,84 @@
 								type="text"
 								class="form-control"
 								placeholder="Телефон"
-								v-model="expert.phone"
+								v-model="user.phone"
 							/>
 						</div>
 					</div>
+
 					<div class="form-group">
 						<div class="mb-3">
-							<input
-								type="text"
-								class="form-control"
-								placeholder="Должность"
-								v-model="expert.position"
-							/>
+							<select
+								class="form-select"
+								placeholder="Профиль"
+								v-model="user.profile"
+							>
+								<option
+									v-for="profile in profiles"
+									:key="profile.id"
+								>
+									{{ profile.title }}
+								</option>
+							</select>
 						</div>
 					</div>
-					<div class="form-floating mb-3">
-						<textarea
-							class="form-control"
-							rows="3"
-							style="height: 100%"
-							v-model="expert.cert"
-						></textarea>
-						<label for="floatingTextarea"
-							>Квалификационный аттестат</label
-						>
-					</div>
 
-					<div class="form-floating mb-3">
-						<textarea
-							class="form-control"
-							rows="3"
-							style="height: 100%"
-							v-model="expert.direction"
-						></textarea>
-						<label for="floatingTextarea"
-							>Направление деятельности</label
-						>
-					</div>
+					<div v-if="user.profile == 2">
+						<div class="form-group">
+							<div class="mb-3">
+								<input
+									type="text"
+									class="form-control"
+									placeholder="Должность"
+									v-model="expert.position"
+								/>
+							</div>
+						</div>
+						<div class="form-floating mb-3">
+							<textarea
+								class="form-control"
+								rows="3"
+								style="height: 100%"
+								v-model="expert.cert"
+							></textarea>
+							<label for="floatingTextarea"
+								>Квалификационный аттестат</label
+							>
+						</div>
 
-					<div class="form-floating mb-3">
-						<textarea
-							class="form-control"
-							rows="3"
-							style="height: 100%"
-							v-model="expert.misc"
-						></textarea>
-						<label for="floatingTextarea">Примечание</label>
+						<div class="form-floating mb-3">
+							<textarea
+								class="form-control"
+								rows="3"
+								style="height: 100%"
+								v-model="expert.direction"
+							></textarea>
+							<label for="floatingTextarea"
+								>Направление деятельности</label
+							>
+						</div>
+
+						<div class="form-floating mb-3">
+							<textarea
+								class="form-control"
+								rows="3"
+								style="height: 100%"
+								v-model="expert.misc"
+							></textarea>
+							<label for="floatingTextarea">Примечание</label>
+						</div>
 					</div>
 					<a
 						style="margin: 0 auto; cursor: pointer"
 						class="btn-get-started"
-						@click.prevent="
-							isTouched = true;
-							addExpert();
-						"
+						@click.prevent="addExpert()"
 						>Сохранить</a
 					>
 				</form>
 			</div>
 		</div>
 
-		<div class="row" v-if="isExperts">
+		<div class="row" v-if="getExperts?.length">
 			<div
 				class="col-md-6 col-lg-4 col-sm-12 col-xl-4"
 				v-for="expert in experts"
@@ -238,90 +235,69 @@
 			v-else
 			style="width: 50%; margin: 0 auto"
 		>
-			Экспертов нет!
+			Пользователей нет!
 		</div>
 	</section>
 </template>
 
 <script lang="ts">
-import { computed, defineComponent, onMounted, reactive, ref } from 'vue';
-import { useStore } from 'vuex';
+import { defineComponent } from 'vue';
+import { mapGetters } from 'vuex';
+
+export interface Expert {
+	position: string;
+	cert: string;
+	direction: string;
+	misc: string;
+}
+
+export interface User {
+	fio: string;
+	birth_date: Date;
+	email: string;
+	password: string;
+	phone: string;
+	profile: number;
+}
 
 export default defineComponent({
-	setup() {
-		const expert = reactive({
-			last_name: '',
-			name: '',
-			second_name: '',
-			birth_date: '',
-			phone: '',
-			email: '',
-			password: '',
-			position: '',
-			cert: '',
-			direction: '',
-			misc: '',
-		});
-
-		const isOpen = ref(false);
-		const isExperts = ref(false);
-		const store = useStore();
-		let file: any = null;
-		const status = ref(false);
-		const isTouched = ref(false);
-
-		onMounted(async () => {
-			await getExperts();
-		});
-
-		const changeUploadImage = async (e: any) => {
+	data() {
+		return {
+			user: {} as User,
+			expert: {} as Expert,
+			file: '',
+		};
+	},
+	async mounted() {
+		await this.$store.dispatch('getExpertsAction');
+		await this.$store.dispatch('getUsersAction');
+		await this.$store.dispatch('getRolesAction');
+	},
+	computed: {
+		...mapGetters(['getExperts', 'getUsers']),
+	},
+	methods: {
+		async changeUploadImage(e: any) {
 			var files = e.target.files || e.dataTransfer.files;
 			if (!files.length) return;
-			file = files[0];
-		};
-
-		const getExperts = async () => {
-			await store.dispatch('getExpertsAction');
-			isExperts.value = true;
-		};
-
-		const addExpert = async () => {
+			this.file = files[0];
+		},
+		async addExpert() {
 			let formData = null;
-			if (file != null) {
+			if (this.file != null) {
 				formData = new FormData();
-				formData.append('file', file);
-				formData.append('expert', JSON.stringify(expert));
+				formData.append('file', this.file);
+				formData.append('expert', JSON.stringify(this.expert));
 			}
 
-			status.value = await store.dispatch('addExpertAction', formData);
+			const result = await this.$store.dispatch(
+				'addExpertAction',
+				formData,
+			);
 
 			document.getElementById('addExpertBtn')!.click();
-			await getExperts();
-		};
-
-		const experts = computed(() => store.getters.getExperts);
-
-		if (experts.value?.length > 0) isExperts.value = true;
-		else isExperts.value = false;
-
-		const deleteExpert = async (id: number) => {
-			await store.dispatch('deleteExpertAction', id);
-			await getExperts();
-		};
-
-		const backEndUrl = computed(() => store.getters.getBackendUrl);
-
-		return {
-			experts: experts,
-			isExperts: isExperts,
-			expert: expert,
-			isOpen: isOpen,
-			isTouched: isTouched,
-			addExpert: addExpert,
-			deleteExpert: deleteExpert,
-			changeUploadImage: changeUploadImage,
-			backEndUrl: backEndUrl,
-		};
+			await this.$store.dispatch('getExpertsAction');
+		},
 	},
 });
 </script>

@@ -9,6 +9,10 @@ export class UserAccess {
 		this.repository = AppDataSource.getRepository(User);
 	}
 
+	public async getAllUsers() {
+		return await this.repository.find({ relations: ['roles'] });
+	}
+
 	public async getUserByEmailAndPassword(
 		email: string,
 		password: string,

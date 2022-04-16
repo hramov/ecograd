@@ -1,4 +1,5 @@
 import { Repository } from 'typeorm';
+import { ExpertDto } from '../../../entity/common/dto/expert.dto';
 import { AppDataSource } from '../data-source';
 import { Expert } from '../model/Expert.model';
 
@@ -10,5 +11,13 @@ export class CommonAccess {
 
 	public async getExpertsForLandingPage() {
 		return await this.repository.find();
+	}
+
+	public async createExpert(data: ExpertDto) {
+		return await this.repository.save(data);
+	}
+
+	public async updateExpert(data: ExpertDto) {
+		return await this.repository.save(data);
 	}
 }

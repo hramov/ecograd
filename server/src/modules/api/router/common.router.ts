@@ -14,6 +14,14 @@ export class CommonRouter {
 			this.commonController.getExperts(req, res),
 		);
 
+		this.router.post('/expert', (req: Request, res: Response) =>
+			this.commonController.createExpert(req, res),
+		);
+
+		this.router.put('/expert', (req: Request, res: Response) =>
+			this.commonController.updateExpert(req, res),
+		);
+
 		return this.router;
 	}
 }

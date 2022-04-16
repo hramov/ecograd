@@ -10,11 +10,15 @@ const state = {
 		: false,
 	uexperts: [],
 	uexpert: {},
+	roles: [],
 };
 
 const mutations = {
 	setJWT(state: any, token: string) {
 		state.jwt_token = token;
+	},
+	setRoles(state: any, data: any) {
+		state.roles = data;
 	},
 	setUserForExpert(state: any, data?: IUser) {
 		state.uexpert = data;
@@ -55,12 +59,16 @@ const actions = {
 		return true;
 	},
 
+	async getRolesAction({ commit }: any, id: any) {
+		commit('setRoles', await FetchDataProvider.get(`user/roles`));
+	},
+
 	async getUserForExpertAction({ commit }: any, id: any) {
 		commit('setUserForExpert', await FetchDataProvider.get(`users/${id}`));
 	},
 
 	async getUsersAction({ commit }: any) {
-		commit('setUsers', await FetchDataProvider.get('users/expert'));
+		commit('setUsers', await FetchDataProvider.get('user/all'));
 	},
 
 	async getUserAction({ commit }: any) {
@@ -83,6 +91,8 @@ const getters = {
 			.length,
 	getUser: (state: any) =>
 		state.user || JSON.parse(localStorage.getItem('user')!),
+
+	getRoles: (state: any) => state.roles,
 	getIsLoggedIn: (state: any) => state.isLoggedIn,
 	getUsers: (state: any) => state.users,
 	getUExperts: (state: any) => state.uexperts,

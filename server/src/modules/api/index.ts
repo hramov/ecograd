@@ -14,8 +14,12 @@ export class APIReply<T> {
 	public error: string | null;
 }
 
-export async function SuccessAPIReply<T>(res: Response, data: APIReply<T>) {
-	res.status(200).json(data);
+export async function SuccessAPIReply<T>(res: Response, data: T) {
+	res.status(200).json({
+		status: true,
+		error: null,
+		data: data,
+	});
 }
 @autoInjectable()
 export class API {

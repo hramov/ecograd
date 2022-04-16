@@ -11,4 +11,8 @@ export class RoleAccess {
 	public async save(role: Role): Promise<Role> {
 		return await this.repository.save(role);
 	}
+
+	public async get(): Promise<Role[]> {
+		return await this.repository.find();
+	}
 }

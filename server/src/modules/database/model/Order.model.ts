@@ -24,6 +24,5 @@ export class Order {
 	address: string;
 
 	@OneToOne(() => User, (user) => user.id)
-	@JoinTable()
 	client: User;
 }
