@@ -5,17 +5,15 @@ import {
 	OneToMany,
 	PrimaryGeneratedColumn,
 } from 'typeorm';
-import { Client } from '../user/Client.model';
+import { Ecograd } from '../Ecograd.model';
+import { Client } from '../user/profiles/Client.model';
 import { Attach } from './Attach.model';
 import { Section } from './Section.model';
 
 @Entity({
-	schema: 'order',
+	schema: 'business',
 })
-export class Order {
-	@PrimaryGeneratedColumn()
-	id?: number;
-
+export class Order extends Ecograd {
 	@Column('text', {
 		unique: true,
 	})
@@ -35,7 +33,4 @@ export class Order {
 
 	@OneToMany(() => Section, (section: Section) => section.id)
 	section: Section[];
-
-	@Column('timestamp with time zone', { default: () => 'CURRENT_TIMESTAMP' })
-	createdAt: Date;
 }

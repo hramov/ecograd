@@ -1,22 +1,10 @@
-import {
-	Column,
-	Entity,
-	ManyToOne,
-	OneToOne,
-	PrimaryGeneratedColumn,
-} from 'typeorm';
-import { Admin } from './Admin.model';
-import { Client } from './Client.model';
-import { Expert } from './Expert.model';
-import { Profile } from './Profile.model';
+import { Column, Entity } from 'typeorm';
+import { Ecograd } from '../Ecograd.model';
 
 @Entity({
-	schema: 'user',
+	schema: 'auth',
 })
-export class User {
-	@PrimaryGeneratedColumn()
-	id?: number;
-
+export class User extends Ecograd {
 	@Column('text', { unique: true, nullable: false })
 	name: string;
 
@@ -29,20 +17,6 @@ export class User {
 	@Column('text', { nullable: false })
 	password: string;
 
-	@ManyToOne(() => Profile, (profile) => profile.id, {
-		cascade: true,
-	})
-	profile: Profile;
-
-	@OneToOne(() => Admin)
-	admin: Admin;
-
-	@OneToOne(() => Expert)
-	expert: Expert;
-
-	@OneToOne(() => Client)
-	client: Client;
-
-	@Column('timestamp with time zone', { default: () => 'CURRENT_TIMESTAMP' })
-	createdAt: Date;
+	@Column()
+	profile: string;
 }

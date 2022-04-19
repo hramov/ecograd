@@ -1,15 +1,11 @@
 import { Router } from 'express';
-import { CommonRouter } from './common.router';
-import { OrderRouter } from './order.router';
-import { UserRouter } from './user.router';
+import { userRouter } from './user/user.router';
 
 export class APIRouter {
 	private readonly router = Router();
 
 	init() {
-		this.router.use('/common', new CommonRouter().init());
-		this.router.use('/user', new UserRouter().init());
-		this.router.use('/order', new OrderRouter().init());
+		this.router.use('/user', userRouter);
 		return this.router;
 	}
 }

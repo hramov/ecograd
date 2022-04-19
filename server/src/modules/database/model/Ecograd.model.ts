@@ -1,23 +1,19 @@
 import {
+	BaseEntity,
 	Column,
 	Entity,
-	JoinColumn,
-	OneToOne,
+	PrimaryColumn,
 	PrimaryGeneratedColumn,
 } from 'typeorm';
-import { User } from './User.model';
 
-@Entity({
-	schema: 'user',
-})
-export class Admin {
+@Entity()
+export class Ecograd extends BaseEntity {
 	@PrimaryGeneratedColumn()
 	id: number;
 
-	@OneToOne(() => User)
-	@JoinColumn()
-	user: User;
-
 	@Column('timestamp with time zone', { default: () => 'CURRENT_TIMESTAMP' })
 	createdAt: Date;
+
+	@Column('timestamp with time zone', { default: () => 'CURRENT_TIMESTAMP' })
+	updatedAt: Date;
 }

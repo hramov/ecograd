@@ -6,7 +6,7 @@ import { Logger } from '../logger';
 import { autoInjectable } from 'tsyringe';
 import { APIRouter } from './router';
 import passport from 'passport';
-import { JWTStrategy } from '../../entity/auth/strategy/jwt.strategy';
+import { JWTStrategy } from '../../auth/strategy/jwt.strategy';
 
 export class APIReply<T> {
 	public status: boolean;

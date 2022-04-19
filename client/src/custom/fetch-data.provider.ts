@@ -38,7 +38,11 @@ export class FetchDataProvider {
 				});
 		}
 		return await axios
-			.post(url, data)
+			.post(url, data, {
+				headers: {
+					Authorization: `Bearer ${store.getters.getJWT}`,
+				},
+			})
 			.then(response => response.data)
 			.catch(error => {
 				throw new Error(error);
@@ -75,9 +79,16 @@ export class FetchDataProvider {
 			});
 	}
 
-	public static async delete(url: string, id: number) {
+	public static async delete(
+		url: string,
+		id: number,
+	): Promise<AxiosResponse<any>> {
 		return await axios
-			.delete(url + '/' + id)
+			.delete(url + '/' + id, {
+				headers: {
+					Authorization: `Bearer ${store.getters.getJWT}`,
+				},
+			})
 			.then(response => response.data)
 			.catch(error => {
 				throw new Error(error);

@@ -1,14 +1,12 @@
 import { Column, Entity, ManyToOne, PrimaryGeneratedColumn } from 'typeorm';
+import { Ecograd } from '../Ecograd.model';
 import { Order } from './Order.model';
 import { Section } from './Section.model';
 
 @Entity({
-	schema: 'order',
+	schema: 'business',
 })
-export class Attach {
-	@PrimaryGeneratedColumn()
-	id?: number;
-
+export class Attach extends Ecograd {
 	@Column('text', {
 		unique: true,
 	})
@@ -25,7 +23,4 @@ export class Attach {
 
 	@ManyToOne(() => Section, (section: Section) => section.id)
 	section: Section;
-
-	@Column('timestamp with time zone', { default: () => 'CURRENT_TIMESTAMP' })
-	createdAt: Date;
 }

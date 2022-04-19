@@ -13,7 +13,7 @@
 					aria-controls="collapseExample"
 					@click="isOpen = !isOpen"
 				>
-					<p v-if="!isOpen">Добавить / Изменить</p>
+					<p v-if="!isOpen">Добавить</p>
 					<p v-else>Скрыть</p>
 				</button>
 			</h1>
@@ -334,7 +334,9 @@ export default defineComponent({
 			await this.$store.dispatch('getUsersAction');
 		},
 
-		async deleteUser(user_id: number) {},
+		async deleteUser(user_id: number) {
+			await this.$store.dispatch('deleteUserAction', user_id);
+		},
 	},
 });
 </script>

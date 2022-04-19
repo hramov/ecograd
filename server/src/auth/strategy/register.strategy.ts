@@ -5,7 +5,8 @@ import {
 	Strategy,
 } from 'passport-local';
 import { autoInjectable } from 'tsyringe';
-import { UserAccess } from '../../../modules/database/access/user.access';
+import { createUser } from '../../modules/api/router/user/create-user.router';
+import { User } from '../../modules/database/model/user/User.model';
 
 const opts: IStrategyOptionsWithRequest = {
 	usernameField: 'email',
@@ -15,10 +16,8 @@ const opts: IStrategyOptionsWithRequest = {
 
 @autoInjectable()
 export class RegisterStrategy extends Strategy {
-	private static access: UserAccess;
-	constructor(private readonly userAccess?: UserAccess) {
+	constructor() {
 		super(opts, RegisterStrategy.verify);
-		RegisterStrategy.access = userAccess;
 	}
 
 	private static async verify(
@@ -27,18 +26,11 @@ export class RegisterStrategy extends Strategy {
 		password: string,
 		done: (error: any, user?: any, options?: IVerifyOptions) => void,
 	) {
-		const user = await RegisterStrategy.access.checkIfUserExistsByEmail(
-			email,
-		);
+		let user = await User.findOneBy({ email });
 		if (user) {
 			return done('User already exists', user);
 		}
-		return done(
-			null,
-			await RegisterStrategy.access.create(
-				req.body.user,
-				req.body.profile,
-			),
-		);
+
+		return done(null, await createUser(req, null));
 	}
 }

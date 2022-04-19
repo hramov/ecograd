@@ -1,6 +1,7 @@
+import { compare } from 'bcrypt';
 import { IStrategyOptions, IVerifyOptions, Strategy } from 'passport-local';
 import { autoInjectable } from 'tsyringe';
-import { UserAccess } from '../../../modules/database/access/user.access';
+import { User } from '../../modules/database/model/user/User.model';
 
 const opts: IStrategyOptions = {
 	usernameField: 'email',
@@ -10,10 +11,8 @@ const opts: IStrategyOptions = {
 
 @autoInjectable()
 export class LoginStrategy extends Strategy {
-	private static access: UserAccess;
-	constructor(private readonly userAccess?: UserAccess) {
+	constructor() {
 		super(opts, LoginStrategy.verify);
-		LoginStrategy.access = userAccess;
 	}
 
 	private static async verify(
@@ -21,10 +20,9 @@ export class LoginStrategy extends Strategy {
 		password: string,
 		done: (error: any, user?: any, options?: IVerifyOptions) => void,
 	) {
-		const user = await LoginStrategy.access.getUserByEmailAndPassword(
-			email,
-			password,
-		);
-		return done(null, user);
+		let user = await User.findOneBy({ email });
+		if (user && compare(password, user.password)) return done(null, user);
+
+		return done(user, null);
 	}
 }

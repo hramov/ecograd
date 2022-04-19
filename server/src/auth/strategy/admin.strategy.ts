@@ -1,8 +1,7 @@
 import { Strategy, ExtractJwt, StrategyOptions } from 'passport-jwt';
 import { IVerifyOptions } from 'passport-local';
 import { autoInjectable } from 'tsyringe';
-import { UserAccess } from '../../../modules/database/access/user.access';
-import { UserNotFoundError } from '../../../modules/error/app/user-not-found.error';
+import { Admin } from '../../modules/database/model/user/profiles/Admin.model';
 
 const opts: StrategyOptions = {
 	jwtFromRequest: ExtractJwt.fromAuthHeaderAsBearerToken(),
@@ -12,23 +11,21 @@ const opts: StrategyOptions = {
 };
 
 @autoInjectable()
-export class JWTStrategy extends Strategy {
+export class AdminStrategy extends Strategy {
 	public static strategyName = 'JWT';
-	public static access: UserAccess;
 
-	constructor(private readonly userAccess?: UserAccess) {
-		super(opts, JWTStrategy.verify);
-		JWTStrategy.access = userAccess;
+	constructor() {
+		super(opts, AdminStrategy.verify);
 	}
 
 	public static async verify(
 		jwt_payload: any,
 		done: (error: any, user?: any, options?: IVerifyOptions) => void,
 	) {
-		const user = await JWTStrategy.access.getUserByID(jwt_payload.sub);
-		if (user instanceof UserNotFoundError) {
-			return done(user, null);
+		const admin = await Admin.findOneBy({ user: { id: jwt_payload.sub } });
+		if (!admin) {
+			return done(admin, null);
 		}
-		return done(null, user);
+		return done(null, admin);
 	}
 }

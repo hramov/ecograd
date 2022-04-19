@@ -61,7 +61,12 @@ const actions = {
 
 	async addUserAction({ commit }: any, data: any) {
 		console.log(data);
-		const result = await FetchDataProvider.post(`user`, data, false);
+		const result = await FetchDataProvider.post('user', data, false);
+	},
+
+	async deleteUserAction({ commit }: any, user_id: number) {
+		const result = await FetchDataProvider.delete('user', user_id);
+		console.log(result);
 	},
 
 	async getProfilesAction({ commit }: any, id: any) {
