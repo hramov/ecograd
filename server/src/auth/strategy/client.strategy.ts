@@ -1,7 +1,7 @@
 import { Strategy, ExtractJwt, StrategyOptions } from 'passport-jwt';
 import { IVerifyOptions } from 'passport-local';
 import { autoInjectable } from 'tsyringe';
-import { Admin } from '../../modules/database/model/user/profiles/Admin.model';
+import { Client } from '../../modules/database/model/user/profiles/Client.model';
 
 const opts: StrategyOptions = {
 	jwtFromRequest: ExtractJwt.fromAuthHeaderAsBearerToken(),
@@ -11,21 +11,23 @@ const opts: StrategyOptions = {
 };
 
 @autoInjectable()
-export class AdminStrategy extends Strategy {
-	public static strategyName = 'admin';
+export class ClientStrategy extends Strategy {
+	public static strategyName = 'client';
 
 	constructor() {
-		super(opts, AdminStrategy.verify);
+		super(opts, ClientStrategy.verify);
 	}
 
 	public static async verify(
 		jwt_payload: any,
 		done: (error: any, user?: any, options?: IVerifyOptions) => void,
 	) {
-		const admin = await Admin.findOneBy({ user: { id: jwt_payload.sub } });
-		if (!admin) {
-			return done(admin, null);
+		const client = await Client.findOneBy({
+			user: { id: jwt_payload.sub },
+		});
+		if (!client) {
+			return done(client, null);
 		}
-		return done(null, admin);
+		return done(null, client);
 	}
 }

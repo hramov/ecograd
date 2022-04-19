@@ -12,7 +12,7 @@ const opts: StrategyOptions = {
 
 @autoInjectable()
 export class JWTStrategy extends Strategy {
-	public static strategyName = 'JWT';
+	public static strategyName = 'user';
 
 	constructor() {
 		super(opts, JWTStrategy.verify);

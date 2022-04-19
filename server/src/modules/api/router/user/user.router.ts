@@ -1,6 +1,7 @@
 import { Router } from 'express';
 import passport from 'passport';
 import { AdminStrategy } from '../../../../auth/strategy/admin.strategy';
+import { ExpertStrategy } from '../../../../auth/strategy/expert.strategy';
 import { JWTStrategy } from '../../../../auth/strategy/jwt.strategy';
 import { LoginStrategy } from '../../../../auth/strategy/login.strategy';
 import { RegisterStrategy } from '../../../../auth/strategy/register.strategy';
