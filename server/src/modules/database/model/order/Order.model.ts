@@ -1,12 +1,14 @@
 import {
 	Column,
 	Entity,
+	JoinColumn,
 	ManyToOne,
 	OneToMany,
 	PrimaryGeneratedColumn,
 } from 'typeorm';
 import { Ecograd } from '../Ecograd.model';
 import { Client } from '../user/profiles/Client.model';
+import { Expert } from '../user/profiles/Expert.model';
 import { Attach } from './Attach.model';
 import { Section } from './Section.model';
 
@@ -26,7 +28,12 @@ export class Order extends Ecograd {
 	status: string;
 
 	@ManyToOne(() => Client, (client: Client) => client.id)
+	@JoinColumn()
 	client: Client;
+
+	@ManyToOne(() => Expert, (expert: Expert) => expert.id)
+	@JoinColumn()
+	expert: Expert;
 
 	@OneToMany(() => Attach, (attach: Attach) => attach.id)
 	files: Attach[];

@@ -3,7 +3,11 @@ import passport from 'passport';
 import { ClientStrategy } from '../../../../auth/strategy/client.strategy';
 import { JWTStrategy } from '../../../../auth/strategy/jwt.strategy';
 import { addOrder } from './add-order.router';
+import { appointExpert } from './appoint-expert.router';
+import { changeOrderStatus } from './change-order-status.router';
+import { changeSectionStatus } from './change-section-status.router';
 import { checkChanges } from './check-changes.router';
+import { getOrdersWithoutExpert } from './get-orders-without-expert.router';
 import { uploadFile } from './upload-file.router';
 
 const router = Router();
@@ -21,9 +25,33 @@ router.get(
 );
 
 router.post(
-	'/upload-file',
+	'/upload-file/:order_id',
 	passport.authenticate(new JWTStrategy(), { session: false }),
 	uploadFile,
+);
+
+router.patch(
+	'/appoint-expert/:order_id',
+	passport.authenticate(new JWTStrategy(), { session: false }),
+	appointExpert,
+);
+
+router.patch(
+	'/change-order-status',
+	passport.authenticate(new JWTStrategy(), { session: false }),
+	changeOrderStatus,
+);
+
+router.patch(
+	'/change-section-status',
+	passport.authenticate(new JWTStrategy(), { session: false }),
+	changeSectionStatus,
+);
+
+router.get(
+	'/no-expert',
+	passport.authenticate(new JWTStrategy(), { session: false }),
+	getOrdersWithoutExpert,
 );
 
 export { router as orderRouter };

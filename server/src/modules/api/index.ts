@@ -4,7 +4,7 @@ import cors from 'cors';
 import { APP } from '../../config/constant';
 import { Logger } from '../logger';
 import { autoInjectable } from 'tsyringe';
-import { APIRouter } from './router';
+import { APIRouter } from './router/router';
 import passport from 'passport';
 import { JWTStrategy } from '../../auth/strategy/jwt.strategy';
 

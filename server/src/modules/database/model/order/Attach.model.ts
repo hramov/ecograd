@@ -1,5 +1,6 @@
 import { Column, Entity, ManyToOne, PrimaryGeneratedColumn } from 'typeorm';
 import { Ecograd } from '../Ecograd.model';
+import { User } from '../user/User.model';
 import { Order } from './Order.model';
 import { Section } from './Section.model';
 
@@ -23,4 +24,7 @@ export class Attach extends Ecograd {
 
 	@ManyToOne(() => Section, (section: Section) => section.id)
 	section: Section;
+
+	@ManyToOne(() => User, (user: User) => user.id)
+	sender: User;
 }
