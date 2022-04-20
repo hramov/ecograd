@@ -7,6 +7,7 @@ import { appointExpert } from './appoint-expert.router';
 import { changeOrderStatus } from './change-order-status.router';
 import { changeSectionStatus } from './change-section-status.router';
 import { checkChanges } from './check-changes.router';
+import { getAttachesForSection } from './get-attaches-for-section.router';
 import { getOrdersWithoutExpert } from './get-orders-without-expert.router';
 import { getSections } from './get-sections.router';
 import { uploadFile } from './upload-file.router';
@@ -59,6 +60,12 @@ router.get(
 	'/sections-dict',
 	passport.authenticate(new JWTStrategy(), { session: false }),
 	getSections,
+);
+
+router.get(
+	'/attaches-for-section/:section_id',
+	passport.authenticate(new JWTStrategy(), { session: false }),
+	getAttachesForSection,
 );
 
 export { router as orderRouter };

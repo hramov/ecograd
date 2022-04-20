@@ -9,7 +9,7 @@ class App {
 		const db = new Database();
 		await db.init();
 
-		const api = container.resolve(API);
+		const api = new API();
 		await api.start();
 	}
 }

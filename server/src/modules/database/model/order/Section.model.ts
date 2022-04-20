@@ -6,8 +6,8 @@ import { Order } from './Order.model';
 	schema: 'business',
 })
 export class Section extends Ecograd {
-	@Column('integer')
-	arrange: number;
+	@Column('varchar')
+	arrange: string;
 
 	@Column('text', {
 		unique: true,

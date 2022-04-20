@@ -21,9 +21,8 @@ export async function SuccessAPIReply<T>(res: Response, data: T) {
 		data: data,
 	});
 }
-@autoInjectable()
 export class API {
-	constructor(private readonly logger?: Logger) {}
+	constructor() {}
 
 	public async start() {
 		const app = express();
@@ -46,7 +45,7 @@ export class API {
 		try {
 			app.listen(port, () => {
 				let proc = require('process');
-				this.logger.writeInfo(
+				Logger.writeInfo(
 					'app listening on port ' +
 						port +
 						', ' +
@@ -56,7 +55,7 @@ export class API {
 			});
 		} catch (_err) {
 			const err = _err as Error;
-			this.logger.writeError(err.message);
+			Logger.writeError(err.message);
 		}
 	}
 }

@@ -30,7 +30,7 @@ export async function uploadFile(req: Request, res: Response) {
 
 	for (let i = 0; i < fileNames.length; i++) {
 		const section = Section.create({
-			arrange: parseInt(sectionNames[i]),
+			arrange: sectionNames[i],
 			title: req.body[sectionNames[i]],
 			status: 'new',
 			order: order,
