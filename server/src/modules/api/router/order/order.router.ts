@@ -8,6 +8,7 @@ import { changeOrderStatus } from './change-order-status.router';
 import { changeSectionStatus } from './change-section-status.router';
 import { checkChanges } from './check-changes.router';
 import { getOrdersWithoutExpert } from './get-orders-without-expert.router';
+import { getSections } from './get-sections.router';
 import { uploadFile } from './upload-file.router';
 
 const router = Router();
@@ -52,6 +53,12 @@ router.get(
 	'/no-expert',
 	passport.authenticate(new JWTStrategy(), { session: false }),
 	getOrdersWithoutExpert,
+);
+
+router.get(
+	'/sections-dict',
+	passport.authenticate(new JWTStrategy(), { session: false }),
+	getSections,
 );
 
 export { router as orderRouter };

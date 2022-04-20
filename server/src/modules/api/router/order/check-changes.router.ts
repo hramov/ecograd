@@ -4,6 +4,7 @@ import { AppDataSource } from '../../../database/data-source';
 import { Client } from '../../../database/model/user/profiles/Client.model';
 import { Expert } from '../../../database/model/user/profiles/Expert.model';
 import { User } from '../../../database/model/user/User.model';
+import { NotFoundError } from '../../../error/http/not-found.error';
 
 export async function checkChanges(req: Request, res: Response) {
 	const user = req.user as User;
@@ -11,14 +12,18 @@ export async function checkChanges(req: Request, res: Response) {
 
 	if (user.profile == ROLES.Client) {
 		const client = await Client.findOneBy({ user: { id: user.id } });
-		if (!client) return res.json({ message: 'Cannot find user' });
+		if (!client) return NotFoundError(res, 'client');
 		senderId = client.id;
 	} else if (user.profile == ROLES.Expert) {
 		const expert = await Expert.findOneBy({ user: { id: user.id } });
-		if (!expert) return res.json({ message: 'Cannot find user' });
+		if (!expert) return NotFoundError(res, 'expert');
 		senderId = expert.id;
 	} else {
-		return res.json({ message: 'User must be either expert or client' });
+		return NotFoundError(
+			res,
+			'user',
+			'User must be either expert or client',
+		);
 	}
 
 	const query = `

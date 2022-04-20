@@ -7,6 +7,7 @@ import { Attach } from '../../../database/model/order/Attach.model';
 import { Order } from '../../../database/model/order/Order.model';
 import { User } from '../../../database/model/user/User.model';
 import { Section } from '../../../database/model/order/Section.model';
+import { NotFoundError } from '../../../error/http/not-found.error';
 
 export async function uploadFile(req: Request, res: Response) {
 	const sender = req.user as User;
@@ -15,16 +16,14 @@ export async function uploadFile(req: Request, res: Response) {
 	});
 
 	if (!order) {
-		return res.json({
-			message: 'Order not found',
-		});
+		return NotFoundError(res, 'order');
 	}
 
 	const fileNames = Object.keys(req.files);
 	const sectionNames = Object.keys(req.body);
 
 	if (fileNames.length != sectionNames.length) {
-		return res.json({
+		return res.status(400).json({
 			message: 'Sections and files are not equal',
 		});
 	}
