@@ -1,6 +1,6 @@
 import { Request, Response } from 'express';
 import { ROLES } from '../../../../auth/config';
-import { AppDataSource } from '../../../database/data-source';
+import { Order } from '../../../database/model/order/Order.model';
 import { Client } from '../../../database/model/user/profiles/Client.model';
 import { Expert } from '../../../database/model/user/profiles/Expert.model';
 import { User } from '../../../database/model/user/User.model';
@@ -32,5 +32,6 @@ export async function checkChanges(req: Request, res: Response) {
 			JOIN business.attach a ON a."orderId" = o.id
 			WHERE a.is_new = true AND a."senderId" <> ${senderId};
 		`;
-	res.json(await AppDataSource.query(query));
+
+	res.json(await Order.query(query));
 }

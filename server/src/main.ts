@@ -1,5 +1,4 @@
 import 'reflect-metadata';
-import { container } from 'tsyringe';
 import { API } from './modules/api';
 import { Database } from './modules/database';
 import dotenv from 'dotenv';
