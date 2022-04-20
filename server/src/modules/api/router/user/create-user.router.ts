@@ -6,34 +6,42 @@ import { Expert } from '../../../database/model/user/profiles/Expert.model';
 import { User } from '../../../database/model/user/User.model';
 
 export async function createUser(req: Request, res: Response) {
-	const user = req.body;
-	const result = User.create(user);
-	await result.save();
+	const user = req.body.user;
+	const profile = req.body.profile;
+
+	const result = User.create({
+		name: user.name,
+		email: user.email,
+		password: user.password,
+		profile: user.profile,
+	});
+	console.log(result);
+	const savedUser = await result.save();
 
 	let error = null;
 
 	switch (user.profile) {
 		case ROLES.Admin:
 			const admin = Admin.create({
-				user: result,
+				user: savedUser,
 			});
 			await admin.save();
 			break;
 		case ROLES.Expert:
 			const expert = Expert.create({
-				certificate: user.certificate,
-				direction: user.direction,
-				misc: user.misc,
-				position: user.position,
-				phone: user.phone,
-				user: result,
+				certificate: profile.certificate,
+				direction: profile.direction,
+				misc: profile.misc,
+				position: profile.position,
+				phone: profile.phone,
+				user: savedUser,
 			});
 			await expert.save();
 			break;
 		case ROLES.Client:
 			const client = Client.create({
-				phone: user.phone,
-				user: result,
+				phone: profile.phone,
+				user: savedUser,
 			});
 			await client.save();
 			break;

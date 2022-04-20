@@ -50,7 +50,7 @@
 						<div
 							v-if="!!getUser.id"
 							class="dropdown"
-							style="margin-left: auto; margin-right: 0; max-width: 150px"
+							style="margin-left: auto; margin-right: 0; max-width: 300px"
 						>
 							<button
 								class="nav-link item dropdown-toggle"
@@ -76,7 +76,7 @@
 									>
 									<a
 										class="dropdown-item"
-										v-if="getUser.role == 'client'"
+										v-if="getIsClient"
 										@click.prevent="$router.push('/client')"
 										>Открыть</a
 									>
@@ -119,7 +119,7 @@ export default defineComponent({
 		},
 	},
 	computed: {
-		...mapGetters(['getUser', 'getIsAdmin']),
+		...mapGetters(['getUser', 'getIsAdmin', 'getIsClient']),
 	},
 });
 </script>

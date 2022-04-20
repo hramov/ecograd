@@ -8,6 +8,7 @@ import { Order } from '../../../database/model/order/Order.model';
 import { User } from '../../../database/model/user/User.model';
 import { Section } from '../../../database/model/order/Section.model';
 import { NotFoundError } from '../../../error/http/not-found.error';
+import { Logger } from '../../../logger';
 
 export async function uploadFile(req: Request, res: Response) {
 	const sender = req.user as User;
@@ -22,16 +23,24 @@ export async function uploadFile(req: Request, res: Response) {
 	const fileNames = Object.keys(req.files);
 	const sectionNames = Object.keys(req.body);
 
-	if (fileNames.length != sectionNames.length) {
-		return res.status(400).json({
-			message: 'Sections and files are not equal',
+	const sectionsWithoutFiles = sectionNames.filter(
+		(sectionName: string) => !fileNames.includes(sectionName),
+	);
+
+	for (const section of sectionsWithoutFiles) {
+		const sec = Section.create({
+			arrange: section,
+			title: req.body[section],
+			status: 'new',
+			order: order,
 		});
+		await sec.save();
 	}
 
 	for (let i = 0; i < fileNames.length; i++) {
 		const section = Section.create({
-			arrange: sectionNames[i],
-			title: req.body[sectionNames[i]],
+			arrange: fileNames[i],
+			title: req.body[fileNames[i]],
 			status: 'new',
 			order: order,
 		});
@@ -52,7 +61,7 @@ export async function uploadFile(req: Request, res: Response) {
 			);
 
 			if (!fs.existsSync(dirPath)) {
-				fs.mkdirSync(dirPath);
+				fs.mkdirSync(dirPath, { recursive: true });
 			}
 
 			await file.mv(path.resolve(dirPath + '/' + url));
@@ -65,8 +74,10 @@ export async function uploadFile(req: Request, res: Response) {
 				sender,
 			});
 			await attach.save();
-		} catch (err) {
-			res.json({
+		} catch (_err) {
+			const err = _err as Error;
+			Logger.writeError(err.message);
+			return res.json({
 				message: err,
 			});
 		}

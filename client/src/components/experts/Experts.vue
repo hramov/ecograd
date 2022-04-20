@@ -26,23 +26,6 @@
 		>
 			<div class="card card-body text-center">
 				<form>
-					<!-- <div v-if="!user.image_url" class="form-group">
-						<label for="image_url" class="label">Аватар</label>
-						<input
-							id="image_url"
-							type="file"
-							class="form-control"
-							placeholder="Ссылка на аватар"
-							ref="file"
-							@change="changeUploadImage"
-						/>
-					</div> -->
-					<!-- <div v-else class="form-group">
-						<img
-							:src="`` + user.image_url"
-							style="width: 100%; margin-bottom: 10px"
-						/>
-					</div> -->
 					<div class="form-group">
 						<div class="mb-3">
 							<input
@@ -170,85 +153,81 @@
 			</div>
 		</div>
 
-		<div class="row" v-if="getUsers?.length">
+		<div class="row" v-if="Object.keys(getUsers).length">
 			<div
 				class="col-md-6 col-lg-4 col-sm-12 col-xl-4"
-				v-for="user in getUsers"
-				:key="user.id"
+				v-for="(profile, index) in getUsers"
+				:key="index"
 			>
-				<div class="card">
-					<!-- <img
-						v-if="user.image_url"
-						:src="backEndUrl + expert.image_url"
-						class="card-img-top"
-						alt="..."
-					/>
-					<img
-						v-else
-						:src="`${process.env.API_URL}/uploads/avatars/dummy.jpg`"
-						class="card-img-top"
-						alt="..."
-					/> -->
-					<div class="card-body text-left">
-						<h5 class="card-title">
-							{{ user.name }}
-						</h5>
-						<h6
-							class="card-subtitle mb-2 text-muted"
-							v-if="user.profile?.title === 'Эксперт'"
-						>
-							<i class="fa fa-male"></i
-							>{{ user.expert?.position }}
-						</h6>
-						<h6 class="card-subtitle mb-2 text-muted">
-							<hr />
-							<i class="fa fa-envelope-square"></i
-							>{{ user.email }}
-						</h6>
-						<h6
-							class="card-subtitle mb-2 text-muted"
-							v-if="user.profile?.title == 'Эксперт'"
-						>
-							<hr />
-							<i class="fa fa-phone"></i>{{ user.expert?.phone }}
-						</h6>
-						<h6
-							class="card-subtitle mb-2 text-muted"
-							v-if="user.profile?.title == 'Эксперт'"
-						>
-							<hr />
-							<i class="fa fa-certificate"></i
-							>{{ user.expert?.certificate }}
-						</h6>
-						<h6
-							class="card-subtitle mb-2 text-muted"
-							v-if="user.profile?.title == 'Эксперт'"
-						>
-							<hr />
-							<i class="fa fa-compass"></i
-							>{{ user.expert?.direction }}
-						</h6>
-						<h6
-							class="card-subtitle mb-2 text-muted"
-							v-if="
-								user.profile?.title == 'Эксперт' &&
-									user.profile?.misc
-							"
-						>
-							<hr />
-							<i class="fa fa-compass"></i>{{ user.expert?.misc }}
-						</h6>
-						<hr />
-						<div
-							style="display: flex; justify-content: space-around"
-						>
-							<button
-								type="button"
-								class="btn btn-danger"
-								@click.prevent="deleteUser(user.id)"
+				<div v-for="user in profile" :key="user.id">
+					<div class="card">
+						<div class="card-body text-left">
+							<h5 class="card-title">
+								{{ user.user.name }}
+							</h5>
+							<h6 class="card-subtitle mb-2 text-muted">
+								<i class="fa fa-male"></i
+								>{{ user.user?.profile }}
+							</h6>
+							<h6
+								class="card-subtitle mb-2 text-muted"
+								v-if="user.user?.profile === 'Эксперт'"
 							>
-								Удалить
-							</button>
+								<hr />
+								<i class="fa fa-male"></i>{{ user.position }}
+							</h6>
+							<h6 class="card-subtitle mb-2 text-muted">
+								<hr />
+								<i class="fa fa-envelope-square"></i
+								>{{ user.user?.email }}
+							</h6>
+							<h6
+								class="card-subtitle mb-2 text-muted"
+								v-if="
+									user.user?.profile == 'Эксперт' ||
+										user.user?.profile == 'Клиент'
+								"
+							>
+								<hr />
+								<i class="fa fa-phone"></i>{{ user.phone }}
+							</h6>
+							<h6
+								class="card-subtitle mb-2 text-muted"
+								v-if="user.user?.profile == 'Эксперт'"
+							>
+								<hr />
+								<i class="fa fa-certificate"></i
+								>{{ user.certificate }}
+							</h6>
+							<h6
+								class="card-subtitle mb-2 text-muted"
+								v-if="user.user?.profile == 'Эксперт'"
+							>
+								<hr />
+								<i class="fa fa-compass"></i
+								>{{ user.direction }}
+							</h6>
+							<h6
+								class="card-subtitle mb-2 text-muted"
+								v-if="
+									user.user?.profile == 'Эксперт' && user.misc
+								"
+							>
+								<hr />
+								<i class="fa fa-compass"></i>{{ user.misc }}
+							</h6>
+							<hr />
+							<div
+								style="display: flex; justify-content: space-around"
+							>
+								<button
+									type="button"
+									class="btn btn-danger"
+									@click.prevent="deleteUser(user.id)"
+								>
+									Удалить
+								</button>
+							</div>
 						</div>
 					</div>
 				</div>

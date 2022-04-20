@@ -6,7 +6,7 @@ import { NotFoundError } from '../../../error/http/not-found.error';
 
 export async function addOrder(req: Request, res: Response) {
 	const user = req.user as User;
-	const client = await Client.findOneBy({ user: { id: user.id } });
+	const client = await Client.findOneBy({ id: user.id });
 
 	if (!client) {
 		return NotFoundError(res, 'client');

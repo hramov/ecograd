@@ -1,24 +1,21 @@
-import { Router } from 'express';
+import { Request, Response, Router } from 'express';
 import passport from 'passport';
+import { AdminStrategy } from '../../../../auth/strategy/admin.strategy';
 import { ClientStrategy } from '../../../../auth/strategy/client.strategy';
 import { JWTStrategy } from '../../../../auth/strategy/jwt.strategy';
+import { Order } from '../../../database/model/order/Order.model';
 import { addOrder } from './add-order.router';
 import { appointExpert } from './appoint-expert.router';
 import { changeOrderStatus } from './change-order-status.router';
 import { changeSectionStatus } from './change-section-status.router';
 import { checkChanges } from './check-changes.router';
 import { getAttachesForSection } from './get-attaches-for-section.router';
+import { getOrdersForClient } from './get-orders-for-client.router';
 import { getOrdersWithoutExpert } from './get-orders-without-expert.router';
 import { getSections } from './get-sections.router';
 import { uploadFile } from './upload-file.router';
 
 const router = Router();
-
-router.post(
-	'/add-order',
-	passport.authenticate(new ClientStrategy(), { session: false }),
-	addOrder,
-);
 
 router.get(
 	'/check-changes',
@@ -57,7 +54,7 @@ router.get(
 );
 
 router.get(
-	'/sections-dict',
+	'/sections-dict/:order_type',
 	passport.authenticate(new JWTStrategy(), { session: false }),
 	getSections,
 );
@@ -66,6 +63,24 @@ router.get(
 	'/attaches-for-section/:section_id',
 	passport.authenticate(new JWTStrategy(), { session: false }),
 	getAttachesForSection,
+);
+
+router.get(
+	'/client',
+	passport.authenticate(new ClientStrategy(), { session: false }),
+	getOrdersForClient,
+);
+
+router.post(
+	'/',
+	passport.authenticate(new ClientStrategy(), { session: false }),
+	addOrder,
+);
+
+router.get(
+	'/',
+	passport.authenticate(new AdminStrategy(), { session: false }),
+	async (req: Request, res: Response) => res.json(await Order.find()),
 );
 
 export { router as orderRouter };

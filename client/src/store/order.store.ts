@@ -4,6 +4,7 @@ import { IOrder } from '@/custom/interfaces';
 const state = {
 	orders: [] as IOrder[],
 	order: {} as IOrder,
+	sections: [],
 };
 
 const mutations = {
@@ -12,6 +13,9 @@ const mutations = {
 	},
 	setOrder(state: any, order: any) {
 		state.order = order.data.order;
+	},
+	setSections(state: any, data: any) {
+		state.sections = data;
 	},
 };
 
@@ -37,11 +41,18 @@ const actions = {
 	async deleteOrderDocsAction(_: any, order_id: any) {
 		return FetchDataProvider.patch('orders/delete', order_id, null);
 	},
+	async getSectionsAction({ commit }: any, type: number) {
+		const sections = await FetchDataProvider.get(
+			'order/sections-dict/' + type,
+		);
+		commit('setSections', sections);
+	},
 };
 
 const getters = {
 	getOrder: (state: any) => state.order,
 	getOrders: (state: any) => state.orders,
+	getSections: (state: any) => state.sections,
 };
 
 export default {

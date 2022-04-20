@@ -3,3 +3,203 @@
 	padding-top: 0px;
 	max-width: 200px;
 }
+
+.add-project-contaider {
+	width: 100%;
+}
+
+.add-project-contaider-colum {
+	display: flex;
+}
+
+.add-project-contaider>h2 {
+	padding-bottom: 5px;
+}
+
+.header-background {
+	margin-top: 30px;
+	width: 100%;
+	/* background-color: #CEDFFA; */
+	background-color: #71c55d;
+	text-align: center;
+}
+
+.project-name {
+	width: 35%;
+	margin-top: 5px;
+}
+
+.project-name>p,
+.project-name>select {
+	width: 95%;
+}
+
+.add-project-form {
+	width: 100%;
+}
+
+.add-project-checkbox {
+	width: 100%;
+}
+
+.add-project-checkbox-up-text,
+.accordion-body {
+	width: 100%;
+	display: flex;
+	justify-content: space-between;
+}
+
+.accordion-body {
+	padding: 0;
+}
+
+.collapse-margin {
+	margin-top: 10px;
+}
+
+.add-project-checkbox-down-text {
+	width: 100%;
+	display: flex;
+	justify-content: space-between;
+}
+
+.add-project-input-up,
+.add-project-input-down,
+.accordion-body-input {
+	margin: 5px 0 10px 10px;
+	margin-right: 10px;
+}
+
+.form-size {
+	padding: 0 10px;
+}
+
+.form-margin-texarea {
+	margin: 0 20px 10px 10px;
+}
+
+body {
+	font-family: 'Montserrat',
+		sans-serif;
+	width: 100%;
+}
+
+h1 {
+	text-align: center;
+	margin: 10px 0;
+	font-weight: bold;
+}
+
+.status-project-header {
+	text-align: center;
+	margin: 10px 0;
+	text-decoration: underline;
+}
+
+.list-group {
+	margin: 10px;
+}
+
+.project {
+	display: flex;
+	width: 100%;
+}
+
+.add-project-bt>a {
+	text-decoration: none;
+	color: black;
+}
+
+.img-comment {
+	background: url(../img/external-comment-social-media-basic-1-sbts2018-outline-sbts2018.png) 5px 18px no-repeat;
+	background-size: 20px;
+	/* Параметры фонового рисунка */
+	padding-left: 30px;
+	/* Смещаем текст вправо */
+}
+
+.add-project-container {
+	width: 20%;
+}
+
+.add-project-bt {
+	/* стиль для кнопки добавить проект */
+	background-color: #CEDFFA;
+}
+
+.color-selection {
+	background-color: #b2b8c463;
+}
+
+.color-selection-red {
+	background-color: #FACECE;
+}
+
+.color-selection-yellow {
+	background-color: #fcf7a2d8;
+}
+
+.color-selection-green {
+	background-color: #CEFADF;
+}
+
+.existing-prohect>ul>p {
+	text-align: center;
+}
+
+.add-project-container>ul {
+	text-align: center;
+}
+
+.divider {
+	width: 1px;
+	height: 500px;
+	border-right: 34px;
+	background-color: rgba(128, 128, 128, 0.329);
+	margin: 10px;
+}
+
+.info-project-container {
+	display: flex;
+	width: 75%;
+}
+
+.existing-project {
+	width: 35%;
+}
+
+.existing-project>ul>p {
+	text-align: center;
+	font-weight: bold;
+	font-size: 20px;
+}
+
+.project-status {
+	width: 65%;
+}
+
+.project-status>p {
+	font-weight: bold;
+	font-size: 20px;
+	margin: 10px 10px 10px 0;
+
+}
+
+.project-status-chapter>ul>li {
+	justify-content: space-between;
+	float: right;
+
+}
+
+.project-status-chapter>ul>h2 {
+	text-align: center;
+}
+
+.file-data {
+	display: flex;
+	justify-content: space-between;
+}
+
+.project-status-button {
+	text-align: center;
+}

@@ -2,6 +2,7 @@ import { Strategy, ExtractJwt, StrategyOptions } from 'passport-jwt';
 import { IVerifyOptions } from 'passport-local';
 import { autoInjectable } from 'tsyringe';
 import { Client } from '../../modules/database/model/user/profiles/Client.model';
+import { User } from '../../modules/database/model/user/User.model';
 
 const opts: StrategyOptions = {
 	jwtFromRequest: ExtractJwt.fromAuthHeaderAsBearerToken(),
@@ -25,6 +26,7 @@ export class ClientStrategy extends Strategy {
 		const client = await Client.findOneBy({
 			user: { id: jwt_payload.sub },
 		});
+		client.user = await User.findOneBy({ id: jwt_payload.sub });
 		if (!client) {
 			return done(client, null);
 		}

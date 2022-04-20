@@ -96,7 +96,8 @@ const actions = {
 const getters = {
 	getJWT: (state: any) =>
 		state.jwt_token || (localStorage.getItem('jwt_token') as string),
-	getIsAdmin: (state: any) => state.user?.profile?.title == 'Администратор',
+	getIsAdmin: (state: any) => state.user?.profile == 'Администратор',
+	getIsClient: (state: any) => state.user?.profile == 'Клиент',
 	getUser: (state: any) =>
 		state.user || JSON.parse(localStorage.getItem('user')!),
 

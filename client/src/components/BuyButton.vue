@@ -1,20 +1,15 @@
 <template>
-  <button
-    type="button"
-    class="btn-get-started mt-3"
-    data-bs-toggle="modal"
-    data-bs-target="#buyModal"
-  >
-    Заказать экспертизу
-  </button>
-  <!-- <a href="#" class="btn-get-started">Заказать экспертизу</a> -->
+	<button
+		type="button"
+		class="btn-get-started mt-3"
+		@click="$router.push({ path: 'add-order' })"
+	>
+		Заказать экспертизу
+	</button>
 </template>
 
 <script lang="ts">
-import { defineComponent } from "vue";
+import { defineComponent } from 'vue';
 
-export default defineComponent({
-  // setup() {
-  // },
-});
+export default defineComponent({});
 </script>

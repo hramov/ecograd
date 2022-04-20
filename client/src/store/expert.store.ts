@@ -17,7 +17,7 @@ const mutations = {
 
 const actions = {
 	async getExpertsAction({ commit }: any) {
-		commit('setExperts', await FetchDataProvider.get('common/expert'));
+		// commit('setExperts', await FetchDataProvider.get('common/expert'));
 	},
 	async getSingleExpertAction({ commit }: any, id: number) {
 		commit(

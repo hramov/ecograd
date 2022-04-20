@@ -8,9 +8,7 @@ import { Section } from './Section.model';
 	schema: 'business',
 })
 export class Attach extends Ecograd {
-	@Column('text', {
-		unique: true,
-	})
+	@Column('text')
 	title: string;
 
 	@Column('text', { unique: true })

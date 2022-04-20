@@ -16,9 +16,7 @@ import { Section } from './Section.model';
 	schema: 'business',
 })
 export class Order extends Ecograd {
-	@Column('text', {
-		unique: true,
-	})
+	@Column('text')
 	title: string;
 
 	@Column('text')
@@ -39,5 +37,5 @@ export class Order extends Ecograd {
 	files: Attach[];
 
 	@OneToMany(() => Section, (section: Section) => section.id)
-	section: Section[];
+	sections: Section[];
 }

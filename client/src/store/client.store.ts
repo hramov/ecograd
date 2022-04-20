@@ -16,10 +16,9 @@ const mutations = {
 
 const actions = {
 	async getOrdersForClient({ commit }: any) {
-		const result = await FetchDataProvider.get(`orders/client`);
-		console.log(result);
-		commit('setOrders', result.data.orders);
-		return result.data.orders;
+		const result = await FetchDataProvider.get(`order/client`);
+		commit('setOrders', result);
+		return result;
 	},
 
 	async uploadDocsAction({ commit }: any, data: any) {
