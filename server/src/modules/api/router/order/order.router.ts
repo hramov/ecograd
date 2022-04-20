@@ -13,6 +13,7 @@ import { getAttachesForSection } from './get-attaches-for-section.router';
 import { getOrdersForClient } from './get-orders-for-client.router';
 import { getOrdersWithoutExpert } from './get-orders-without-expert.router';
 import { getSections } from './get-sections.router';
+import { uploadFileForSection } from './upload-file-for-section.router';
 import { uploadFile } from './upload-file.router';
 
 const router = Router();
@@ -27,6 +28,12 @@ router.post(
 	'/upload-file/:order_id',
 	passport.authenticate(new JWTStrategy(), { session: false }),
 	uploadFile,
+);
+
+router.post(
+	'/upload-file-for-section',
+	passport.authenticate(new JWTStrategy(), { session: false }),
+	uploadFileForSection,
 );
 
 router.patch(

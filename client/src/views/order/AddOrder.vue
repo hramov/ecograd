@@ -162,6 +162,7 @@ export interface Section {
 	title: string;
 	checked: boolean;
 	sub: Section[];
+	arrange: string;
 	attach: any;
 }
 
@@ -232,30 +233,6 @@ export default defineComponent({
 		},
 
 		addFile(ev: Event, code: string) {
-			// let section: Section = {} as Section;
-			// if (code.split('.').length > 1) {
-			// 	const sectionNumber = code.split('.')[0];
-			// 	const candidate = this.sections.find(
-			// 		(section: Section) => section.code == sectionNumber,
-			// 	);
-			// 	if (candidate) {
-			// 		const subCandidate = candidate.sub.find(
-			// 			(sub: Section) => sub.code == code,
-			// 		);
-			// 		if (subCandidate) {
-			// 			section = subCandidate;
-			// 		}
-			// 	}
-			// } else {
-			// 	const candidate = this.sections.find(
-			// 		(section: Section) => section.code == code,
-			// 	);
-
-			// 	if (candidate) {
-			// 		section = candidate;
-			// 	}
-			// }
-			// section!.file = this.$refs[code].files[0];
 			this.formData.append(code, this.$refs[code].files[0]);
 		},
 	},
