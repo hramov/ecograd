@@ -1,5 +1,11 @@
 <template>
-	<div class="add-project-contaider" style="margin-top: 100px">
+	<div v-if="!getUser" style="margin-top: 100px" class="container">
+		<div class="alert alert-warning" role="alert">
+			Для того, чтобы получить возможность добавлять заказы необходимо
+			заключить договор. Далее вам будет предоставлен доступ к системе
+		</div>
+	</div>
+	<div class="add-project-contaider" style="margin-top: 100px" v-else>
 		<h2 class="header-background">Добавить проект</h2>
 		<div class="add-project-contaider-colum">
 			<div class="project-name">
@@ -52,6 +58,7 @@
 											class="form-check-label"
 											for="flexCheckChecked"
 										>
+											{{ section.code }}
 											{{ section.title }}</label
 										>
 									</p>
@@ -110,6 +117,7 @@
 														class="form-check-label"
 														for="flexCheckChecked"
 													>
+														{{ sub.code }}
 														{{ sub.title }}</label
 													>
 												</p>
@@ -145,8 +153,10 @@
 </template>
 
 <script lang="ts">
+import { Client, Expert } from '@/components/experts/Experts.vue';
 import { FetchDataProvider } from '@/custom/fetch-data.provider';
 import { defineComponent } from '@vue/runtime-core';
+import { mapGetters } from 'vuex';
 
 export interface Order {
 	id?: number;
@@ -154,6 +164,8 @@ export interface Order {
 	cipher: string;
 	type: 0 | 1 | 2;
 	sections: Section[];
+	client: Client;
+	expert: Expert;
 }
 
 export interface Section {
@@ -164,6 +176,7 @@ export interface Section {
 	sub: Section[];
 	arrange: string;
 	attach: any;
+	status: 'new' | 'taken' | 'done';
 }
 
 export default defineComponent({
@@ -176,6 +189,9 @@ export default defineComponent({
 			sections: [] as Section[],
 			formData: new FormData(),
 		};
+	},
+	computed: {
+		...mapGetters(['getUser']),
 	},
 	methods: {
 		async loadSections() {
@@ -206,12 +222,13 @@ export default defineComponent({
 				this.formData.append(section.code, section.title);
 			}
 
-			await FetchDataProvider.post(
+			const result = await FetchDataProvider.post(
 				'/order/upload-file/' + orderResult.id,
 				this.formData,
 			);
-
 			this.formData = new FormData();
+			alert('Проект успешно добавлен');
+			this.$router.push({ path: '/client' });
 		},
 
 		checkSubsection() {
@@ -233,7 +250,8 @@ export default defineComponent({
 		},
 
 		addFile(ev: Event, code: string) {
-			this.formData.append(code, this.$refs[code].files[0]);
+			const target = ev.target as HTMLInputElement;
+			this.formData.append(code, target.files![0]);
 		},
 	},
 });

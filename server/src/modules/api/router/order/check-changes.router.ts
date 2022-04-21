@@ -1,37 +1,19 @@
 import { Request, Response } from 'express';
-import { ROLES } from '../../../../auth/config';
 import { Order } from '../../../database/model/order/Order.model';
-import { Client } from '../../../database/model/user/profiles/Client.model';
-import { Expert } from '../../../database/model/user/profiles/Expert.model';
 import { User } from '../../../database/model/user/User.model';
-import { NotFoundError } from '../../../error/http/not-found.error';
 
 export async function checkChanges(req: Request, res: Response) {
 	const user = req.user as User;
-	let senderId = null;
-
-	if (user.profile == ROLES.Client) {
-		const client = await Client.findOneBy({ user: { id: user.id } });
-		if (!client) return NotFoundError(res, 'client');
-		senderId = client.id;
-	} else if (user.profile == ROLES.Expert) {
-		const expert = await Expert.findOneBy({ user: { id: user.id } });
-		if (!expert) return NotFoundError(res, 'expert');
-		senderId = expert.id;
-	} else {
-		return NotFoundError(
-			res,
-			'user',
-			'User must be either expert or client',
-		);
-	}
+	const senderId = user.id;
 
 	const query = `
-			SELECT o.id FROM business.order o
+			SELECT o.id as order_id, s.id as section_id, a.id as attach_id FROM business.order o
 			JOIN business.section s ON s."orderId" = o.id
-			JOIN business.attach a ON a."orderId" = o.id
-			WHERE a.is_new = true AND a."senderId" <> ${senderId};
+			JOIN business.attach a ON a."sectionId" = s.id
+			WHERE a.is_new = true AND a."senderId" <> ${senderId}
 		`;
 
-	res.json(await Order.query(query));
+	const result = await Order.query(query);
+	console.log(result);
+	res.json(result);
 }

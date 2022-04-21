@@ -76,7 +76,7 @@
 									>
 									<a
 										class="dropdown-item"
-										v-if="getIsClient"
+										v-if="getIsClient || getIsExpert"
 										@click.prevent="$router.push('/client')"
 										>Открыть</a
 									>
@@ -85,7 +85,8 @@
 									<a
 										class="dropdown-item"
 										@click.prevent="
-											$store.dispatch('logout')
+											$store.dispatch('logout');
+											$router.push({ path: '/' });
 										"
 										>Выйти</a
 									>
@@ -119,7 +120,7 @@ export default defineComponent({
 		},
 	},
 	computed: {
-		...mapGetters(['getUser', 'getIsAdmin', 'getIsClient']),
+		...mapGetters(['getUser', 'getIsAdmin', 'getIsClient', 'getIsExpert']),
 	},
 });
 </script>

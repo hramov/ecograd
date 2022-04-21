@@ -1,9 +1,8 @@
 import { FetchDataProvider } from '@/custom/fetch-data.provider';
-import { IOrder } from '@/custom/interfaces';
 
 const state = {
-	orders: [] as IOrder[],
-	order: {} as IOrder,
+	orders: [] as any[],
+	order: {} as any,
 };
 const mutations = {
 	setOrders(state: any, data: any) {

@@ -1,10 +1,4 @@
-import {
-	Column,
-	Entity,
-	ManyToOne,
-	OneToMany,
-	PrimaryGeneratedColumn,
-} from 'typeorm';
+import { Column, Entity, ManyToOne, OneToMany } from 'typeorm';
 import { Ecograd } from '../Ecograd.model';
 import { Attach } from './Attach.model';
 import { Order } from './Order.model';
@@ -21,6 +15,9 @@ export class Section extends Ecograd {
 
 	@Column('text')
 	status: string;
+
+	@Column('boolean', { default: false })
+	parent: boolean;
 
 	@ManyToOne(() => Order, (order: Order) => order.id)
 	order: Order;

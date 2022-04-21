@@ -3,9 +3,9 @@ import { Section } from '../../../database/model/order/Section.model';
 import { NotFoundError } from '../../../error/http/not-found.error';
 
 export async function changeSectionStatus(req: Request, res: Response) {
-	const section_id = req.body.section_id as string;
-	const status = req.body.status as string;
-
+	const section_id = req.params.section_id as string;
+	const status = req.body.new_status as string;
+	console.log(req.body);
 	const section = await Section.findOneBy({ id: parseInt(section_id) });
 
 	if (!section) {
@@ -17,6 +17,7 @@ export async function changeSectionStatus(req: Request, res: Response) {
 	}
 
 	section.status = status;
+	console.log(section);
 	await section.save();
 
 	res.json({

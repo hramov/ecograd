@@ -1,9 +1,4 @@
-import {
-	createRouter,
-	createWebHashHistory,
-	createWebHistory,
-	RouteRecordRaw,
-} from 'vue-router';
+import { createRouter, createWebHistory, RouteRecordRaw } from 'vue-router';
 import Landing from '../views/Landing.vue';
 import store from './../store/index';
 
@@ -17,11 +12,6 @@ const routes: Array<RouteRecordRaw> = [
 		path: '/expertise',
 		name: 'Expertise',
 		component: () => import('../views/Expertise.vue'),
-	},
-	{
-		path: '/login',
-		name: 'Login',
-		component: () => import('../views/Login.vue'),
 	},
 	{
 		path: '/dashboard',
@@ -42,13 +32,11 @@ const routes: Array<RouteRecordRaw> = [
 
 const router = createRouter({
 	history: createWebHistory(process.env.BASE_URL),
-	// history: createWebHashHistory(),
 	routes,
 });
 
 router.beforeEach(async (to, from, next) => {
 	if (to.path == '/dashboard') {
-		// await store.dispatch("isAdminAction");
 		store.getters.getIsAdmin ? next() : next('/');
 		return;
 	}

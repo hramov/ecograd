@@ -12,6 +12,7 @@ import { Logger } from '../../../logger';
 
 export async function uploadFileForSection(req: Request, res: Response) {
 	const sender = req.user as User;
+
 	const order = await Order.findOneBy({
 		id: parseInt(req.body.order_id),
 	});
@@ -49,13 +50,23 @@ export async function uploadFileForSection(req: Request, res: Response) {
 		await file.mv(path.resolve(dirPath + '/' + url));
 		const attach = Attach.create({
 			title: name,
-			path: '/public/order_data/' + req.params.order_id + '/' + url,
+			path:
+				'public/order_data/' +
+				order.id +
+				'/' +
+				section.arrange +
+				'/' +
+				url,
 			is_new: true,
 			order,
 			section,
 			sender,
 		});
 		await attach.save();
+		if (sender.profile == 'Эксперт') {
+			section.status = 'taken';
+			await section.save();
+		}
 	} catch (_err) {
 		const err = _err as Error;
 		Logger.writeError(err.message);

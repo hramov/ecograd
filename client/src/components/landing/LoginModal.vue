@@ -13,7 +13,7 @@
 					class="alert alert-danger"
 					role="alert"
 				>
-					Ошибка авторизации! {{ status }}
+					Ошибка авторизации!
 				</div>
 				<div
 					v-if="isLoggedIn && isTouched"
@@ -70,7 +70,7 @@
 
 <script lang="ts">
 import { defineComponent } from 'vue';
-import { mapActions } from 'vuex';
+import { mapActions, mapGetters } from 'vuex';
 
 export default defineComponent({
 	data() {
@@ -81,6 +81,9 @@ export default defineComponent({
 			isLoggedIn: false,
 		};
 	},
+	computed: {
+		...mapGetters(['getUser']),
+	},
 	methods: {
 		...mapActions(['loginAction', 'getUserAction']),
 		async login() {
@@ -90,7 +93,14 @@ export default defineComponent({
 				password: this.password,
 			});
 			await this.getUserAction();
-			this.$router.push('/dashboard');
+
+			if (this.getUser) {
+				const closeBtn = document.getElementById(
+					'closeBtn',
+				) as HTMLElement;
+				closeBtn.click();
+				this.$router.push({ path: '/dashboard' });
+			}
 		},
 	},
 });

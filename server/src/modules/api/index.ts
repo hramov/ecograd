@@ -34,6 +34,7 @@ export class API {
 		app.use(fileUpload());
 
 		app.use(cors());
+		app.use('/api/public', express.static('public'));
 
 		const router = new APIRouter();
 

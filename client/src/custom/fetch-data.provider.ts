@@ -72,7 +72,11 @@ export class FetchDataProvider {
 		data: any,
 	): Promise<AxiosResponse<any>> {
 		return await axios
-			.patch(url + '/' + id, data)
+			.patch(url + '/' + id, data, {
+				headers: {
+					Authorization: `Bearer ${store.getters.getJWT}`,
+				},
+			})
 			.then(response => response.data)
 			.catch(error => {
 				console.log(error);

@@ -155,7 +155,7 @@
 
 		<div class="row" v-if="Object.keys(getUsers).length">
 			<div
-				class="col-md-6 col-lg-4 col-sm-12 col-xl-4"
+				class="col-md-6 col-lg-3 col-sm-12 col-xl-3"
 				v-for="(profile, index) in getUsers"
 				:key="index"
 			>

@@ -1,12 +1,14 @@
 <template>
 	<div class="landing">
-		<LoginModal v-if="!getUser" />
 		<buy-modal />
 		<Intro />
 		<About />
 		<Team />
 		<Requisities />
 		<Contacts />
+		<NormatModal />
+		<ObjectsModal />
+		<DocumentsModal />
 	</div>
 </template>
 
@@ -17,7 +19,9 @@ import About from './../components/landing/About.vue';
 import Team from '../components/experts/Team.vue';
 import Requisities from './../components/landing/Requisities.vue';
 import Contacts from './../components/landing/Contacts.vue';
-import LoginModal from './../components/landing/LoginModal.vue';
+import NormatModal from './../components/footerModals/Normat.vue';
+import ObjectsModal from './../components/footerModals/Objects.vue';
+import DocumentsModal from './../components/footerModals/Documents.vue';
 import BuyModal from '@/components/landing/BuyModal.vue';
 import { mapGetters } from 'vuex';
 export default defineComponent({
@@ -27,8 +31,10 @@ export default defineComponent({
 		Team,
 		Requisities,
 		Contacts,
-		LoginModal,
 		BuyModal,
+		NormatModal,
+		ObjectsModal,
+		DocumentsModal,
 	},
 	computed: {
 		...mapGetters(['getUser']),

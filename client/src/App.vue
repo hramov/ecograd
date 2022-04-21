@@ -1,10 +1,8 @@
 <template>
 	<div>
 		<Header :isUser="getUser?.email" />
+		<LoginModal />
 		<router-view />
-		<NormatModal />
-		<ObjectsModal />
-		<DocumentsModal />
 		<br />
 		<Footer />
 	</div>
@@ -15,11 +13,7 @@ import '@/assets/css/style.css';
 import { defineComponent } from 'vue';
 import Header from './components/Header.vue';
 import Footer from './components/Footer.vue';
-
-import NormatModal from './components/footerModals/Normat.vue';
-import ObjectsModal from './components/footerModals/Objects.vue';
-import DocumentsModal from './components/footerModals/Documents.vue';
-
+import LoginModal from './components/landing/LoginModal.vue';
 import { mapGetters } from 'vuex';
 export default defineComponent({
 	name: 'App',
@@ -27,9 +21,7 @@ export default defineComponent({
 	components: {
 		Header,
 		Footer,
-		NormatModal,
-		ObjectsModal,
-		DocumentsModal,
+		LoginModal,
 	},
 	computed: {
 		...mapGetters(['getUser']),

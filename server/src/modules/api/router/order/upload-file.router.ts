@@ -33,6 +33,7 @@ export async function uploadFile(req: Request, res: Response) {
 			title: req.body[section],
 			status: 'new',
 			order: order,
+			parent: false,
 		});
 		await sec.save();
 	}
@@ -67,7 +68,13 @@ export async function uploadFile(req: Request, res: Response) {
 			await file.mv(path.resolve(dirPath + '/' + url));
 			const attach = Attach.create({
 				title: name,
-				path: '/public/order_data/' + req.params.order_id + '/' + url,
+				path:
+					'public/order_data/' +
+					order.id +
+					'/' +
+					section.arrange +
+					'/' +
+					url,
 				is_new: true,
 				order,
 				section,

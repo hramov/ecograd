@@ -1,9 +1,11 @@
-import { Router } from 'express';
+import { Request, Response, Router } from 'express';
 import passport from 'passport';
 import { AdminStrategy } from '../../../../auth/strategy/admin.strategy';
 import { JWTStrategy } from '../../../../auth/strategy/jwt.strategy';
 import { LoginStrategy } from '../../../../auth/strategy/login.strategy';
 import { RegisterStrategy } from '../../../../auth/strategy/register.strategy';
+import { Feedback } from '../../../database/model/user/Feedback.model';
+import { Expert } from '../../../database/model/user/profiles/Expert.model';
 import { createUser } from './create-user.router';
 import { deleteUser } from './delete-user.router';
 import { getProfiles } from './get-profiles.router';
@@ -37,6 +39,19 @@ router.get(
 	passport.authenticate(new AdminStrategy(), { session: false }),
 	getProfiles,
 );
+
+router.get('/expert', async (req: Request, res: Response) =>
+	res.json(await Expert.find({ relations: ['user'] })),
+);
+
+router.post('/feedback', async (req: Request, res: Response) => {
+	const feedback = Feedback.create({
+		name: req.body.name,
+		email: req.body.email,
+		feedback: req.body.text,
+	});
+	res.json(await feedback.save());
+});
 
 router.delete(
 	'/:id',

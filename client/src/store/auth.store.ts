@@ -1,10 +1,9 @@
 import { FetchDataProvider } from '@/custom/fetch-data.provider';
-import { IUser } from '@/custom/interfaces';
 
 const state = {
 	jwt_token: '' || (localStorage.getItem('token') as string),
-	user: null || (JSON.parse(localStorage.getItem('user')!) as IUser),
-	users: [] as IUser[],
+	user: null || (JSON.parse(localStorage.getItem('user')!) as any),
+	users: [] as any[],
 	isLoggedIn: JSON.parse(localStorage.getItem('user') as string)
 		? JSON.parse(localStorage.getItem('user') as string).id
 		: false,
@@ -20,7 +19,7 @@ const mutations = {
 	setProfiles(state: any, data: any) {
 		state.profiles = data;
 	},
-	setUserForExpert(state: any, data?: IUser) {
+	setUserForExpert(state: any, data: any) {
 		state.uexpert = data;
 	},
 	setIsLoggedIn(state: any, data: boolean) {
@@ -98,6 +97,7 @@ const getters = {
 		state.jwt_token || (localStorage.getItem('jwt_token') as string),
 	getIsAdmin: (state: any) => state.user?.profile == 'Администратор',
 	getIsClient: (state: any) => state.user?.profile == 'Клиент',
+	getIsExpert: (state: any) => state.user?.profile == 'Эксперт',
 	getUser: (state: any) =>
 		state.user || JSON.parse(localStorage.getItem('user')!),
 

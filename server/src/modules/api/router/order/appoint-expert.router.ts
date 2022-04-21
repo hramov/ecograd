@@ -31,6 +31,7 @@ export async function appointExpert(req: Request, res: Response) {
 	}
 
 	order.expert = expert;
+	order.status = 'taken';
 	await order.save();
 
 	res.json(order);

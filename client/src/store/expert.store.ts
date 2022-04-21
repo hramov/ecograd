@@ -1,23 +1,23 @@
 import { FetchDataProvider } from '@/custom/fetch-data.provider';
-import { IExpert } from '@/custom/interfaces';
 
 const state = {
-	expert: {} as IExpert,
-	experts: [] as IExpert[],
+	expert: {} as any,
+	experts: [] as any[],
 };
 
 const mutations = {
 	setExperts(state: any, data: any) {
-		state.experts = data.experts;
+		state.experts = data;
 	},
-	setExpert(state: any, data: IExpert) {
+	setExpert(state: any, data: any) {
 		state.expert = data;
 	},
 };
 
 const actions = {
 	async getExpertsAction({ commit }: any) {
-		// commit('setExperts', await FetchDataProvider.get('common/expert'));
+		const result = await FetchDataProvider.get('user/expert');
+		commit('setExperts', result);
 	},
 	async getSingleExpertAction({ commit }: any, id: number) {
 		commit(
