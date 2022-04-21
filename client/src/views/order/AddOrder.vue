@@ -44,24 +44,24 @@
 							v-for="(section, index) in sections"
 							:key="index"
 						>
-							<div v-if="!section.sub">
+							<div
+								v-if="!section.sub"
+								class="add-project-checkbox-up-text"
+							>
 								<div class="add-project-checkbox-text">
-									<p>
-										<input
-											class="form-check-input"
-											type="checkbox"
-											value=""
-											id="flexCheckChecked"
-											v-model="section.checked"
-										/>
-										<label
-											class="form-check-label"
-											for="flexCheckChecked"
-										>
-											{{ section.code }}
-											{{ section.title }}</label
-										>
-									</p>
+									<input
+										class="form-check-input"
+										type="checkbox"
+										id="flexCheckChecked"
+										v-model="section.checked"
+									/>
+									<label
+										class="form-check-label"
+										for="flexCheckChecked"
+									>
+										{{ section.code }}
+										{{ section.title }}</label
+									>
 								</div>
 								<div class="add-project-input-up">
 									<input
@@ -81,6 +81,7 @@
 								<div class="accordion-item">
 									<h2
 										class="accordion-header"
+										style="width: 99.2%; margin: 8px 0"
 										id="headingTwo"
 									>
 										<button
@@ -91,6 +92,7 @@
 											aria-expanded="false"
 											aria-controls="collapseTwo"
 										>
+											{{ section.code }}
 											{{ section.title }}
 										</button>
 									</h2>
@@ -222,6 +224,10 @@ export default defineComponent({
 				this.formData.append(section.code, section.title);
 			}
 
+			if (!this.isFormDataHasItems(this.formData)) {
+				alert('Необходимо выбрать хотя бы один раздел');
+				return;
+			}
 			const result = await FetchDataProvider.post(
 				'/order/upload-file/' + orderResult.id,
 				this.formData,
@@ -252,6 +258,14 @@ export default defineComponent({
 		addFile(ev: Event, code: string) {
 			const target = ev.target as HTMLInputElement;
 			this.formData.append(code, target.files![0]);
+		},
+
+		isFormDataHasItems(formData: FormData) {
+			let i = 0;
+			for (const val of formData.values()) {
+				if (val) i++;
+			}
+			return !!i;
 		},
 	},
 });

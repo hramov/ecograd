@@ -29,7 +29,7 @@
 						</button>
 						<li
 							style="cursor: pointer"
-							class="list-group-item list-group-item-action"
+							class="list-group-item list-group-item-action list-project-color"
 							:class="{ selected: selectedId == order.id }"
 							@click="
 								selectedId != order.id
@@ -108,8 +108,8 @@
 								{{ section.arrange }} {{ section.title }}
 							</li>
 							<li
-								class="list-group-item list-group-item-action"
-								style="background-color: #CEDFFA; text-align: center"
+								class="list-group-item list-group-item-action add-project-bt"
+								style="text-align: center"
 								@click="showAddSection = true"
 								v-if="getIsClient && sectionsToAdd.length > 0"
 							>
@@ -119,133 +119,127 @@
 							</li>
 						</ul>
 					</div>
-					<div v-if="showAddSection">
-						<div class="add-project-form" v-if="order.type">
-							<div class="add-project-checkbox">
-								<div class="add-project-checkbox-up">
+
+					<div
+						class="add-project-form"
+						v-if="order.type && showAddSection"
+					>
+						<div class="add-project-checkbox">
+							<div class="add-project-checkbox-up">
+								<div
+									class="add-project-checkbox-up-text"
+									v-for="section in sectionsToAdd"
+									:key="section.code"
+								>
 									<div
+										v-if="!section.sub"
 										class="add-project-checkbox-up-text"
-										v-for="section in sectionsToAdd"
-										:key="section.code"
 									>
-										<div v-if="!section.sub">
-											<div
-												class="add-project-checkbox-text"
+										<div class="add-project-checkbox-text">
+											<label
+												class="form-check-label"
+												for="flexCheckChecked"
+												style="text-align:left"
 											>
-												<p>
-													<input
-														class="form-check-input"
-														type="checkbox"
-														value=""
-														id="flexCheckChecked"
-														v-model="
-															section.checked
-														"
-													/>
-													<label
-														class="form-check-label"
-														for="flexCheckChecked"
-													>
-														{{ section.code }}
-														{{
-															section.title
-														}}</label
-													>
-												</p>
-											</div>
-											<div class="add-project-input-up">
 												<input
-													type="file"
-													class="form-control form-size"
-													:disabled="!section.checked"
-													:ref="section.code"
-													@change="
-														addFile(
-															$event,
-															section.code,
-														)
-													"
+													class="form-check-input"
+													type="checkbox"
+													id="flexCheckChecked"
+													v-model="section.checked"
 												/>
-											</div>
+												{{ section.code }}
+												{{ section.title }}</label
+											>
 										</div>
-										<div
-											class="accordion accordion-flush"
-											id="accordionExample"
-											v-else
-										>
-											<div class="accordion-item">
-												<h2
-													class="accordion-header"
-													id="headingTwo"
+										<div class="add-project-input-up">
+											<input
+												type="file"
+												class="form-control form-size"
+												:disabled="!section.checked"
+												:ref="section.code"
+												@change="
+													addFile(
+														$event,
+														section.code,
+													)
+												"
+											/>
+										</div>
+									</div>
+									<div
+										class="accordion accordion-flush"
+										id="accordionExample"
+										v-else
+									>
+										<div class="accordion-item">
+											<h2
+												class="accordion-header"
+												id="headingTwo"
+											>
+												<button
+													class="accordion-button collapsed"
+													type="button"
+													data-bs-toggle="collapse"
+													data-bs-target="#collapseTwo"
+													aria-expanded="false"
+													aria-controls="collapseTwo"
 												>
-													<button
-														class="accordion-button collapsed"
-														type="button"
-														data-bs-toggle="collapse"
-														data-bs-target="#collapseTwo"
-														aria-expanded="false"
-														aria-controls="collapseTwo"
-													>
-														{{ section.code }}
-														{{ section.title }}
-													</button>
-												</h2>
+													{{ section.code }}
+													{{ section.title }}
+												</button>
+											</h2>
+											<div
+												id="collapseTwo"
+												class="accordion-collapse collapse collapse-margin"
+												aria-labelledby="headingTwo"
+												data-bs-parent="#accordionExample"
+											>
 												<div
-													id="collapseTwo"
-													class="accordion-collapse collapse collapse-margin"
-													aria-labelledby="headingTwo"
-													data-bs-parent="#accordionExample"
+													class="accordion-body"
+													v-for="(sub,
+													index) in section.sub"
+													:key="index"
 												>
 													<div
-														class="accordion-body"
-														v-for="(sub,
-														index) in section.sub"
-														:key="index"
+														class="accordion-body-text"
 													>
-														<div
-															class="accordion-body-text"
-														>
-															<p>
-																<input
-																	class="form-check-input "
-																	type="checkbox"
-																	id="flexCheckChecked"
-																	v-model="
-																		sub.checked
-																	"
-																/>
-																<label
-																	class="form-check-label"
-																	for="flexCheckChecked"
-																>
-																	{{
-																		sub.code
-																	}}
-																	{{
-																		sub.title
-																	}}</label
-																>
-															</p>
-														</div>
-														<div
-															class="accordion-body-input"
+														<label
+															class="form-check-label"
+															for="flexCheckChecked"
+															style="text-align:left"
 														>
 															<input
-																name="myFile"
-																type="file"
-																class="form-control form-size"
-																:disabled="
-																	!sub.checked
-																"
-																:ref="sub.code"
-																@change="
-																	addFile(
-																		$event,
-																		sub.code,
-																	)
+																class="form-check-input "
+																type="checkbox"
+																id="flexCheckChecked"
+																v-model="
+																	sub.checked
 																"
 															/>
-														</div>
+															{{ sub.code }}
+															{{
+																sub.title
+															}}</label
+														>
+													</div>
+													<div
+														class="accordion-body-input"
+													>
+														<input
+															name="myFile"
+															type="file"
+															class="form-control form-size"
+															:disabled="
+																!sub.checked
+															"
+															:ref="sub.code"
+															@change="
+																addFile(
+																	$event,
+																	sub.code,
+																)
+															"
+														/>
 													</div>
 												</div>
 											</div>
@@ -253,10 +247,10 @@
 									</div>
 								</div>
 							</div>
-							<button class="btn btn-success" @click="addSection">
-								Добавить
-							</button>
 						</div>
+						<button class="btn btn-success" @click="addSection">
+							Добавить
+						</button>
 					</div>
 					<div
 						class="project-status"
@@ -535,27 +529,26 @@ export default defineComponent({
 
 <style>
 .green {
-	background-color: #71c55d;
+	background-color: #53d8a5a9;
 	cursor: pointer;
 }
 
 .yellow {
-	background-color: #ced11f;
+	background-color: #feef7d9c;
 	cursor: pointer;
 }
 
 .grey {
-	background-color: #d2d8d1;
+	background-color: #fffafa;
 	cursor: pointer;
 }
 
 .selected {
-	border-color: #71c55d;
-	background-color: white;
+	background-color: #add8e6;
 }
 
 .selected:hover {
 	text-decoration: none;
-	background-color: #9dd193;
+	background-color: #add8e6;
 }
 </style>

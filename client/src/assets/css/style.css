@@ -1,8 +1,13 @@
+/* body {
+	background-color: #fffafa;
+} */
+
 .logo {
 	padding-left: 0px;
 	padding-top: 0px;
 	max-width: 200px;
 }
+
 
 .add-project-contaider {
 	width: 100%;
@@ -35,11 +40,15 @@
 }
 
 .add-project-form {
-	width: 100%;
+	width: 65%;
 }
 
 .add-project-checkbox {
 	width: 100%;
+}
+
+.form-check-input {
+	margin-right: 10px;
 }
 
 .add-project-checkbox-up-text,
@@ -49,8 +58,17 @@
 	justify-content: space-between;
 }
 
+.add-project-checkbox-text {
+	width: 70%;
+}
+
 .accordion-body {
 	padding: 0;
+	padding-left: 25px;
+}
+
+.accordion-body-text {
+	width: 70%;
 }
 
 .collapse-margin {
@@ -68,6 +86,7 @@
 .accordion-body-input {
 	margin: 5px 0 10px 10px;
 	margin-right: 10px;
+	width: 30%;
 }
 
 .form-size {
@@ -124,7 +143,12 @@ h1 {
 
 .add-project-bt {
 	/* стиль для кнопки добавить проект */
-	background-color: #CEDFFA;
+	background-color: #7DCE94;
+	font-weight: bold;
+}
+
+.list-project-color:hover {
+	background-color: #FFFFE0;
 }
 
 .color-selection {
