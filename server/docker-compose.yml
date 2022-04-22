@@ -41,7 +41,7 @@ services:
 
 volumes:
   db-data:
-  data:
+  data/sql/:
   logs:
   public:
 
