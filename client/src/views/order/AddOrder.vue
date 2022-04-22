@@ -330,7 +330,9 @@ export default defineComponent({
 			);
 			this.formData = new FormData();
 			alert('Проект успешно добавлен');
-			this.$router.push({ path: '/client' });
+			this.$emit('add-project', true);
+			this.order = {} as Order;
+			this.sections = [];
 		},
 
 		checkSubsection() {

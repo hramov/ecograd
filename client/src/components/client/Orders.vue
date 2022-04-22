@@ -49,7 +49,11 @@
 				</div>
 				<div class="divider"></div>
 
-				<AddOrder v-if="addProject" style="width: 75%" />
+				<AddOrder
+					v-if="addProject"
+					style="width: 75%"
+					@add-project="addProjectHandler"
+				/>
 
 				<div
 					class="info-project-container"
@@ -621,6 +625,13 @@ export default defineComponent({
 				if (val) i++;
 			}
 			return !!i;
+		},
+
+		async addProjectHandler(data: any) {
+			if (data == true) {
+				await this.getOrders();
+				this.addProject = false;
+			}
 		},
 	},
 });
