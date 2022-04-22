@@ -1,15 +1,15 @@
 import express, { Response } from 'express';
 import fileUpload from 'express-fileupload';
 import cors from 'cors';
-import { APP } from '../../config/constant';
 import { Logger } from '../logger';
-import { autoInjectable } from 'tsyringe';
 import { APIRouter } from './router/router';
 import passport from 'passport';
 import { JWTStrategy } from '../../auth/strategy/jwt.strategy';
 import { readFileSync } from 'fs';
+import appRoot from 'app-root-path';
 
 import https from 'https';
+import path from 'path';
 export class APIReply<T> {
 	public status: boolean;
 	public data: T;
@@ -48,11 +48,12 @@ export class API {
 
 		try {
 			const certificate = readFileSync(
-				'/etc/letsencrypt/live/hramovdev.ru/fullchain.pem',
+				path.resolve(appRoot.path, 'data/cert/fullchain.pem'),
 			);
 			const privateKey = readFileSync(
-				'/etc/letsencrypt/live/hramovdev.ru/privkey.pem',
+				path.resolve(appRoot.path, 'data/cert/privkey.pem'),
 			);
+
 			https
 				.createServer(
 					{
