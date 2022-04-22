@@ -4,10 +4,13 @@ import { Admin } from '../../../database/model/user/profiles/Admin.model';
 import { Client } from '../../../database/model/user/profiles/Client.model';
 import { Expert } from '../../../database/model/user/profiles/Expert.model';
 import { User } from '../../../database/model/user/User.model';
+import { BadRequestError } from '../../../error/http/bad-request.error';
 
 export async function createUser(req: Request, res: Response) {
 	const user = req.body.user;
 	const profile = req.body.profile;
+
+	if (!req.body.user.name || !req.body.profile) return BadRequestError(res);
 
 	const result = User.create({
 		name: user.name,

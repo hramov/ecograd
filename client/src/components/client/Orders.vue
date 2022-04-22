@@ -6,7 +6,11 @@
 		<div v-else>
 			<h1 v-if="!order.id">Мои объекты</h1>
 			<h3 v-else style="text-align: center">{{ order.title }}</h3>
-			<h4 class="status-project-header" v-if="order.id">
+			<h4
+				class="status-project-header"
+				v-if="order.id"
+				style="margin-bottom: 20px"
+			>
 				Статус выбранного объекта:
 				{{
 					order.status == 'new'
@@ -56,25 +60,9 @@
 				<div class="divider"></div>
 
 				<div class="info-project-container" v-if="order.id">
-					<div class="existing-project">
-						<div v-if="getIsExpert" style="text-align: center">
-							<p>Клиент: {{ order.client_name }}</p>
-						</div>
-
-						<div
-							v-if="getIsClient && order.expert"
-							style="text-align: center"
-						>
-							<p>Эксперт: {{ order.expert.name }}</p>
-						</div>
-						<div
-							v-if="getIsClient && !order.expert"
-							style="text-align: center"
-						>
-							<p>Эксперт еще не назначен</p>
-						</div>
+					<div class="existing-project" style="width: 30%">
 						<ul class="list-group">
-							<p class="list-group-p">Загруженные разделы</p>
+							<h4>Загруженные разделы</h4>
 							<li
 								class="list-group-item list-group-item-action color-selection"
 								:class="{
@@ -122,8 +110,14 @@
 
 					<div
 						class="add-project-form"
-						v-if="order.type && showAddSection"
+						v-if="
+							order.object_type &&
+								order.exp_type &&
+								showAddSection
+						"
+						style="width: 70%; margin-left: 1%"
 					>
+						<h4>Доступные разделы</h4>
 						<div class="add-project-checkbox">
 							<div class="add-project-checkbox-up">
 								<div
@@ -469,8 +463,12 @@ export default defineComponent({
 		},
 
 		async chooseOrder(id: number) {
+			if (!id) return;
+
 			this.selectedId = id;
 			this.order = await FetchDataProvider.get('/order/' + id);
+
+			if (!this.order || !this.order.id) return;
 			this.order.expert = await FetchDataProvider.get(
 				'/order/expert-for-order/' + this.order.id,
 			);
@@ -481,8 +479,12 @@ export default defineComponent({
 			);
 
 			const candidate: Section[] = await FetchDataProvider.get(
-				'/order/sections-dict/' + this.order.type,
+				'/order/sections-dict/' +
+					this.order.exp_type +
+					'/' +
+					this.order.object_type,
 			);
+
 			const orderArrange = this.sections.map(
 				(section: Section) => section.arrange,
 			);

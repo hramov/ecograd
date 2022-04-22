@@ -74,7 +74,7 @@ router.get(
 );
 
 router.get(
-	'/sections-dict/:order_type',
+	'/sections-dict/:exp_type/:object_type',
 	passport.authenticate(new JWTStrategy(), { session: false }),
 	getSections,
 );
@@ -106,7 +106,8 @@ router.get(
 router.get(
 	'/expert/:order_id',
 	passport.authenticate(new AdminStrategy(), { session: false }),
-	async (req: Request, res: Response) =>
+	async (req: Request, res: Response) => {
+		if (!req.params.order_id) return BadRequestError(res);
 		res.json(
 			(
 				await Order.query(
@@ -119,7 +120,8 @@ router.get(
 				`,
 				)
 			)[0],
-		),
+		);
+	},
 );
 
 router.get(
@@ -176,11 +178,12 @@ router.post(
 router.get(
 	'/:order_id',
 	passport.authenticate(new JWTStrategy(), { session: false }),
-	async (req: Request, res: Response) =>
+	async (req: Request, res: Response) => {
+		if (!req.params.order_id) return BadRequestError(res);
 		res.json(
 			(
 				await Order.query(
-					`SELECT o.id, o.title, o.type, o.status, o."createdAt", 
+					`SELECT o.id, o.title, o.exp_type, o.object_type, o.status, o."createdAt", 
 						c.phone as client_phone, 
 						u.name as client_name, u.email as client_email,
 						array_to_string(array_agg(distinct(concat(s.arrange, ' ', s.title))), ';') as sections
@@ -194,7 +197,8 @@ router.get(
 				`,
 				)
 			)[0],
-		),
+		);
+	},
 );
 
 router.get(

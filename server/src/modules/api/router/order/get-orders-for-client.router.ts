@@ -7,6 +7,7 @@ import { User } from '../../../database/model/user/User.model';
 export async function getOrdersForClient(req: Request, res: Response) {
 	const user = req.user as User;
 	const orders = await Order.findBy({ client: { id: user.id } });
+
 	for (const order of orders) {
 		order.sections = await Section.find({
 			where: {

@@ -5,7 +5,8 @@
 .logo {
 	padding-left: 0px;
 	padding-top: 0px;
-	max-width: 200px;
+	width: auto;
+	max-width: 100%;
 }
 
 
@@ -94,7 +95,7 @@
 }
 
 .form-margin-texarea {
-	margin: 0 20px 10px 10px;
+	margin: 0 20px 20px 10px;
 }
 
 body {
@@ -112,7 +113,7 @@ h1 {
 .status-project-header {
 	text-align: center;
 	margin: 10px 0;
-	text-decoration: underline;
+	/* text-decoration: underline; */
 }
 
 .list-group {
@@ -226,4 +227,8 @@ h1 {
 
 .project-status-button {
 	text-align: center;
+}
+
+.list-group-p {
+	margin-bottom: 10px;
 }

@@ -22,6 +22,7 @@ export class JWTStrategy extends Strategy {
 		jwt_payload: any,
 		done: (error: any, user?: any, options?: IVerifyOptions) => void,
 	) {
+		if (!jwt_payload.sub) return new Error('Token not valid');
 		const user = await User.findOneBy({ id: jwt_payload.sub });
 		if (!user) {
 			return done(user, null);

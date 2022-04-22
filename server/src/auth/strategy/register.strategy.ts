@@ -26,11 +26,11 @@ export class RegisterStrategy extends Strategy {
 		password: string,
 		done: (error: any, user?: any, options?: IVerifyOptions) => void,
 	) {
+		if (!email) return new Error('Credentials miss');
 		let user = await User.findOneBy({ email });
 		if (user) {
 			return done('User already exists', user);
 		}
-
 		return done(null, await createUser(req, null));
 	}
 }

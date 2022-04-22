@@ -23,6 +23,7 @@ export class ClientStrategy extends Strategy {
 		jwt_payload: any,
 		done: (error: any, user?: any, options?: IVerifyOptions) => void,
 	) {
+		if (!jwt_payload.sub) return new Error('Token not valid');
 		const client = await Client.findOneBy({
 			user: { id: jwt_payload.sub },
 		});

@@ -6,37 +6,95 @@
 		</div>
 	</div>
 	<div class="add-project-contaider" style="margin-top: 100px" v-else>
-		<h2 class="header-background">Добавить проект</h2>
-		<div class="add-project-contaider-colum">
-			<div class="project-name">
-				<p>
-					<textarea
-						placeholder="Введите название объекта..."
-						class="form-control form-margin-texarea"
-						v-model="order.title"
-					></textarea>
-				</p>
-				<p>
-					<textarea
-						placeholder="Введите шифр объекта..."
-						class="form-control form-margin-texarea"
-						v-model="order.cipher"
-					></textarea>
-				</p>
-
+		<h2 style="text-align: center">Добавить объект</h2>
+		<hr style="width: 90%; margin: 20px auto" />
+		<form class="add-project-contaider-colum" @submit.prevent="createOrder">
+			<div class="project-name" style="margin-left: 10px; width: 30%">
+				<h4 style="margin-left: 10px;">Описание</h4>
+				<textarea
+					style="resize: none"
+					rows="3"
+					placeholder="Введите название проектной документации..."
+					class="form-control form-margin-texarea"
+					v-model="order.title"
+					@input="isNameInput = true"
+					@emptied="isNameInput = false"
+					required
+				></textarea>
+				<div style="margin: 0px -10px 20px 10px" v-if="isNameInput">
+					<label>Заявление на проведение экспертизы</label>
+					<input
+						type="file"
+						class="form-control form-size"
+						@change="
+							isFileLoaded = true;
+							addFile($event, '0');
+						"
+						required
+					/>
+				</div>
 				<select
+					v-if="isFileLoaded"
+					style="width: 100%"
 					class="accordion-button collapsed form-control form-margin-texarea form-select"
 					name="registraistion-name-sex"
-					v-model="order.type"
-					@change="loadSections"
+					@change="
+						isTypeSelected = true;
+						loadSections();
+					"
+					v-model="order.exp_type"
+					required
+				>
+					<option disabled value="0">Вид экспертизы</option>
+					<option value="1"
+						>Результаты инженерно-экологических изысканий
+						(РИИ)</option
+					>
+					<option value="2">Проектная документация (ПД)</option>
+					<option value="3">РИИ и ПД</option>
+				</select>
+				<select
+					v-if="isTypeSelected && order.exp_type != '1'"
+					style="width: 100%"
+					class="accordion-button collapsed form-control form-margin-texarea form-select"
+					name="registraistion-name-sex"
+					v-model="order.object_type"
+					@change="
+						isObjectTypeSelected = true;
+						loadSections();
+					"
+					required
 				>
 					<option disabled value="0">Тип объекта</option>
 					<option value="1">Объект капитального строительства</option>
 					<option value="2">Линейный объект</option>
 				</select>
+				<textarea
+					style="resize: none"
+					rows="3"
+					v-if="isObjectTypeSelected || order.exp_type == '1'"
+					placeholder="Введите шифр проектной документации..."
+					class="form-control form-margin-texarea"
+					v-model="order.docs_cipher"
+					required
+				></textarea>
+				<textarea
+					style="resize: none"
+					rows="3"
+					v-if="isObjectTypeSelected || order.exp_type == '1'"
+					placeholder="Введите шифр РИИ..."
+					class="form-control form-margin-texarea"
+					v-model="order.rii_cipher"
+					required
+				></textarea>
 			</div>
 
-			<div class="add-project-form" v-if="order.type">
+			<div
+				class="add-project-form"
+				v-if="isShowSections"
+				style="width: 60%; margin: 10px auto"
+			>
+				<h4>Разделы</h4>
 				<div class="add-project-checkbox">
 					<div class="add-project-checkbox-up">
 						<div
@@ -49,16 +107,16 @@
 								class="add-project-checkbox-up-text"
 							>
 								<div class="add-project-checkbox-text">
-									<input
-										class="form-check-input"
-										type="checkbox"
-										id="flexCheckChecked"
-										v-model="section.checked"
-									/>
 									<label
 										class="form-check-label"
 										for="flexCheckChecked"
 									>
+										<input
+											class="form-check-input"
+											type="checkbox"
+											id="flexCheckChecked"
+											v-model="section.checked"
+										/>
 										{{ section.code }}
 										{{ section.title }}</label
 									>
@@ -109,16 +167,18 @@
 										>
 											<div class="accordion-body-text">
 												<p>
-													<input
-														class="form-check-input "
-														type="checkbox"
-														id="flexCheckChecked"
-														v-model="sub.checked"
-													/>
 													<label
 														class="form-check-label"
 														for="flexCheckChecked"
 													>
+														<input
+															class="form-check-input "
+															type="checkbox"
+															id="flexCheckChecked"
+															v-model="
+																sub.checked
+															"
+														/>
 														{{ sub.code }}
 														{{ sub.title }}</label
 													>
@@ -146,11 +206,22 @@
 						</div>
 					</div>
 				</div>
-				<button class="btn btn-success" @click="createOrder">
-					Добавить
-				</button>
+				<div v-if="sections.length" style="text-align: center">
+					<button
+						class="btn btn-success"
+						type="submit"
+						style="width: 20%"
+					>
+						Добавить
+					</button>
+				</div>
+				<div v-else style="width: 60%; margin: 0 auto;">
+					<div class="alert alert-danger" role="alert">
+						Ошибка при загрузке секций
+					</div>
+				</div>
 			</div>
-		</div>
+		</form>
 	</div>
 </template>
 
@@ -161,17 +232,19 @@ import { defineComponent } from '@vue/runtime-core';
 import { mapGetters } from 'vuex';
 
 export interface Order {
-	id?: number;
+	id: number;
 	title: string;
-	cipher: string;
-	type: 0 | 1 | 2;
+	docs_cipher: string;
+	rii_cipher: string;
+	exp_type: 0 | 1 | 2;
+	object_type: 0 | 1 | 2;
 	sections: Section[];
 	client: Client;
 	expert: Expert;
 }
 
 export interface Section {
-	id?: number;
+	id: number;
 	code: string;
 	title: string;
 	checked: boolean;
@@ -186,36 +259,53 @@ export default defineComponent({
 	data() {
 		return {
 			order: {
-				type: 0,
+				exp_type: 0,
+				object_type: 0,
 			} as Order,
 			sections: [] as Section[],
 			formData: new FormData(),
+			isNameInput: false,
+			isFileLoaded: false,
+			isTypeSelected: false,
+			isObjectTypeSelected: false,
 		};
 	},
 	computed: {
 		...mapGetters(['getUser']),
+		isShowSections(): boolean {
+			return (
+				this.isNameInput &&
+				this.isFileLoaded &&
+				this.isTypeSelected &&
+				(this.isObjectTypeSelected || this.order.exp_type == 1)
+			);
+		},
 	},
 	methods: {
 		async loadSections() {
 			this.sections = await FetchDataProvider.get(
-				'/order/sections-dict/' + this.order.type,
+				'/order/sections-dict/' +
+					this.order.exp_type +
+					'/' +
+					this.order.object_type,
 			);
 		},
 
 		async createOrder() {
 			this.checkSubsection();
-			const orderResult = await FetchDataProvider.post(
-				'/order',
-				this.order,
+
+			const sections = this.sections.filter(
+				(section: Section) => section.checked,
 			);
 
-			if (!orderResult.id) {
+			if (sections.length == 0) {
+				alert('Необходимо загрузить хотя бы один раздел!');
 				return;
 			}
 
-			for (const section of this.sections.filter(
-				(section: Section) => section.checked,
-			)) {
+			this.formData.append('0', 'Заявление на проведение экспертизы');
+
+			for (const section of sections) {
 				if (section.sub) {
 					for (const sub of section.sub) {
 						this.formData.append(sub.code, sub.title);
@@ -228,6 +318,16 @@ export default defineComponent({
 				alert('Необходимо выбрать хотя бы один раздел');
 				return;
 			}
+
+			const orderResult = await FetchDataProvider.post(
+				'/order',
+				this.order,
+			);
+
+			if (!orderResult.id) {
+				return;
+			}
+
 			const result = await FetchDataProvider.post(
 				'/order/upload-file/' + orderResult.id,
 				this.formData,
@@ -266,6 +366,12 @@ export default defineComponent({
 				if (val) i++;
 			}
 			return !!i;
+		},
+
+		showFormData(formData: FormData) {
+			for (const val of formData.values()) {
+				console.log(val);
+			}
 		},
 	},
 });

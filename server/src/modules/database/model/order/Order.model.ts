@@ -1,11 +1,4 @@
-import {
-	Column,
-	Entity,
-	JoinColumn,
-	ManyToOne,
-	OneToMany,
-	PrimaryGeneratedColumn,
-} from 'typeorm';
+import { Column, Entity, JoinColumn, ManyToOne, OneToMany } from 'typeorm';
 import { Ecograd } from '../Ecograd.model';
 import { Client } from '../user/profiles/Client.model';
 import { Expert } from '../user/profiles/Expert.model';
@@ -19,8 +12,17 @@ export class Order extends Ecograd {
 	@Column('text')
 	title: string;
 
-	@Column('text')
-	type: string;
+	@Column('text', { nullable: true })
+	exp_type: string;
+
+	@Column('text', { nullable: true })
+	object_type: string;
+
+	@Column('text', { nullable: true })
+	docs_cipher: string;
+
+	@Column('text', { nullable: true })
+	rii_cipher: string;
 
 	@Column('text')
 	status: string;

@@ -2,10 +2,16 @@ import { Request, Response } from 'express';
 import { Order } from '../../../database/model/order/Order.model';
 import { Client } from '../../../database/model/user/profiles/Client.model';
 import { User } from '../../../database/model/user/User.model';
+import { BadRequestError } from '../../../error/http/bad-request.error';
 import { NotFoundError } from '../../../error/http/not-found.error';
 
 export async function addOrder(req: Request, res: Response) {
 	const user = req.user as User;
+
+	if (!req.body || !req.body.title) {
+		return BadRequestError(res);
+	}
+
 	const client = await Client.findOneBy({ id: user.id });
 
 	if (!client) {
@@ -14,7 +20,10 @@ export async function addOrder(req: Request, res: Response) {
 
 	const order = Order.create({
 		title: req.body.title,
-		type: req.body.type,
+		exp_type: req.body.exp_type,
+		object_type: req.body.object_type,
+		docs_cipher: req.body.docs_cipher,
+		rii_cipher: req.body.rii_cipher,
 		status: 'new',
 		client: client,
 		expert: null,

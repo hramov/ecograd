@@ -20,6 +20,7 @@ export class LoginStrategy extends Strategy {
 		password: string,
 		done: (error: any, user?: any, options?: IVerifyOptions) => void,
 	) {
+		if (!email || !password) return new Error('Credentials miss');
 		let user = await User.findOneBy({ email });
 		if (user && compare(password, user.password)) return done(null, user);
 

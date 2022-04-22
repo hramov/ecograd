@@ -9,9 +9,14 @@ import { User } from '../../../database/model/user/User.model';
 import { Section } from '../../../database/model/order/Section.model';
 import { NotFoundError } from '../../../error/http/not-found.error';
 import { Logger } from '../../../logger';
+import { BadRequestError } from '../../../error/http/bad-request.error';
 
 export async function uploadFile(req: Request, res: Response) {
 	const sender = req.user as User;
+
+	if (!req.params.order_id || Object.keys(req.body).length == 0)
+		return BadRequestError(res);
+
 	const order = await Order.findOneBy({
 		id: parseInt(req.params.order_id),
 	});

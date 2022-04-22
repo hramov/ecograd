@@ -1,10 +1,13 @@
 import { Request, Response } from 'express';
 import { Order } from '../../../database/model/order/Order.model';
 import { User } from '../../../database/model/user/User.model';
+import { BadRequestError } from '../../../error/http/bad-request.error';
 
 export async function checkChanges(req: Request, res: Response) {
 	const user = req.user as User;
 	const senderId = user.id;
+
+	if (!senderId) return BadRequestError(res);
 
 	const query = `
 			SELECT o.id as order_id, s.id as section_id, a.id as attach_id FROM business.order o
@@ -14,6 +17,5 @@ export async function checkChanges(req: Request, res: Response) {
 		`;
 
 	const result = await Order.query(query);
-	console.log(result);
 	res.json(result);
 }
