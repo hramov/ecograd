@@ -25,7 +25,7 @@ export class Logger {
 			fs.mkdirSync(dir, { recursive: true });
 		}
 
-		const file = path.resolve(dir, today + '.txt');
+		const file = dir + '/' + today + '.txt';
 		if (fs.existsSync(file)) {
 			fs.appendFileSync(file, msg + '\n');
 		} else {
