@@ -16,8 +16,7 @@ export class Logger {
 	}
 
 	private static writeToFile(msg: string) {
-		// const today = new Date().toLocaleDateString().split('.').join('_');
-		const today = new Date().toLocaleDateString();
+		const today = new Date().toLocaleDateString().split('.').join('_');
 		const year = new Date().getFullYear().toString();
 		const month = (new Date().getMonth() + 1).toString();
 

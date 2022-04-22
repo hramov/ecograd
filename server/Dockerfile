@@ -1,4 +1,4 @@
-FROM node:17
+FROM node:16
 
 WORKDIR /usr/src/app
 RUN apt-get update && apt-get install --no-install-recommends -y
