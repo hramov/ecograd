@@ -11,7 +11,7 @@ services:
     environment:
       - JWT_SECRET=!seCreT
       - HASH_SECRET=password
-      - DB_HOST=localhost
+      - DB_HOST=185.154.53.78
       - DB_PORT=5432
       - DB_USER=postgres
       - DB_PASSWORD=postgres
