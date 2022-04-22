@@ -1,6 +1,7 @@
 import { DataSource } from 'typeorm';
 import { DatabaseIniter } from './init';
 import { Attach } from './model/order/Attach.model';
+import { Inquire } from './model/order/Inquire.model';
 import { Order } from './model/order/Order.model';
 import { Section } from './model/order/Section.model';
 import { Feedback } from './model/user/Feedback.model';
@@ -29,6 +30,7 @@ export class Database {
 					Section,
 					Attach,
 					Feedback,
+					Inquire,
 				],
 				subscribers: [],
 				migrations: [],

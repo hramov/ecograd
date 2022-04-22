@@ -1,3 +1,4 @@
+import { hashSync } from 'bcrypt';
 import { Request, Response } from 'express';
 import { ROLES } from '../../../../auth/config';
 import { Admin } from '../../../database/model/user/profiles/Admin.model';
@@ -15,10 +16,9 @@ export async function createUser(req: Request, res: Response) {
 	const result = User.create({
 		name: user.name,
 		email: user.email,
-		password: user.password,
+		password: hashSync(user.password, 10),
 		profile: user.profile,
 	});
-	console.log(result);
 	const savedUser = await result.save();
 
 	let error = null;

@@ -1,19 +1,19 @@
+import appRoot from 'app-root-path';
 import { Request, Response } from 'express';
 import fileUpload from 'express-fileupload';
+import { existsSync, mkdirSync } from 'fs';
 import path, { extname } from 'path';
-import appRoot from 'app-root-path';
-import fs from 'fs';
-import { Attach } from '../../../database/model/order/Attach.model';
+import { Inquire } from '../../../database/model/order/Inquire.model';
 import { Order } from '../../../database/model/order/Order.model';
 import { User } from '../../../database/model/user/User.model';
-import { Section } from '../../../database/model/order/Section.model';
+import { BadRequestError } from '../../../error/http/bad-request.error';
 import { NotFoundError } from '../../../error/http/not-found.error';
 import { Logger } from '../../../logger';
-import { BadRequestError } from '../../../error/http/bad-request.error';
 
-export async function uploadFileForSection(req: Request, res: Response) {
+export async function uploadInquire(req: Request, res: Response) {
 	const sender = req.user as User;
-	if (!req.body.order_id || !req.body.section_id) return BadRequestError(res);
+
+	if (!req.body.order_id) return BadRequestError(res);
 
 	const order = await Order.findOneBy({
 		id: parseInt(req.body.order_id),
@@ -23,14 +23,7 @@ export async function uploadFileForSection(req: Request, res: Response) {
 		return NotFoundError(res, 'order');
 	}
 
-	const section = await Section.findOneBy({ id: req.body.section_id });
-
-	if (!section) {
-		return NotFoundError(res, 'section');
-	}
-
 	const fileNames = Object.keys(req.files);
-	console.log(fileNames);
 	if (fileNames.length == 0) return BadRequestError(res);
 
 	try {
@@ -44,33 +37,25 @@ export async function uploadFileForSection(req: Request, res: Response) {
 		const url = md5 + '_' + Date.now() + extname(name);
 		const dirPath = path.resolve(
 			appRoot.path,
-			'public/order_data/' + order.id + '/' + section.arrange,
+			'public/order_data/' + order.id + '/inquires',
 		);
 
-		if (!fs.existsSync(dirPath)) {
-			fs.mkdirSync(dirPath, { recursive: true });
+		if (!existsSync(dirPath)) {
+			mkdirSync(dirPath, { recursive: true });
 		}
 
 		await file.mv(path.resolve(dirPath + '/' + url));
-		const attach = Attach.create({
+
+		const inquire = Inquire.create({
 			title: name,
-			path:
-				'public/order_data/' +
-				order.id +
-				'/' +
-				section.arrange +
-				'/' +
-				url,
-			is_new: true,
+			path: 'public/order_data/' + order.id + '/inquires/' + url,
 			order,
-			section,
 			sender,
 		});
-		await attach.save();
-		if (sender.profile == 'Эксперт') {
-			section.status = 'taken';
-			await section.save();
-		}
+		await inquire.save();
+		Logger.writeInfo(
+			'Successfully upload inquire for order ' + req.body.order_id,
+		);
 	} catch (_err) {
 		const err = _err as Error;
 		Logger.writeError(err.message);

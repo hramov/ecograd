@@ -8,6 +8,7 @@ import { Attach } from '../../../database/model/order/Attach.model';
 import { Order } from '../../../database/model/order/Order.model';
 import { Section } from '../../../database/model/order/Section.model';
 import { BadRequestError } from '../../../error/http/bad-request.error';
+import { Logger } from '../../../logger';
 import { addOrder } from './add-order.router';
 import { appointExpert } from './appoint-expert.router';
 import { changeOrderStatus } from './change-order-status.router';
@@ -15,12 +16,14 @@ import { changeSectionStatus } from './change-section-status.router';
 import { checkChanges } from './check-changes.router';
 import { getAttachesForSection } from './get-attaches-for-section.router';
 import { getExpertForOrder } from './get-expert-for-order.router';
+import { getInquire } from './get-inquire.router';
 import { getOrdersForClient } from './get-orders-for-client.router';
 import { getOrdersForExpert } from './get-orders-for-expert.router';
 import { getOrdersWithoutExpert } from './get-orders-without-expert.router';
 import { getSections } from './get-sections.router';
 import { uploadFileForSection } from './upload-file-for-section.router';
 import { uploadFile } from './upload-file.router';
+import { uploadInquire } from './upload-inquire.router';
 
 const router = Router();
 
@@ -141,6 +144,18 @@ router.get(
 	},
 );
 
+router.post(
+	'/upload-inquire',
+	passport.authenticate(new JWTStrategy(), { session: false }),
+	uploadInquire,
+);
+
+router.get(
+	'/inquire/:order_id',
+	passport.authenticate(new JWTStrategy(), { session: false }),
+	getInquire,
+);
+
 router.get(
 	'/sections/:order_id',
 	passport.authenticate(new JWTStrategy(), { session: false }),
@@ -180,10 +195,11 @@ router.get(
 	passport.authenticate(new JWTStrategy(), { session: false }),
 	async (req: Request, res: Response) => {
 		if (!req.params.order_id) return BadRequestError(res);
-		res.json(
-			(
-				await Order.query(
-					`SELECT o.id, o.title, o.exp_type, o.object_type, o.status, o."createdAt", 
+		try {
+			res.json(
+				(
+					await Order.query(
+						`SELECT o.id, o.title, o.exp_type, o.object_type, o.status, o."createdAt", 
 						c.phone as client_phone, 
 						u.name as client_name, u.email as client_email,
 						array_to_string(array_agg(distinct(concat(s.arrange, ' ', s.title))), ';') as sections
@@ -195,9 +211,16 @@ router.get(
 				WHERE a.id > 0 AND o.id = ${req.params.order_id}
 				GROUP BY o.id, c.id, u.id
 				`,
-				)
-			)[0],
-		);
+					)
+				)[0],
+			);
+		} catch (_err) {
+			const err = _err as Error;
+			Logger.writeError(err.message);
+			res.json({
+				error: err.message,
+			});
+		}
 	},
 );
 
@@ -207,7 +230,7 @@ router.get(
 	async (req: Request, res: Response) =>
 		res.json(
 			await Order.query(
-				`SELECT o.id, o.title, o.type, o.status, o."createdAt", 
+				`SELECT o.id, o.title, o.exp_type, o.object_type, o.status, o."createdAt", 
 						c.phone as client_phone, 
 						u.name, u.email as client_email,
 						array_to_string(array_agg(distinct(concat(s.arrange, ' ', s.title))), ';') as sections
@@ -223,5 +246,4 @@ router.get(
 			),
 		),
 );
-
 export { router as orderRouter };

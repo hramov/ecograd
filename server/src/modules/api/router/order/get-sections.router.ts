@@ -14,7 +14,10 @@ export function getSections(req: Request, res: Response) {
 	const exp_type = parseInt(req.params.exp_type as string);
 	const object_type = parseInt(req.params.object_type as string);
 
-	if (!exp_type || !object_type) return BadRequestError(res);
+	if (!exp_type) return BadRequestError(res);
+
+	if (!object_type && (exp_type == 2 || exp_type == 3))
+		return BadRequestError(res);
 
 	const object_section_linear = [
 		{ code: '1', title: 'Пояснительная записка' },

@@ -1,3 +1,4 @@
+import { hashSync } from 'bcrypt';
 import { Admin } from '../model/user/profiles/Admin.model';
 import { User } from '../model/user/User.model';
 
@@ -10,7 +11,7 @@ export class DatabaseIniter {
 		const user = User.create({
 			name: 'Администратор',
 			email: 'admin@ecograd.ru',
-			password: 'admin',
+			password: hashSync('admin', 10),
 			profile: 'Администратор',
 		});
 
