@@ -7,8 +7,8 @@ COPY package*.json ./
 RUN npm i
 COPY ./src/ ./src
 COPY ./tsconfig.json ./tsconfig.json 
-RUN mkdit logs
-RUN mkdit public
+RUN mkdir logs
+RUN mkdir public
 RUN tsc
 
 RUN ls
