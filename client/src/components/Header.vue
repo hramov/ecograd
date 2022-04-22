@@ -4,9 +4,9 @@
 		aria-label="Eleventh navbar example"
 	>
 		<div class="container-fluid">
-			<a class="navbar-brand" href="/"
+			<router-link class="navbar-brand" to="/"
 				><img class="logo" src="assets/img/logo.png"
-			/></a>
+			/></router-link>
 			<button
 				class="navbar-toggler"
 				type="button"
@@ -25,10 +25,14 @@
 					style="text-align: right"
 				>
 					<li class="nav-item">
-						<a
+						<router-link
+							v-if="$route.path != '/'"
 							class="nav-link item"
 							aria-current="page"
-							href="/#intro"
+							to="/"
+							>Главная</router-link
+						>
+						<a v-else class="nav-link item" href="/#intro"
 							>Главная</a
 						>
 					</li>
@@ -47,19 +51,16 @@
 						<a class="nav-link item" href="/#contacts">Контакты</a>
 					</li>
 					<li class="nav-item item">
-						<div
-							v-if="!!getUser.id"
-							class="dropdown"
-							style="margin-left: auto; margin-right: 0; max-width: 300px"
-						>
+						<div v-if="!!getUser.id" class="dropdown">
 							<button
 								class="nav-link item dropdown-toggle"
 								type="button"
 								id="dropdownMenuButton1"
 								data-bs-toggle="dropdown"
 								aria-expanded="false"
+								style="float: right"
 							>
-								{{ getUser.name }} {{ getUser.last_name }}
+								{{ getUser.name }}
 							</button>
 							<ul
 								class="dropdown-menu"
@@ -121,6 +122,20 @@ export default defineComponent({
 	},
 	computed: {
 		...mapGetters(['getUser', 'getIsAdmin', 'getIsClient', 'getIsExpert']),
+		displayUser(): string {
+			const last_name = this.getUser.name.split(' ')[0];
+			const name = this.getUser.name.split(' ')[1];
+			const middle_name = this.getUser.name.split(' ')[2];
+
+			return (
+				last_name +
+				' ' +
+				name[0].toUpperCase() +
+				'. ' +
+				middle_name[0].toUpperCase() +
+				'.'
+			);
+		},
 	},
 });
 </script>

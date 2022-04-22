@@ -4,7 +4,7 @@
 			<h1>
 				Пользователи /
 				<button
-					class="btn btn-success"
+					class="btn"
 					type="button"
 					id="addExpertBtn"
 					data-bs-toggle="collapse"
@@ -12,8 +12,11 @@
 					aria-expanded="false"
 					aria-controls="collapseExample"
 					@click="isOpen = !isOpen"
+					style="background-color: #7DCE94;font-weight: bold;"
 				>
-					<p v-if="!isOpen">Добавить</p>
+					<p v-if="!isOpen">
+						Добавить
+					</p>
 					<p v-else>Скрыть</p>
 				</button>
 			</h1>
@@ -153,85 +156,62 @@
 			</div>
 		</div>
 
-		<div class="row" v-if="Object.keys(getUsers).length">
-			<div
-				class="col-md-6 col-lg-3 col-sm-12 col-xl-3"
-				v-for="(profile, index) in getUsers"
-				:key="index"
-			>
-				<div v-for="user in profile" :key="user.id">
-					<div class="card">
-						<div class="card-body text-left">
-							<h5 class="card-title">
-								{{ user.user.name }}
-							</h5>
-							<h6 class="card-subtitle mb-2 text-muted">
-								<i class="fa fa-male"></i
-								>{{ user.user?.profile }}
-							</h6>
-							<h6
-								class="card-subtitle mb-2 text-muted"
-								v-if="user.user?.profile === 'Эксперт'"
-							>
-								<hr />
-								<i class="fa fa-male"></i>{{ user.position }}
-							</h6>
-							<h6 class="card-subtitle mb-2 text-muted">
-								<hr />
-								<i class="fa fa-envelope-square"></i
-								>{{ user.user?.email }}
-							</h6>
-							<h6
-								class="card-subtitle mb-2 text-muted"
-								v-if="
-									user.user?.profile == 'Эксперт' ||
-										user.user?.profile == 'Клиент'
-								"
-							>
-								<hr />
-								<i class="fa fa-phone"></i>{{ user.phone }}
-							</h6>
-							<h6
-								class="card-subtitle mb-2 text-muted"
-								v-if="user.user?.profile == 'Эксперт'"
-							>
-								<hr />
-								<i class="fa fa-certificate"></i
-								>{{ user.certificate }}
-							</h6>
-							<h6
-								class="card-subtitle mb-2 text-muted"
-								v-if="user.user?.profile == 'Эксперт'"
-							>
-								<hr />
-								<i class="fa fa-compass"></i
-								>{{ user.direction }}
-							</h6>
-							<h6
-								class="card-subtitle mb-2 text-muted"
-								v-if="
-									user.user?.profile == 'Эксперт' && user.misc
-								"
-							>
-								<hr />
-								<i class="fa fa-compass"></i>{{ user.misc }}
-							</h6>
-							<hr />
-							<div
-								style="display: flex; justify-content: space-around"
-							>
-								<button
-									type="button"
-									class="btn btn-danger"
-									@click.prevent="deleteUser(user.id)"
-								>
-									Удалить
-								</button>
-							</div>
-						</div>
-					</div>
-				</div>
-			</div>
+		<div style="padding: 20px" v-if="Object.keys(getUsers).length">
+			<h3>Администраторы</h3>
+			<table class="table">
+				<thead>
+					<tr>
+						<th scope="col">Имя</th>
+					</tr>
+				</thead>
+				<tbody>
+					<tr v-for="admin in getUsers.admin" :key="admin.id">
+						<td scope="row">{{ admin.user.name }}</td>
+					</tr>
+				</tbody>
+			</table>
+
+			<h3 style="margin-top: 30px">Эксперты</h3>
+			<table class="table">
+				<thead>
+					<tr>
+						<th scope="col">Имя</th>
+						<th scope="col">Телефон</th>
+						<th scope="col">Сертификат</th>
+						<th scope="col">Направление</th>
+						<th scope="col">Доп.</th>
+						<th scope="col">Объектов (в работе / всего)</th>
+					</tr>
+				</thead>
+				<tbody>
+					<tr v-for="expert in getUsers.expert" :key="expert.id">
+						<td scope="row">{{ expert.user.name }}</td>
+						<td scope="row">{{ expert.phone }}</td>
+						<td scope="row">{{ expert.certificate }}</td>
+						<td scope="row">{{ expert.direction }}</td>
+						<td scope="row">{{ expert.misc }}</td>
+						<td scope="row">2 / 10</td>
+					</tr>
+				</tbody>
+			</table>
+
+			<h3 style="margin-top: 30px">Клиенты</h3>
+			<table class="table">
+				<thead>
+					<tr>
+						<th scope="col">Имя</th>
+						<th scope="col">Телефон</th>
+						<th scope="col">Объектов (в работе / всего)</th>
+					</tr>
+				</thead>
+				<tbody>
+					<tr v-for="client in getUsers.client" :key="client.id">
+						<td scope="row">{{ client.user.name }}</td>
+						<td scope="row">{{ client.phone }}</td>
+						<td scope="row">2 / 10</td>
+					</tr>
+				</tbody>
+			</table>
 		</div>
 		<div
 			class="alert alert-secondary text-center"

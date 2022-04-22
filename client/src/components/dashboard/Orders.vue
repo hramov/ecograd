@@ -7,7 +7,7 @@
 				<i class="fa fa-times" v-else style="color: red"></i>
 			</h1>
 		</div>
-		<div>
+		<div style="padding: 20px">
 			<table class="table table-striped table-hover" v-if="orders.length">
 				<thead>
 					<tr>

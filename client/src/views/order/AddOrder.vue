@@ -1,15 +1,15 @@
 <template>
-	<div v-if="!getUser" style="margin-top: 100px" class="container">
+	<div v-if="!getUser" style="margin-top: 50px" class="container">
 		<div class="alert alert-warning" role="alert">
 			Для того, чтобы получить возможность добавлять заказы необходимо
 			заключить договор. Далее вам будет предоставлен доступ к системе
 		</div>
 	</div>
-	<div class="add-project-contaider" style="margin-top: 100px" v-else>
+	<div class="add-project-contaider" v-else>
 		<h2 style="text-align: center">Добавить объект</h2>
-		<hr style="width: 90%; margin: 20px auto" />
+		<!-- <hr style="width: 90%; margin: 20px auto" /> -->
 		<form class="add-project-contaider-colum" @submit.prevent="createOrder">
-			<div class="project-name" style="margin-left: 10px; width: 30%">
+			<div class="project-name">
 				<h4 style="margin-left: 10px;">Описание</h4>
 				<textarea
 					style="resize: none"
@@ -89,11 +89,7 @@
 				></textarea>
 			</div>
 
-			<div
-				class="add-project-form"
-				v-if="isShowSections"
-				style="width: 60%; margin: 10px auto"
-			>
+			<div class="add-project-form" v-if="isShowSections">
 				<h4>Разделы</h4>
 				<div class="add-project-checkbox">
 					<div class="add-project-checkbox-up">
@@ -208,9 +204,9 @@
 				</div>
 				<div v-if="sections.length" style="text-align: center">
 					<button
-						class="btn btn-success"
+						class="btn"
 						type="submit"
-						style="width: 20%"
+						style="width: 20%; font-weight: bold; background-color: #7DCE94;"
 					>
 						Добавить
 					</button>

@@ -1,5 +1,5 @@
 <template>
-	<footer class="footer mt-auto py-3 bg-dark">
+	<footer class="footer bg-dark">
 		<div class="text-center text-md-start mt-5">
 			<div class="row mt-3">
 				<div class="col-md-6 col-lg-5 col-sm-12">
@@ -50,39 +50,6 @@
 						>
 					</p>
 				</div>
-				<!-- <div class="col-md-6 col-lg-3 col-sm-6">
-					<h6 class="text-uppercase fw-bold">Экспертиза</h6>
-					<p>
-						<a
-							href="#!"
-							class="text-reset"
-							data-bs-toggle="modal"
-							data-bs-target="#normatModal"
-						>
-							Нормативная база</a
-						>
-					</p>
-					<p>
-						<a
-							href="#!"
-							class="text-reset"
-							data-bs-toggle="modal"
-							data-bs-target="#objectsModal"
-						>
-							Объекты экспертизы</a
-						>
-					</p>
-					<p>
-						<a
-							href="#!"
-							class="text-reset"
-							data-bs-toggle="modal"
-							data-bs-target="#documentsModal"
-						>
-							Документы</a
-						>
-					</p>
-				</div> -->
 			</div>
 		</div>
 	</footer>

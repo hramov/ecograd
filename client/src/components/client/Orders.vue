@@ -1,44 +1,34 @@
 <template>
 	<section class="client-orders">
-		<div v-if="getIsExpert && !orders.length">
-			Нет проектов
+		<div
+			v-if="getIsExpert && !orders.length"
+			class="alert alert-warning"
+			role="alert"
+			style="width: 50%; margin: 0 auto; text-align: center"
+		>
+			Пока нет назначенных проектов
 		</div>
 		<div v-else>
-			<h1 v-if="!order.id">Мои объекты</h1>
-			<h3 v-else style="text-align: center">{{ order.title }}</h3>
-			<h4
-				class="status-project-header"
-				v-if="order.id"
-				style="margin-bottom: 20px"
-			>
-				Статус выбранного объекта:
-				{{
-					order.status == 'new'
-						? 'зарегистрирован'
-						: order.status == 'taken'
-						? 'у эксперта'
-						: 'закончен'
-				}}
-			</h4>
 			<div class="project">
 				<div class="add-project-container">
 					<ul class="list-group">
 						<button
 							type="button"
 							class="add-project-bt btn list-group-item-action"
-							@click="$router.push({ path: 'add-order' })"
+							@click="addProject = true"
 							v-if="getIsClient"
 						>
-							Добавить проект
+							Добавить объект
 						</button>
 						<li
 							style="cursor: pointer"
 							class="list-group-item list-group-item-action list-project-color"
 							:class="{ selected: selectedId == order.id }"
 							@click="
+								addProject = false;
 								selectedId != order.id
 									? chooseOrder(order.id)
-									: null
+									: null;
 							"
 							v-for="order in orders"
 							:key="order.id"
@@ -59,8 +49,65 @@
 				</div>
 				<div class="divider"></div>
 
-				<div class="info-project-container" v-if="order.id">
-					<div class="existing-project" style="width: 30%">
+				<AddOrder v-if="addProject" style="width: 75%" />
+
+				<div
+					class="info-project-container"
+					v-if="order.id && !addProject"
+				>
+					<h2 style="margin: 0 auto; margin-bottom: 30px">
+						{{ order.title }}
+					</h2>
+					<div
+						style="width: 100%; margin-left: 10px; margin-bottom: 30px"
+						v-if="!addProject"
+					>
+						<h4>Загруженные справки о внесении изменений</h4>
+						<table class="table">
+							<thead>
+								<tr>
+									<th scope="col">№</th>
+									<th scope="col">Документ</th>
+									<th scope="col">Дата загрузки</th>
+								</tr>
+							</thead>
+							<tbody>
+								<tr
+									v-for="(inquire, index) in inquires"
+									:key="index"
+								>
+									<th scope="row">{{ index + 1 }}</th>
+									<td>
+										<a :href="apiUrl + inquire.path">{{
+											inquire.title
+										}}</a>
+									</td>
+									<td>{{ inquire.createdAt }}</td>
+								</tr>
+							</tbody>
+						</table>
+						<div style="display: flex">
+							<input
+								type="file"
+								class="form-control"
+								:ref="section.code"
+								@change="
+									addInquireFile($event, 'inquire');
+									inquireAttached = true;
+								"
+								style="width: 40%"
+							/>
+							<button
+								class="btn"
+								style="background-color: #7DCE94; font-weight: bold; margin-left: 20px"
+								@click="addInquire"
+								:disabled="!inquireAttached"
+							>
+								Загрузить
+							</button>
+						</div>
+					</div>
+					<div class="existing-project" v-if="!addProject">
 						<ul class="list-group">
 							<h4>Загруженные разделы</h4>
 							<li
@@ -113,9 +160,10 @@
 						v-if="
 							order.object_type &&
 								order.exp_type &&
-								showAddSection
+								showAddSection &&
+								!addProject
 						"
-						style="width: 70%; margin-left: 1%"
+						style="width: 65%;"
 					>
 						<h4>Доступные разделы</h4>
 						<div class="add-project-checkbox">
@@ -242,17 +290,26 @@
 								</div>
 							</div>
 						</div>
-						<button class="btn btn-success" @click="addSection">
-							Добавить
-						</button>
+						<div v-if="sections.length" style="text-align: center">
+							<button
+								style="text-align: center; width: 20%"
+								class="btn btn-success"
+								@click="addSection"
+							>
+								Добавить
+							</button>
+						</div>
 					</div>
+
 					<div
 						class="project-status"
-						v-if="section.id && !showAddSection"
+						v-if="section.id && !showAddSection && !addProject"
 					>
 						<div class="project-status-chapter">
 							<ul class="list-group">
-								<h2>{{ section.title }}</h2>
+								<h4 style="text-align: center">
+									{{ section.title }}
+								</h4>
 								<li
 									class="list-group-item list-group-item-action file-data"
 									v-for="file in attaches"
@@ -336,6 +393,7 @@ import { Order, Section } from '@/views/order/AddOrder.vue';
 import { defineComponent } from '@vue/runtime-core';
 import { mapGetters } from 'vuex';
 import BuyButton from './../BuyButton.vue';
+import AddOrder from '../../views/order/AddOrder.vue';
 
 export interface Attach {
 	id: number;
@@ -348,6 +406,7 @@ export interface Attach {
 export default defineComponent({
 	components: {
 		BuyButton,
+		AddOrder,
 	},
 	data() {
 		return {
@@ -359,7 +418,10 @@ export default defineComponent({
 			sectionsToAdd: [] as Section[],
 			attaches: [] as Attach[],
 			formData: new FormData(),
+			fileInquireUpload: {} as any,
+			inquiryForm: new FormData(),
 			fileUpload: {} as any,
+			inquireAttached: false,
 			changes: [
 				{
 					order_id: 0,
@@ -369,11 +431,16 @@ export default defineComponent({
 			],
 			selectedId: 0,
 			selectedSectionId: 0,
+			inquires: [] as any[],
+			addProject: false,
 		};
 	},
 
 	computed: {
 		...mapGetters(['getIsExpert', 'getIsClient']),
+		apiUrl() {
+			return process.env.VUE_APP_BACKEND;
+		},
 	},
 
 	async mounted() {
@@ -407,6 +474,7 @@ export default defineComponent({
 				alert('Секция помечена как законченная');
 			}
 		},
+
 		getDownloadURL(path: string) {
 			return process.env.VUE_APP_BACKEND + path;
 		},
@@ -447,6 +515,11 @@ export default defineComponent({
 			this.formData.append(code, this.fileUpload.files![0]);
 		},
 
+		addInquireFile(ev: Event, code: string) {
+			this.fileInquireUpload = ev.target as HTMLInputElement;
+			this.inquiryForm.append(code, this.fileInquireUpload.files![0]);
+		},
+
 		async addAttach() {
 			this.formData.append('order_id', String(this.order.id));
 			this.formData.append('section_id', String(this.section.id));
@@ -462,6 +535,24 @@ export default defineComponent({
 			this.fileUpload.value = null;
 		},
 
+		async addInquire() {
+			if (!this.isFormDataHasItems(this.inquiryForm)) {
+				alert('Необходимо прикрепить файл!');
+				return;
+			}
+
+			this.inquiryForm.append('order_id', String(this.order.id));
+			await FetchDataProvider.post(
+				'/order/upload-inquire',
+				this.inquiryForm,
+			);
+			this.inquiryForm = new FormData();
+
+			alert('Справка успешно загружена');
+			await this.chooseOrder(Number(this.order.id));
+			this.fileInquireUpload.value = null;
+		},
+
 		async chooseOrder(id: number) {
 			if (!id) return;
 
@@ -472,6 +563,11 @@ export default defineComponent({
 			this.order.expert = await FetchDataProvider.get(
 				'/order/expert-for-order/' + this.order.id,
 			);
+
+			this.inquires = await FetchDataProvider.get(
+				'/order/inquire/' + this.order.id,
+			);
+
 			this.sections = (
 				await FetchDataProvider.get('/order/sections/' + this.order.id)
 			).sort((a: Section, b: Section) =>
@@ -516,6 +612,7 @@ export default defineComponent({
 			this.attaches = await FetchDataProvider.get(
 				'/order/attaches-for-section/' + id,
 			);
+			this.changes = await FetchDataProvider.get('/order/check-changes');
 		},
 
 		isFormDataHasItems(formData: FormData) {

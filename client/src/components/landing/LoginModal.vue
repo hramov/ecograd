@@ -82,7 +82,7 @@ export default defineComponent({
 		};
 	},
 	computed: {
-		...mapGetters(['getUser']),
+		...mapGetters(['getUser', 'getIsAdmin', 'getIsClient', 'getIsExpert']),
 	},
 	methods: {
 		...mapActions(['loginAction', 'getUserAction']),
@@ -99,7 +99,12 @@ export default defineComponent({
 					'closeBtn',
 				) as HTMLElement;
 				closeBtn.click();
-				this.$router.push({ path: '/dashboard' });
+				if (this.getIsAdmin)
+					return this.$router.push({ path: '/dashboard' });
+				if (this.getIsClient)
+					return this.$router.push({ path: '/client' });
+				if (this.getIsExpert)
+					return this.$router.push({ path: '/client' });
 			}
 		},
 	},
