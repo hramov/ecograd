@@ -41,7 +41,7 @@ export class API {
 		app.use('/api', router.init());
 		passport.use(new JWTStrategy());
 
-		const port = Number(process.env.MTNK_APP_PORT) || APP.defaultPort;
+		const port = 5005;
 
 		try {
 			app.listen(port, () => {
