@@ -7,7 +7,9 @@ import { autoInjectable } from 'tsyringe';
 import { APIRouter } from './router/router';
 import passport from 'passport';
 import { JWTStrategy } from '../../auth/strategy/jwt.strategy';
+import { readFileSync } from 'fs';
 
+import https from 'https';
 export class APIReply<T> {
 	public status: boolean;
 	public data: T;
@@ -21,6 +23,7 @@ export async function SuccessAPIReply<T>(res: Response, data: T) {
 		data: data,
 	});
 }
+
 export class API {
 	constructor() {}
 
@@ -44,16 +47,30 @@ export class API {
 		const port = 5005;
 
 		try {
-			app.listen(port, () => {
-				let proc = require('process');
-				Logger.writeInfo(
-					'app listening on port ' +
-						port +
-						', ' +
-						'node: ' +
-						proc.version,
-				);
-			});
+			const certificate = readFileSync(
+				'/etc/letsencrypt/live/hramovdev.ru/fullchain.pem',
+			);
+			const privateKey = readFileSync(
+				'/etc/letsencrypt/live/hramovdev.ru/privkey.pem',
+			);
+			https
+				.createServer(
+					{
+						key: privateKey,
+						cert: certificate,
+					},
+					app,
+				)
+				.listen(port, () => {
+					let proc = require('process');
+					Logger.writeInfo(
+						'app listening on port ' +
+							port +
+							', ' +
+							'node: ' +
+							proc.version,
+					);
+				});
 		} catch (_err) {
 			const err = _err as Error;
 			Logger.writeError(err.message);

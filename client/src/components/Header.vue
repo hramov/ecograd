@@ -51,7 +51,7 @@
 						<a class="nav-link item" href="/#contacts">Контакты</a>
 					</li>
 					<li class="nav-item item">
-						<div v-if="!!getUser.id" class="dropdown">
+						<div v-if="getUser && getUser.id" class="dropdown">
 							<button
 								class="nav-link item dropdown-toggle"
 								type="button"
