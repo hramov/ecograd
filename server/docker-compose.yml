@@ -34,7 +34,7 @@ services:
       - POSTGRES_PASSWORD=grafserega1997
     volumes:
       - db-data:/var/lib/postgresql/data
-      # - ./data/sql/:/docker-entrypoint-initdb.d/
+      - data/sql/:/docker-entrypoint-initdb.d/
     command: -p 54302
     networks:
       - postgres
@@ -43,7 +43,7 @@ volumes:
   db-data:
   logs:
   public:
-  
+
 networks:
   postgres:
     driver: bridge
