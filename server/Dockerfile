@@ -9,6 +9,7 @@ COPY ./src/ ./
 COPY ./tsconfig.json ./tsconfig.json 
 RUN mkdir logs
 RUN mkdir public
+RUN ls
 RUN tsc
 RUN ls
 
