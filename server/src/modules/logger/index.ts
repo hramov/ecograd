@@ -1,6 +1,6 @@
 import appRoot from 'app-root-path';
 import path from 'path';
-import fs, { existsSync, mkdirSync } from 'fs';
+import { appendFileSync, existsSync, mkdirSync, writeFileSync } from 'fs';
 
 export class Logger {
 	public static writeInfo(msg: string) {
@@ -26,10 +26,10 @@ export class Logger {
 		}
 
 		const file = path.resolve(dir, today + '.txt');
-		if (fs.existsSync(file)) {
-			fs.appendFileSync(file, msg + '\n');
+		if (existsSync(file)) {
+			appendFileSync(file, msg + '\n');
 		} else {
-			fs.writeFileSync(file, msg + '\n');
+			writeFileSync(file, msg + '\n');
 		}
 	}
 }
