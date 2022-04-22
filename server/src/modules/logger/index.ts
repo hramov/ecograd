@@ -6,13 +6,13 @@ export class Logger {
 	public static writeInfo(msg: string) {
 		const result = `INFO | ${new Date().toLocaleString()} | ${msg}`;
 		console.log(result);
-		Logger.writeToFile(result);
+		// Logger.writeToFile(result);
 	}
 
 	public static writeError(msg: string) {
 		const result = `ERROR | ${new Date().toLocaleString()} | ${msg}`;
 		console.log(result);
-		Logger.writeToFile(result);
+		// Logger.writeToFile(result);
 	}
 
 	private static writeToFile(msg: string) {
