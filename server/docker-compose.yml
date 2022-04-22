@@ -41,7 +41,9 @@ services:
 
 volumes:
   db-data:
-
+  logs:
+  public:
+  
 networks:
   postgres:
     driver: bridge
