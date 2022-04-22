@@ -18,6 +18,7 @@ services:
       - DB_NAME=ecograd
     volumes:
       - /opt/projects/ecograd/logs:/usr/src/app/logs
+      - /opt/projects/ecograd/public:/usr/src/app/public
     # networks:
     #   - postgres
 
