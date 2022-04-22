@@ -1,0 +1,29 @@
+version: "3"
+services:
+
+  server:
+    image: ecograd_server
+    container_name: ecograd_server
+    expose:
+      - "5005"
+    ports:
+      - "5005:5005"
+    environment:
+      - JWT_SECRET=!seCreT
+      - HASH_SECRET=password
+      - DB_HOST=localhost
+      - DB_PORT=5432
+      - DB_USER=postgres
+      - DB_PASSWORD=postgres
+      - DB_NAME=ecograd
+    volumes:
+      - /opt/projects/ecograd/logs:/usr/src/app/logs
+    # networks:
+    #   - postgres
+
+volumes:
+  logs:
+
+# networks:
+#   postgres:
+#     driver: bridge
