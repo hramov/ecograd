@@ -6,6 +6,7 @@ RUN npm i -g typescript
 COPY package*.json ./
 RUN npm i
 COPY ./src/ ./src
+COPY ./data/ ./data
 COPY ./tsconfig.json ./tsconfig.json 
 RUN mkdir logs
 RUN mkdir public
