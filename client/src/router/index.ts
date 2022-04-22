@@ -1,4 +1,9 @@
-import { createRouter, createWebHistory, RouteRecordRaw } from 'vue-router';
+import {
+	createRouter,
+	createWebHashHistory,
+	createWebHistory,
+	RouteRecordRaw,
+} from 'vue-router';
 import Landing from '../views/Landing.vue';
 import store from './../store/index';
 

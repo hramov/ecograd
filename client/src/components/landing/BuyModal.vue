@@ -14,7 +14,7 @@
 					</div>
 					<div v-else class="alert alert-success" role="alert">
 						Ваш заказ успешно отправлен!
-						<div v-if="!user.id">
+						<div v-if="!user || !user.id">
 							<p>Для входа на сайт используйте</p>
 							<p>логин: {{ tempuser.email }}</p>
 							<p>пароль: {{ tempuser.password }}</p>

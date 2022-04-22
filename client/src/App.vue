@@ -28,6 +28,9 @@ export default defineComponent({
 	},
 
 	async mounted() {
+		if (this.$route.path == '/') {
+			this.$router.push({ path: '/' });
+		}
 		if (!this.getUser) {
 			await this.$store.dispatch('getUserAction');
 		}

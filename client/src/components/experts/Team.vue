@@ -1,5 +1,5 @@
 <template>
-	<section class="team" id="team">
+	<section class="team" id="team" ref="team" v-if="getExperts.length">
 		<div class="text-center">
 			<h1>Наши эксперты</h1>
 			<div class="small mb-3">

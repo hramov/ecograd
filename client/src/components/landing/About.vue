@@ -1,5 +1,5 @@
 <template>
-	<section class="about" id="about">
+	<section class="about" id="about" ref="about">
 		<div class="text-center">
 			<h1>Почему нужно выбрать именно нас</h1>
 		</div>

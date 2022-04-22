@@ -39,7 +39,7 @@
 					<li class="nav-item item">
 						<a class="nav-link item" href="/#about">О нас</a>
 					</li>
-					<li class="nav-item item">
+					<li class="nav-item item" v-if="getExperts.length">
 						<a class="nav-link item" href="/#team">Эксперты</a>
 					</li>
 					<li class="nav-item item">
@@ -71,14 +71,16 @@
 										class="dropdown-item"
 										v-if="getIsAdmin"
 										@click.prevent="
-											$router.push('/dashboard')
+											$router.push({ path: '/dashboard' })
 										"
 										>Открыть</a
 									>
 									<a
 										class="dropdown-item"
 										v-if="getIsClient || getIsExpert"
-										@click.prevent="$router.push('/client')"
+										@click.prevent="
+											$router.push({ path: '/client' })
+										"
 										>Открыть</a
 									>
 								</li>
@@ -121,7 +123,13 @@ export default defineComponent({
 		},
 	},
 	computed: {
-		...mapGetters(['getUser', 'getIsAdmin', 'getIsClient', 'getIsExpert']),
+		...mapGetters([
+			'getUser',
+			'getIsAdmin',
+			'getIsClient',
+			'getIsExpert',
+			'getExperts',
+		]),
 		displayUser(): string {
 			const last_name = this.getUser.name.split(' ')[0];
 			const name = this.getUser.name.split(' ')[1];

@@ -1,6 +1,6 @@
 <template>
 	<div class="landing">
-		<buy-modal />
+		<!-- <buy-modal /> -->
 		<Intro />
 		<About />
 		<Team />
@@ -22,7 +22,7 @@ import Contacts from './../components/landing/Contacts.vue';
 import NormatModal from './../components/footerModals/Normat.vue';
 import ObjectsModal from './../components/footerModals/Objects.vue';
 import DocumentsModal from './../components/footerModals/Documents.vue';
-import BuyModal from '@/components/landing/BuyModal.vue';
+// import BuyModal from '@/components/landing/BuyModal.vue';
 import { mapGetters } from 'vuex';
 export default defineComponent({
 	components: {
@@ -31,7 +31,7 @@ export default defineComponent({
 		Team,
 		Requisities,
 		Contacts,
-		BuyModal,
+		// BuyModal,
 		NormatModal,
 		ObjectsModal,
 		DocumentsModal,

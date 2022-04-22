@@ -42,6 +42,13 @@ export class API {
 		const router = new APIRouter();
 
 		app.use('/api', router.init());
+
+		app.use(express.static('app'));
+
+		app.get(/.*/, (req, res) => {
+			res.sendFile(path.resolve(appRoot.path, 'app/index.html'));
+		});
+
 		passport.use(new JWTStrategy());
 
 		const port = 5005;
