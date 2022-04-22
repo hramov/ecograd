@@ -1,5 +1,3 @@
 create database ecograd;
-create schema ecograd
-.auth;
-create schema ecograd
-.business;
+create schema auth;
+create schema business;
