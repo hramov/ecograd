@@ -1,6 +1,6 @@
 import appRoot from 'app-root-path';
 import path from 'path';
-import fs from 'fs';
+import fs, { existsSync, mkdirSync } from 'fs';
 
 export class Logger {
 	public static writeInfo(msg: string) {
@@ -21,8 +21,8 @@ export class Logger {
 		const month = (new Date().getMonth() + 1).toString();
 
 		const dir = path.resolve(appRoot.path, 'logs', year, month);
-		if (!fs.existsSync(dir)) {
-			fs.mkdirSync(dir, { recursive: true });
+		if (!existsSync(dir)) {
+			mkdirSync(dir, { recursive: true });
 		}
 
 		const file = path.resolve(dir, today + '.txt');
