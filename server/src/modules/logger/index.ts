@@ -16,7 +16,8 @@ export class Logger {
 	}
 
 	private static writeToFile(msg: string) {
-		const today = new Date().toLocaleDateString().split('.').join('_');
+		// const today = new Date().toLocaleDateString().split('.').join('_');
+		const today = new Date().toLocaleDateString();
 		const year = new Date().getFullYear().toString();
 		const month = (new Date().getMonth() + 1).toString();
 
@@ -25,7 +26,7 @@ export class Logger {
 			fs.mkdirSync(dir, { recursive: true });
 		}
 
-		const file = dir + '/' + today + '.txt';
+		const file = path.resolve(dir, today + '.txt');
 		if (fs.existsSync(file)) {
 			fs.appendFileSync(file, msg + '\n');
 		} else {
