@@ -7,11 +7,7 @@ COPY package*.json ./
 RUN npm i
 COPY ./src/ ./src
 COPY ./tsconfig.json ./tsconfig.json 
-RUN mkdir logs
-RUN mkdir public
-RUN ls
 RUN tsc
-RUN ls
 
 EXPOSE 5005
 CMD [ "node", "./dist/main.js" ]
