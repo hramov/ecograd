@@ -1,5 +1,6 @@
 import { Request, Response, Router } from 'express';
 import passport from 'passport';
+
 import { AdminStrategy } from '../../../../auth/strategy/admin.strategy';
 import { ClientStrategy } from '../../../../auth/strategy/client.strategy';
 import { ExpertStrategy } from '../../../../auth/strategy/expert.strategy';
@@ -8,6 +9,7 @@ import { Attach } from '../../../database/model/order/Attach.model';
 import { Order } from '../../../database/model/order/Order.model';
 import { Section } from '../../../database/model/order/Section.model';
 import { BadRequestError } from '../../../error/http/bad-request.error';
+import { safe } from '../../../error/safe.decorator';
 import { Logger } from '../../../logger';
 import { addOrder } from './add-order.router';
 import { appointExpert } from './appoint-expert.router';
@@ -30,7 +32,7 @@ const router = Router();
 router.get(
 	'/check-changes',
 	passport.authenticate(new JWTStrategy(), { session: false }),
-	checkChanges,
+	safe(checkChanges),
 );
 
 router.post(

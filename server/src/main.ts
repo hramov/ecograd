@@ -1,7 +1,9 @@
+import dotenv from 'dotenv';
 import 'reflect-metadata';
+
 import { API } from './modules/api';
 import { Database } from './modules/database';
-import dotenv from 'dotenv';
+
 dotenv.config();
 class App {
 	async bootstrap() {

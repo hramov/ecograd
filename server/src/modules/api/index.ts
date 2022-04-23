@@ -1,15 +1,16 @@
-import express, { Response } from 'express';
-import fileUpload from 'express-fileupload';
+import appRoot from 'app-root-path';
 import cors from 'cors';
+import express, { NextFunction, Request, Response } from 'express';
+import fileUpload from 'express-fileupload';
+import { readFileSync } from 'fs';
+import https from 'https';
+import passport from 'passport';
+import path from 'path';
+
+import { JWTStrategy } from '../../auth/strategy/jwt.strategy';
 import { Logger } from '../logger';
 import { APIRouter } from './router/router';
-import passport from 'passport';
-import { JWTStrategy } from '../../auth/strategy/jwt.strategy';
-import { readFileSync } from 'fs';
-import appRoot from 'app-root-path';
 
-import https from 'https';
-import path from 'path';
 export class APIReply<T> {
 	public status: boolean;
 	public data: T;
@@ -35,7 +36,14 @@ export class API {
 		app.use(express.urlencoded({ extended: false }));
 		app.use(passport.initialize());
 		app.use(fileUpload());
-
+		app.use(
+			(err: Error, req: Request, res: Response, next: NextFunction) => {
+				Logger.writeError(err.message);
+				res.status(500).json({
+					message: 'Something went wrong',
+				});
+			},
+		);
 		app.use(cors());
 		app.use('/api/public', express.static('public'));
 
