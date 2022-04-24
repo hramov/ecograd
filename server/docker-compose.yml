@@ -16,6 +16,7 @@ services:
       - DB_USER=postgres
       - DB_PASSWORD=grafserega1997
       - DB_NAME=ecograd
+      - START_TYPE=prod
     volumes:
       - logs:/usr/src/app/logs
       - public:/usr/src/app/public
