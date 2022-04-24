@@ -20,6 +20,7 @@ jobs:
         script: |
                 cd /opt/projects/ecograd
                 git pull origin tmp
+                cd /opt/projects/ecograd/server
                 docker-compose down
                 docker build -t ecograd_server .
                 docker-compose up -d
