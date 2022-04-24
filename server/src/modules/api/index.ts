@@ -61,24 +61,30 @@ export class API {
 				path.resolve(appRoot.path, 'data/cert/privkey.pem'),
 			);
 
-			https
-				.createServer(
-					{
-						key: privateKey,
-						cert: certificate,
-					},
-					app,
-				)
-				.listen(port, () => {
-					let proc = require('process');
+			if (process.env.START_TYPE == 'prod') {
+				https
+					.createServer(
+						{
+							key: privateKey,
+							cert: certificate,
+						},
+						app,
+					)
+					.listen(port, () => {
+						Logger.writeInfo(
+							'App started in PROD mode, listening on port ' +
+								port,
+						);
+					});
+			} else if (process.env.START_TYPE == 'dev') {
+				app.listen(port, () => {
 					Logger.writeInfo(
-						'app listening on port ' +
-							port +
-							', ' +
-							'node: ' +
-							proc.version,
+						'App started in DEV mode, listening on port ' + port,
 					);
 				});
+			} else {
+				throw new Error('Unknown start type');
+			}
 		} catch (_err) {
 			const err = _err as Error;
 			Logger.writeError(err.message);
