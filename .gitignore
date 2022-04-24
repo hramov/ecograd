@@ -1,4 +1,5 @@
-server.7z
-telegram.7z
-crawler.7z
-node_modules
+public/
+logs/
+node_modules/
+
+.env
