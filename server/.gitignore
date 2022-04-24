@@ -1,5 +1,5 @@
 public/
 logs/
 node_modules/
-
+build.sh
 .env
