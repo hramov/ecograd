@@ -19,7 +19,7 @@ jobs:
         port: ${{ secrets.PORT }}
         script: |
                 cd /opt/projects/ecograd
-                git pull origin tmp
+                git pull origin main
                 cd /opt/projects/ecograd/server
                 docker-compose down
                 docker build -t ecograd_server .
