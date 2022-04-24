@@ -22,7 +22,6 @@ services:
       - public:/usr/src/app/public
     networks:
       - postgres
-
   
   db:
     image: postgres
