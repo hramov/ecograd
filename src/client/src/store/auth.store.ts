@@ -7,9 +7,9 @@ const state = {
 	isLoggedIn: JSON.parse(localStorage.getItem('user') as string)
 		? JSON.parse(localStorage.getItem('user') as string).id
 		: false,
-	uexperts: [],
-	uexpert: {},
-	profiles: [],
+	uexperts: [] as any,
+	uexpert: {} as any,
+	profiles: [] as any,
 };
 
 const mutations = {

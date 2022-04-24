@@ -3,7 +3,7 @@ import { FetchDataProvider } from '@/custom/fetch-data.provider';
 const state = {
 	orders: [] as any[],
 	order: {} as any,
-	sections: [],
+	sections: [] as any[],
 };
 
 const mutations = {
