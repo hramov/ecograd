@@ -7,6 +7,7 @@ dotenv.config();
 class App {
 	async bootstrap() {
 		Logger.writeInfo('Start initializing application');
+		
 		const db = new Database();
 		await db.init();
 
