@@ -216,7 +216,7 @@ router.get(
 			);
 		} catch (_err) {
 			const err = _err as Error;
-			Logger.writeError(err.message);
+			Logger.writeError('getOrder', err.message);
 			res.json({
 				error: err.message,
 			});

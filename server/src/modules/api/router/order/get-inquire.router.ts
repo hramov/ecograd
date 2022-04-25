@@ -25,7 +25,7 @@ export async function getInquire(req: Request, res: Response) {
 		res.json(inquires);
 	} catch (_err) {
 		const err = _err as Error;
-		Logger.writeError(err.message);
+		Logger.writeError('getInquire', err.message);
 		res.json({
 			error: err.message,
 		});

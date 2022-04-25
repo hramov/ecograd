@@ -9,8 +9,8 @@ export class Logger {
 		Logger.writeToFile(result);
 	}
 
-	public static writeError(msg: string) {
-		const result = `ERROR | ${new Date().toLocaleString()} | ${msg}`;
+	public static writeError(method: string, msg: string) {
+		const result = `ERROR | ${new Date().toLocaleString()} | ${method} | ${msg}`;
 		console.log(result);
 		Logger.writeToFile(result);
 	}

@@ -58,7 +58,7 @@ export async function uploadInquire(req: Request, res: Response) {
 		);
 	} catch (_err) {
 		const err = _err as Error;
-		Logger.writeError(err.message);
+		Logger.writeError('uploadInquire', err.message);
 		return res.json({
 			message: err,
 		});

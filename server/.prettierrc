@@ -9,5 +9,8 @@
 	"trailingComma": "all",
 	"bracketSpacing": true,
 	"jsxBracketSameLine": false,
-	"semi": true
+	"semi": true,
+	"importOrder": ["^@core/(.*)$", "^@server/(.*)$", "^@ui/(.*)$", "^[./]"],
+	"importOrderSeparation": true,
+	"importOrderSortSpecifiers": true
 }

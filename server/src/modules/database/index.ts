@@ -1,4 +1,5 @@
 import { DataSource } from 'typeorm';
+import { Logger } from '../logger';
 import { DatabaseIniter } from './init';
 import { Attach } from './model/order/Attach.model';
 import { Inquire } from './model/order/Inquire.model';
@@ -19,7 +20,7 @@ export class Database {
 				username: process.env.DB_USER,
 				password: process.env.DB_PASSWORD,
 				database: process.env.DB_NAME,
-				synchronize: true,
+				synchronize: false,
 				logging: ['error'],
 				entities: [
 					User,
@@ -36,6 +37,7 @@ export class Database {
 				migrations: [],
 			});
 			await appDataSource.initialize();
+			Logger.writeInfo('Successfully connected to the database');
 			await DatabaseIniter.initUser();
 		} catch (_err) {
 			const err = _err as Error;

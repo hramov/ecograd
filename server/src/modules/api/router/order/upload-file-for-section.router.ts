@@ -73,7 +73,7 @@ export async function uploadFileForSection(req: Request, res: Response) {
 		}
 	} catch (_err) {
 		const err = _err as Error;
-		Logger.writeError(err.message);
+		Logger.writeError('uploadFileForSection', err.message);
 		return res.json({
 			message: err,
 		});

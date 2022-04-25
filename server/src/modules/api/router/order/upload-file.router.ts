@@ -88,7 +88,7 @@ export async function uploadFile(req: Request, res: Response) {
 			await attach.save();
 		} catch (_err) {
 			const err = _err as Error;
-			Logger.writeError(err.message);
+			Logger.writeError('uploadFile', err.message);
 			return res.json({
 				message: err,
 			});

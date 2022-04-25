@@ -4,7 +4,8 @@
   "description": "",
   "main": "index.js",
   "scripts": {
-    "start:dev": "cross-env START_MODE=ts START_TYPE=dev nodemon --watch 'src/**/*.ts' --exec ts-node src/main.ts"
+    "start:dev": "cross-env START_MODE=ts START_TYPE=dev nodemon --watch 'src/**/*.ts' --exec ts-node src/main.ts",
+    "typeorm": "typeorm-ts-node-commonjs"
   },
   "keywords": [],
   "author": "",

@@ -4,17 +4,23 @@ import { Client } from '../../../database/model/user/profiles/Client.model';
 import { User } from '../../../database/model/user/User.model';
 import { BadRequestError } from '../../../error/http/bad-request.error';
 import { NotFoundError } from '../../../error/http/not-found.error';
+import { Logger } from '../../../logger';
 
 export async function addOrder(req: Request, res: Response) {
 	const user = req.user as User;
 
 	if (!req.body || !req.body.title) {
+		Logger.writeError('addOrder', `No required data`);
 		return BadRequestError(res);
 	}
 
 	const client = await Client.findOneBy({ id: user.id });
 
 	if (!client) {
+		Logger.writeError(
+			'addOrder',
+			`Cannot find client associated with user ID: ${user.id}`,
+		);
 		return NotFoundError(res, 'client');
 	}
 
@@ -30,5 +36,6 @@ export async function addOrder(req: Request, res: Response) {
 	});
 
 	await order.save();
+	Logger.writeInfo(`Successfully added order with ID: ${order.id}`);
 	res.json(order);
 }

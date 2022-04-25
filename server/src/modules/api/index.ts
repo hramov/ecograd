@@ -87,7 +87,7 @@ export class API {
 			}
 		} catch (_err) {
 			const err = _err as Error;
-			Logger.writeError(err.message);
+			Logger.writeError('start', err.message);
 		}
 	}
 }
