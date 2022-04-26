@@ -13,7 +13,6 @@ import LoginModal from '@/components/landing/LoginModal.vue';
 import Footer from '@/components/layout/Footer.vue';
 
 import '@/assets/css/style.css';
-import '@/assets/css/login.css';
 </script>
 
 <style>

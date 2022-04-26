@@ -35,6 +35,6 @@
 
 <script setup lang="ts">
 import { useUserStore } from '../../store/user.store';
-import BuyButton from './components/BuyButton.vue';
+import BuyButton from '@/components/landing/components/BuyButton.vue';
 const store = useUserStore();
 </script>

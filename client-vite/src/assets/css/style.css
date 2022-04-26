@@ -3,6 +3,12 @@ html {
 	margin: 0;
 	padding: 0;
 	font-family: "Roboto", sans-serif !important;
+	position: relative;
+	min-height: 100%;
+}
+
+.body {
+	width: 100%;
 }
 
 a {
@@ -17,13 +23,12 @@ a {
 
 .small {
 	padding: 0% 10% !important;
-	/* margin-top: 50px !important; */
 	margin-bottom: 50px !important;
 }
 
 section {
 	margin-bottom: 20px;
-	padding-top: 50px;
+	padding-top: 100px;
 	font-family: "Montserrat", sans-serif;
 	text-align: justify;
 }
@@ -31,11 +36,6 @@ section {
 .navbar {
 	font-family: "Montserrat", sans-serif;
 	font-weight: bold;
-	/* margin-bottom: 100px; */
-}
-
-.body {
-	width: 100%;
 }
 
 p {
@@ -120,7 +120,7 @@ p {
 	position: absolute;
 	bottom: 0;
 	width: 100%;
-	height: 230px;
+	height: 240px;
 }
 
 footer .row {
@@ -130,7 +130,6 @@ footer .row {
 	margin-bottom: 0px;
 	color: azure;
 	padding: 20px;
-	/* background-color: yellowgreen !important; */
 }
 
 i {
@@ -144,26 +143,14 @@ i {
 	margin-bottom: 24px;
 }
 
-/* body {
-	background-color: #fffafa;
-} */
-
-/* Sticky footer styles
--------------------------------------------------- */
 html {
 	position: relative;
 	min-height: 100%;
 }
 
 body {
-	/* Margin bottom by footer height */
 	margin-bottom: 200px;
 }
-
-
-/* Custom page CSS
--------------------------------------------------- */
-/* Not required for template or sticky footer method. */
 
 body>.container {
 	padding: 60px 15px 0;
@@ -203,7 +190,6 @@ code {
 .header-background {
 	margin-top: 30px;
 	width: 100%;
-	/* background-color: #CEDFFA; */
 	background-color: #71c55d;
 	text-align: center;
 }

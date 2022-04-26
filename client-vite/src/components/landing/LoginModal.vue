@@ -98,3 +98,9 @@ async function login() {
 	}
 }
 </script>
+
+<style scoped>
+form input {
+	margin-bottom: 10px;
+}
+</style>
