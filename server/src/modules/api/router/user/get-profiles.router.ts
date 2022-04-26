@@ -1,7 +1,8 @@
 import { Request, Response } from 'express';
+import { SendSuccessGetReply } from '../../utils/send-success-reply';
 
 export async function getProfiles(req: Request, res: Response) {
-	res.json([
+	SendSuccessGetReply(res, [
 		{
 			id: 1,
 			title: 'Администратор',

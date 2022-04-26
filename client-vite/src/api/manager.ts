@@ -43,35 +43,39 @@ export const ApiManager = {
 		(
 			await instance.get(url, {
 				headers: {
-					'x-auth-token':
-						localStorage.getItem(LSPREFIX + 'token') || '',
+					Authorization:
+						'Bearer ' + localStorage.getItem(LSPREFIX + 'token') ||
+						'',
 				},
 			})
 		).data,
-	post: async <T, U>(url: string, data: T): Promise<U> =>
+	post: async <T, U>(url: string, data: T): Promise<APIReply<U>> =>
 		(
 			await instance.post(url, data, {
 				headers: {
-					'x-auth-token':
-						localStorage.getItem(LSPREFIX + 'token') || '',
+					Authorization:
+						'Bearer ' + localStorage.getItem(LSPREFIX + 'token') ||
+						'',
 				},
 			})
 		).data,
-	put: async <T, U>(url: string, data: T): Promise<U> =>
+	put: async <T, U>(url: string, data: T): Promise<APIReply<U>> =>
 		(
 			await instance.put(url, data, {
 				headers: {
-					'x-auth-token':
-						localStorage.getItem(LSPREFIX + 'token') || '',
+					Authorization:
+						'Bearer ' + localStorage.getItem(LSPREFIX + 'token') ||
+						'',
 				},
 			})
 		).data,
-	delete: async <T>(url: string): Promise<T> =>
+	delete: async <T>(url: string): Promise<APIReply<T>> =>
 		(
 			await instance.delete(url, {
 				headers: {
-					'x-auth-token':
-						localStorage.getItem(LSPREFIX + 'token') || '',
+					Authorization:
+						'Bearer ' + localStorage.getItem(LSPREFIX + 'token') ||
+						'',
 				},
 			})
 		).data,

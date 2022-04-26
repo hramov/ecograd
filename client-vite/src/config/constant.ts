@@ -1,1 +1,1 @@
-export const LSPREFIX = 'tnk-app-';
+export const LSPREFIX = 'ecograd-auth-';

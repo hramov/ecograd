@@ -12,6 +12,11 @@ export interface Expert {
 	user: User;
 }
 
+export interface Users {
+	admin: Admin[];
+	client: Client[];
+	expert: Expert[];
+}
 export interface Client {
 	id: number;
 	phone: string;
@@ -57,8 +62,10 @@ export const useUserStore = defineStore('user', {
 	state: () => {
 		return {
 			jwt_token: '' || (localStorage.getItem('token') as string),
-			user: null || (JSON.parse(localStorage.getItem('user')!) as User),
-			users: [] as any[],
+			user:
+				null ||
+				(JSON.parse(localStorage.getItem(LSPREFIX + 'user')!) as User),
+			users: {} as Users,
 			isLoggedIn: JSON.parse(localStorage.getItem('user') as string)
 				? JSON.parse(localStorage.getItem('user') as string).id
 				: false,
@@ -75,25 +82,28 @@ export const useUserStore = defineStore('user', {
 				data,
 			);
 
-			if (!result.access_token) {
+			if (!result.data.access_token) {
 				return false;
 			}
 			this.isLoggedIn = true;
-			this.jwt_token = result.access_token;
-			localStorage.setItem(LSPREFIX + 'token', result.access_token);
+			this.jwt_token = result.data.access_token;
+			localStorage.setItem(LSPREFIX + 'token', result.data.access_token);
 			return true;
 		},
 
 		async logout() {
-			localStorage.setItem(LSPREFIX + 'token', '');
-			localStorage.setItem('user', JSON.stringify(''));
 			this.jwt_token = '';
 			this.user = {} as User;
+			localStorage.setItem(LSPREFIX + 'token', '');
+			localStorage.setItem(LSPREFIX + 'user', JSON.stringify(''));
 			return true;
 		},
 
-		async addUser(data: User) {
-			await ApiManager.post<User, User>('user', data);
+		async addUser(data: { user: User; profile: Admin | Client | Expert }) {
+			await ApiManager.post<
+				{ user: User; profile: Admin | Client | Expert },
+				User
+			>('user', data);
 		},
 
 		async deleteUser(user_id: number) {
@@ -106,13 +116,19 @@ export const useUserStore = defineStore('user', {
 		},
 
 		async getUsers() {
-			const result = await ApiManager.get<User[]>('user');
+			const result = await ApiManager.get<Users>('user');
 			this.users = result.data;
 		},
 
 		async getUser() {
 			const result = await ApiManager.get<User>('user/info');
 			this.user = result.data;
+			if (this.user) {
+				localStorage.setItem(
+					LSPREFIX + 'user',
+					JSON.stringify(this.user),
+				);
+			}
 		},
 
 		async getExperts() {
@@ -125,5 +141,23 @@ export const useUserStore = defineStore('user', {
 		isAdmin: (state: any) => state.user?.profile == 'Администратор',
 		isClient: (state: any) => state.user?.profile == 'Клиент',
 		isExpert: (state: any) => state.user?.profile == 'Эксперт',
+		isUser: (state: any) => !!state.user?.id,
+		displayedUser: (state: any): string => {
+			const user = state.user;
+			if (user.name.split(' ').length > 1) {
+				const last_name = user.name.split(' ')[0];
+				const name = user.name.split(' ')[1];
+				const middle_name = user.name.split(' ')[2];
+				return (
+					last_name +
+					' ' +
+					name[0].toUpperCase() +
+					'. ' +
+					middle_name[0].toUpperCase() +
+					'.'
+				);
+			}
+			return state.user.name;
+		},
 	},
 });

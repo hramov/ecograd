@@ -9,6 +9,7 @@ import { Order } from '../../../database/model/order/Order.model';
 import { Section } from '../../../database/model/order/Section.model';
 import { BadRequestError } from '../../../error/http/bad-request.error';
 import { Logger } from '../../../logger';
+import { SendSuccessGetReply } from '../../utils/send-success-reply';
 import { addOrder } from './add-order.router';
 import { appointExpert } from './appoint-expert.router';
 import { changeOrderStatus } from './change-order-status.router';
@@ -228,7 +229,8 @@ router.get(
 	'/',
 	passport.authenticate(new AdminStrategy(), { session: false }),
 	async (req: Request, res: Response) =>
-		res.json(
+		SendSuccessGetReply<Order[]>(
+			res,
 			await Order.query(
 				`SELECT o.id, o.title, o.exp_type, o.object_type, o.status, o."createdAt", 
 						c.phone as client_phone, 

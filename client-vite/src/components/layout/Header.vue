@@ -5,7 +5,7 @@
 	>
 		<div class="container-fluid">
 			<router-link class="navbar-brand" to="/"
-				><img class="logo" src="@/assets/img/logo.png"
+				><img class="logo" src="@/assets/img/layout/logo.png"
 			/></router-link>
 			<button
 				class="navbar-toggler"
@@ -39,7 +39,7 @@
 					<li class="nav-item item">
 						<a class="nav-link item" href="/#about">О нас</a>
 					</li>
-					<li class="nav-item item" v-if="store.experts.length">
+					<li class="nav-item item" v-if="store.experts?.length">
 						<a class="nav-link item" href="/#team">Эксперты</a>
 					</li>
 					<li class="nav-item item">
@@ -55,7 +55,7 @@
 							v-if="store.user && store.user.id"
 							class="dropdown"
 						>
-							<button
+							<a
 								class="nav-link item dropdown-toggle"
 								type="button"
 								id="dropdownMenuButton1"
@@ -63,8 +63,8 @@
 								aria-expanded="false"
 								style="float: right"
 							>
-								{{ displayUser }}
-							</button>
+								{{ store.user.name }}
+							</a>
 							<ul
 								class="dropdown-menu"
 								aria-labelledby="dropdownMenuButton1"
@@ -117,23 +117,7 @@
 
 <script setup lang="ts">
 import { useUserStore } from '../../store/user.store';
-
 const store = useUserStore();
-
-function displayUser(): string {
-	const last_name = store.user.name.split(' ')[0];
-	const name = store.user.name.split(' ')[1];
-	const middle_name = store.user.name.split(' ')[2];
-
-	return (
-		last_name +
-		' ' +
-		name[0].toUpperCase() +
-		'. ' +
-		middle_name[0].toUpperCase() +
-		'.'
-	);
-}
 </script>
 
 <style scoped>

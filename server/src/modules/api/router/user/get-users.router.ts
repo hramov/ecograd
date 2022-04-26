@@ -3,6 +3,7 @@ import { ROLES } from '../../../../auth/config';
 import { Admin } from '../../../database/model/user/profiles/Admin.model';
 import { Client } from '../../../database/model/user/profiles/Client.model';
 import { Expert } from '../../../database/model/user/profiles/Expert.model';
+import { SendSuccessGetReply } from '../../utils/send-success-reply';
 
 export async function getUsers(req: Request, res: Response) {
 	if (req.query.profile) {
@@ -29,7 +30,7 @@ export async function getUsers(req: Request, res: Response) {
 		}
 	}
 
-	res.json({
+	SendSuccessGetReply(res, {
 		admin: await Admin.find({ relations: ['user'] }),
 		expert: await Expert.find({ relations: ['user'] }),
 		client: await Client.find({ relations: ['user'] }),
