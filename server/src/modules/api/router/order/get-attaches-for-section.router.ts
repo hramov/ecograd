@@ -2,6 +2,7 @@ import { Request, Response } from 'express';
 import { Attach } from '../../../database/model/order/Attach.model';
 import { User } from '../../../database/model/user/User.model';
 import { BadRequestError } from '../../../error/http/bad-request.error';
+import { SendSuccessGetReply } from '../../utils/send-success-reply';
 
 export async function getAttachesForSection(req: Request, res: Response) {
 	const user = req.user as User;
@@ -23,5 +24,5 @@ export async function getAttachesForSection(req: Request, res: Response) {
 		}
 	}
 
-	res.json(attaches);
+	SendSuccessGetReply(res, attaches);
 }

@@ -10,19 +10,22 @@ export async function getUsers(req: Request, res: Response) {
 		const profile = req.query.profile as string;
 		switch (profile) {
 			case ROLES.Admin:
-				return res.json(
+				return SendSuccessGetReply(
+					res,
 					await Admin.find({
 						relations: ['user'],
 					}),
 				);
 			case ROLES.Client:
-				return res.json(
+				return SendSuccessGetReply(
+					res,
 					await Client.find({
 						relations: ['user'],
 					}),
 				);
 			case ROLES.Expert:
-				return res.json(
+				return SendSuccessGetReply(
+					res,
 					await Expert.find({
 						relations: ['user'],
 					}),

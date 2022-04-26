@@ -1,14 +1,16 @@
 <template>
-	<Header />
-	<router-view />
-	<LoginModal />
+	<div style="padding-bottom: 100px">
+		<Header />
+		<router-view />
+		<LoginModal />
+	</div>
 	<Footer />
 </template>
 
 <script setup lang="ts">
-import Header from './components/layout/Header.vue';
-import LoginModal from './components/landing/LoginModal.vue';
-import Footer from './components/layout/Footer.vue';
+import Header from '@/components/layout/Header.vue';
+import LoginModal from '@/components/landing/LoginModal.vue';
+import Footer from '@/components/layout/Footer.vue';
 </script>
 
 <style>

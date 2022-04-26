@@ -2,6 +2,7 @@ import { Request, Response } from 'express';
 import { Order } from '../../../database/model/order/Order.model';
 import { User } from '../../../database/model/user/User.model';
 import { BadRequestError } from '../../../error/http/bad-request.error';
+import { SendSuccessGetReply } from '../../utils/send-success-reply';
 
 export async function checkChanges(req: Request, res: Response) {
 	const user = req.user as User;
@@ -17,5 +18,5 @@ export async function checkChanges(req: Request, res: Response) {
 		`;
 
 	const result = await Order.query(query);
-	res.json(result);
+	SendSuccessGetReply(res, result);
 }

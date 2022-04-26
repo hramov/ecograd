@@ -6,6 +6,7 @@ import { LoginStrategy } from '../../../../auth/strategy/login.strategy';
 import { RegisterStrategy } from '../../../../auth/strategy/register.strategy';
 import { Feedback } from '../../../database/model/user/Feedback.model';
 import { Expert } from '../../../database/model/user/profiles/Expert.model';
+import { SendSuccessGetReply } from '../../utils/send-success-reply';
 import { createUser } from './create-user.router';
 import { deleteUser } from './delete-user.router';
 import { getProfiles } from './get-profiles.router';
@@ -41,7 +42,7 @@ router.get(
 );
 
 router.get('/expert', async (req: Request, res: Response) =>
-	res.json(await Expert.find({ relations: ['user'] })),
+	SendSuccessGetReply(res, await Expert.find({ relations: ['user'] })),
 );
 
 router.post('/feedback', async (req: Request, res: Response) => {
@@ -50,7 +51,7 @@ router.post('/feedback', async (req: Request, res: Response) => {
 		email: req.body.email,
 		feedback: req.body.text,
 	});
-	res.json(await feedback.save());
+	SendSuccessGetReply(res, await feedback.save());
 });
 
 router.delete(

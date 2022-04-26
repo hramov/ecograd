@@ -3,6 +3,7 @@ import { Attach } from '../../../database/model/order/Attach.model';
 import { Order } from '../../../database/model/order/Order.model';
 import { Section } from '../../../database/model/order/Section.model';
 import { User } from '../../../database/model/user/User.model';
+import { SendSuccessGetReply } from '../../utils/send-success-reply';
 
 export async function getOrdersForExpert(req: Request, res: Response) {
 	const user = req.user as User;
@@ -20,5 +21,5 @@ export async function getOrdersForExpert(req: Request, res: Response) {
 			});
 		}
 	}
-	res.json(orders);
+	SendSuccessGetReply(res, orders);
 }

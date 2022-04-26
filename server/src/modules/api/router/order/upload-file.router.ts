@@ -10,6 +10,8 @@ import { Section } from '../../../database/model/order/Section.model';
 import { NotFoundError } from '../../../error/http/not-found.error';
 import { Logger } from '../../../logger';
 import { BadRequestError } from '../../../error/http/bad-request.error';
+import { SendSuccessPostReply } from '../../utils/send-success-reply';
+import { InternalServerError } from '../../../error/http/internal-server.error';
 
 export async function uploadFile(req: Request, res: Response) {
 	const sender = req.user as User;
@@ -89,12 +91,10 @@ export async function uploadFile(req: Request, res: Response) {
 		} catch (_err) {
 			const err = _err as Error;
 			Logger.writeError('uploadFile', err.message);
-			return res.json({
-				message: err,
-			});
+			return InternalServerError(res, err);
 		}
 	}
-	res.json({
+	SendSuccessPostReply(res, {
 		message: 'Successfully uploaded ' + fileNames.length + ' files!',
 	});
 }

@@ -9,6 +9,8 @@ export interface Order {
 	client_email: string;
 	client_phone: string;
 	status: OrderStatus;
+	exp_type: string;
+	object_type: string;
 	createdAt: Date;
 	expert: Expert;
 }
@@ -18,7 +20,16 @@ export enum OrderStatus {
 	Taken = 'taken',
 	Done = 'done',
 }
-export interface Section {}
+export interface Section {
+	id: number;
+	title: string;
+	code: string;
+	arrange: string;
+	checked: boolean;
+	sub: Section[];
+	status: string;
+}
+
 export const useOrderStore = defineStore('order', {
 	state: () => {
 		return {

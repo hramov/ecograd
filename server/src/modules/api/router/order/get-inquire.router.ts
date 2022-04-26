@@ -4,6 +4,7 @@ import { Order } from '../../../database/model/order/Order.model';
 import { BadRequestError } from '../../../error/http/bad-request.error';
 import { NotFoundError } from '../../../error/http/not-found.error';
 import { Logger } from '../../../logger';
+import { SendSuccessGetReply } from '../../utils/send-success-reply';
 
 export async function getInquire(req: Request, res: Response) {
 	if (!req.params.order_id) return BadRequestError(res);
@@ -22,12 +23,10 @@ export async function getInquire(req: Request, res: Response) {
 			order: { createdAt: 'DESC' },
 		});
 
-		res.json(inquires);
+		SendSuccessGetReply(res, inquires);
 	} catch (_err) {
 		const err = _err as Error;
 		Logger.writeError('getInquire', err.message);
-		res.json({
-			error: err.message,
-		});
+		NotFoundError(res, 'inquire', err.message);
 	}
 }

@@ -3,6 +3,7 @@ import { Order } from '../../../database/model/order/Order.model';
 import { Expert } from '../../../database/model/user/profiles/Expert.model';
 import { BadRequestError } from '../../../error/http/bad-request.error';
 import { NotFoundError } from '../../../error/http/not-found.error';
+import { SendSuccessGetReply } from '../../utils/send-success-reply';
 
 export async function appointExpert(req: Request, res: Response) {
 	const order_id = req.params.order_id as string;
@@ -37,5 +38,5 @@ export async function appointExpert(req: Request, res: Response) {
 	order.status = 'taken';
 	await order.save();
 
-	res.json(order);
+	SendSuccessGetReply(res, order);
 }

@@ -7,8 +7,10 @@ import { Inquire } from '../../../database/model/order/Inquire.model';
 import { Order } from '../../../database/model/order/Order.model';
 import { User } from '../../../database/model/user/User.model';
 import { BadRequestError } from '../../../error/http/bad-request.error';
+import { InternalServerError } from '../../../error/http/internal-server.error';
 import { NotFoundError } from '../../../error/http/not-found.error';
 import { Logger } from '../../../logger';
+import { SendSuccessPostReply } from '../../utils/send-success-reply';
 
 export async function uploadInquire(req: Request, res: Response) {
 	const sender = req.user as User;
@@ -59,11 +61,9 @@ export async function uploadInquire(req: Request, res: Response) {
 	} catch (_err) {
 		const err = _err as Error;
 		Logger.writeError('uploadInquire', err.message);
-		return res.json({
-			message: err,
-		});
+		return InternalServerError(res, err);
 	}
-	res.json({
+	SendSuccessPostReply(res, {
 		message: 'Successfully uploaded file!',
 	});
 }

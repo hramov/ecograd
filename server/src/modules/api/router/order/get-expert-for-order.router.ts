@@ -1,6 +1,7 @@
 import { Request, Response } from 'express';
 import { Expert } from '../../../database/model/user/profiles/Expert.model';
 import { BadRequestError } from '../../../error/http/bad-request.error';
+import { SendSuccessGetReply } from '../../utils/send-success-reply';
 
 export async function getExpertForOrder(req: Request, res: Response) {
 	if (!req.params.order_id) return BadRequestError(res);
@@ -12,5 +13,5 @@ export async function getExpertForOrder(req: Request, res: Response) {
 		WHERE o.id = ${req.params.order_id}
 	`);
 
-	res.json(result[0]);
+	SendSuccessGetReply(res, result[0]);
 }

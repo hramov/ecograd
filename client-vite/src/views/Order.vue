@@ -35,7 +35,7 @@
 						>
 							<img
 								align="left"
-								:src="apiUrl + 'public/img/change.png'"
+								:src="getBackendURL() + 'public/img/change.png'"
 								style="width: 20px"
 								v-if="
 									changes
@@ -86,9 +86,12 @@
 								>
 									<th scope="row">{{ index + 1 }}</th>
 									<td>
-										<a :href="apiUrl + inquire.path">{{
-											inquire.title
-										}}</a>
+										<a
+											:href="
+												getBackendURL() + inquire.path
+											"
+											>{{ inquire.title }}</a
+										>
 									</td>
 									<td>{{ inquire.createdAt }}</td>
 								</tr>
@@ -144,7 +147,10 @@
 							>
 								<img
 									align="left"
-									:src="apiUrl + 'public/img/change.png'"
+									:src="
+										getBackendURL() +
+										'public/img/change.png'
+									"
 									style="width: 20px; margin-right: 10px"
 									v-if="
 										changes
@@ -158,7 +164,10 @@
 								class="list-group-item list-group-item-action add-project-bt"
 								style="text-align: center"
 								@click="showAddSection = true"
-								v-if="getIsClient && sectionsToAdd.length > 0"
+								v-if="
+									userStore.isClient &&
+									sectionsToAdd.length > 0
+								"
 							>
 								<button>Добавить раздел</button>
 							</li>
@@ -401,9 +410,8 @@
 </template>
 
 <script setup lang="ts">
-import BuyButton from './../BuyButton.vue';
-import AddOrder from '../../views/order/AddOrder.vue';
-import { onMounted, ref } from '@vue/runtime-core';
+import AddOrder from '@/components/order/AddOrder.vue';
+import { computed, onMounted, ref } from '@vue/runtime-core';
 import { Order, Section, useOrderStore } from '../store/order.store';
 import { Expert, useUserStore } from '../store/user.store';
 import { ApiManager } from '../api/manager';
@@ -441,11 +449,10 @@ const selectedId = ref(0);
 const selectedSectionId = ref(0);
 const inquires = ref([] as any[]);
 const addProject = ref(false);
-const apiUrl = process.env.VUE_APP_BACKEND;
 const orderStore = useOrderStore();
 const userStore = useUserStore();
 
-onMounted(async () => await orderStore.getOrders());
+onMounted(async () => await getOrders());
 
 const getOrders = async () => {
 	if (userStore.isExpert) {
@@ -474,7 +481,11 @@ const setSectionDone = async (section_id: number) => {
 };
 
 const getDownloadURL = (path: string) => {
-	return process.env.VUE_APP_BACKEND + path;
+	return import.meta.env.VITE_API_URL + path;
+};
+
+const getBackendURL = () => {
+	return import.meta.env.VITE_API_URL;
 };
 
 const addSection = async () => {
@@ -492,7 +503,7 @@ const addSection = async () => {
 	}
 
 	if (isFormDataHasItems(formData)) {
-		await ApiManager.post<Section, Section>(
+		await ApiManager.post<any, Section>(
 			'/order/upload-file/' + order.value.id,
 			formData,
 		);
@@ -588,7 +599,7 @@ const chooseOrder = async (id: number) => {
 				if (candidate[i].sub && candidate[i].sub.length == 0) {
 					sectionsToAdd.value.pop();
 				} else {
-					sectionsToAdd.value[this.sectionsToAdd.length - 1].sub =
+					sectionsToAdd.value[sectionsToAdd.value.length - 1].sub =
 						candidate[i].sub;
 				}
 			}

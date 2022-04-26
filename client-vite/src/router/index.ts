@@ -2,6 +2,7 @@ import { createRouter, createWebHistory } from 'vue-router';
 import Landing from '@/views/Landing.vue';
 import Expertise from '@/views/Expertise.vue';
 import Dashboard from '@/views/Dashboard.vue';
+import Order from '@/views/Order.vue';
 import { useUserStore } from '../store/user.store';
 const routes = [
 	{
@@ -22,7 +23,7 @@ const routes = [
 	{
 		path: '/orders',
 		name: 'Orders',
-		component: Orders,
+		component: Order,
 	},
 ];
 const router = createRouter({

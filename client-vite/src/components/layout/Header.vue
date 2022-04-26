@@ -82,7 +82,7 @@
 										class="dropdown-item"
 										v-if="store.isClient || store.isExpert"
 										@click.prevent="
-											$router.push({ path: '/client' })
+											$router.push({ path: '/orders' })
 										"
 										>Открыть</a
 									>

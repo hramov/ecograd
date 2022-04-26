@@ -6,6 +6,8 @@ import { Client } from '../../../database/model/user/profiles/Client.model';
 import { Expert } from '../../../database/model/user/profiles/Expert.model';
 import { User } from '../../../database/model/user/User.model';
 import { BadRequestError } from '../../../error/http/bad-request.error';
+import { InternalServerError } from '../../../error/http/internal-server.error';
+import { SendSuccessPostReply } from '../../utils/send-success-reply';
 
 export async function createUser(req: Request, res: Response) {
 	const user = req.body.user;
@@ -53,7 +55,10 @@ export async function createUser(req: Request, res: Response) {
 	}
 
 	if (res) {
-		res.json(error ? error : result);
+		if (error) {
+			return InternalServerError(res, error);
+		}
+		return SendSuccessPostReply(res, result);
 	} else {
 		return error ? error : result;
 	}

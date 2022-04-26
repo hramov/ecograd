@@ -2,6 +2,10 @@ import { Request, Response } from 'express';
 import { Order } from '../../../database/model/order/Order.model';
 import { BadRequestError } from '../../../error/http/bad-request.error';
 import { NotFoundError } from '../../../error/http/not-found.error';
+import {
+	SendSuccessGetReply,
+	SendSuccessPutReply,
+} from '../../utils/send-success-reply';
 
 export async function changeOrderStatus(req: Request, res: Response) {
 	const order_id = req.body.order_id as string;
@@ -22,7 +26,7 @@ export async function changeOrderStatus(req: Request, res: Response) {
 	order.status = status;
 	await order.save();
 
-	res.json({
+	SendSuccessPutReply(res, {
 		message: 'Successfully updated order with status ' + status,
 	});
 }

@@ -8,8 +8,12 @@ import { Attach } from '../../../database/model/order/Attach.model';
 import { Order } from '../../../database/model/order/Order.model';
 import { Section } from '../../../database/model/order/Section.model';
 import { BadRequestError } from '../../../error/http/bad-request.error';
+import { NotFoundError } from '../../../error/http/not-found.error';
 import { Logger } from '../../../logger';
-import { SendSuccessGetReply } from '../../utils/send-success-reply';
+import {
+	SendSuccessGetReply,
+	SendSuccessPostReply,
+} from '../../utils/send-success-reply';
 import { addOrder } from './add-order.router';
 import { appointExpert } from './appoint-expert.router';
 import { changeOrderStatus } from './change-order-status.router';
@@ -62,7 +66,7 @@ router.patch(
 	'/set-attach-opened/:attach_id',
 	passport.authenticate(new JWTStrategy(), { session: false }),
 	async (req: Request, res: Response) =>
-		res.json(await Attach.save(req.body)),
+		SendSuccessPostReply(res, await Attach.save(req.body)),
 );
 
 router.patch(
@@ -112,7 +116,8 @@ router.get(
 	passport.authenticate(new AdminStrategy(), { session: false }),
 	async (req: Request, res: Response) => {
 		if (!req.params.order_id) return BadRequestError(res);
-		res.json(
+		SendSuccessGetReply(
+			res,
 			(
 				await Order.query(
 					`
@@ -135,7 +140,8 @@ router.get(
 		if (!req.params.section_id) {
 			return BadRequestError(res);
 		}
-		res.json(
+		SendSuccessGetReply(
+			res,
 			await Section.findOne({
 				where: {
 					id: parseInt(req.params.section_id),
@@ -181,7 +187,10 @@ router.get(
 			});
 		}
 
-		res.json(sections.filter((section: Section) => section.attach.length));
+		SendSuccessGetReply(
+			res,
+			sections.filter((section: Section) => section.attach.length),
+		);
 	},
 );
 
@@ -197,7 +206,8 @@ router.get(
 	async (req: Request, res: Response) => {
 		if (!req.params.order_id) return BadRequestError(res);
 		try {
-			res.json(
+			SendSuccessGetReply(
+				res,
 				(
 					await Order.query(
 						`SELECT o.id, o.title, o.exp_type, o.object_type, o.status, o."createdAt", 
@@ -218,9 +228,7 @@ router.get(
 		} catch (_err) {
 			const err = _err as Error;
 			Logger.writeError('getOrder', err.message);
-			res.json({
-				error: err.message,
-			});
+			NotFoundError(res, 'order', err.message);
 		}
 	},
 );

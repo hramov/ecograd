@@ -1,6 +1,7 @@
 import { Request, Response } from 'express';
 import { BadRequestError } from '../../../error/http/bad-request.error';
 import { NotFoundError } from '../../../error/http/not-found.error';
+import { SendSuccessGetReply } from '../../utils/send-success-reply';
 
 export enum OrderTypes {
 	'Объект капитального строительства' = 1,
@@ -179,20 +180,23 @@ export function getSections(req: Request, res: Response) {
 	];
 
 	if (exp_type == 1) {
-		res.json(exp_sections);
+		SendSuccessGetReply(res, exp_sections);
 	} else if (exp_type == 2) {
 		if (object_type == 1) {
-			res.json(object_section_cap);
+			SendSuccessGetReply(res, object_section_cap);
 		} else if (object_type == 2) {
-			res.json(object_section_linear);
+			SendSuccessGetReply(res, object_section_linear);
 		} else {
 			return NotFoundError(res, 'object_type');
 		}
 	} else if (exp_type == 3) {
 		if (object_type == 1) {
-			res.json([...object_section_cap, ...exp_sections]);
+			SendSuccessGetReply(res, [...object_section_cap, ...exp_sections]);
 		} else if (object_type == 2) {
-			res.json([...object_section_linear, ...exp_sections]);
+			SendSuccessGetReply(res, [
+				...object_section_linear,
+				...exp_sections,
+			]);
 		} else {
 			return NotFoundError(res, 'object_type');
 		}

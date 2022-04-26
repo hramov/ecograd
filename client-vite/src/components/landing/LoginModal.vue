@@ -93,8 +93,8 @@ async function login() {
 		const closeBtn = document.getElementById('closeBtn') as HTMLElement;
 		closeBtn.click();
 		if (store.isAdmin) return router.push({ path: '/dashboard' });
-		if (store.isClient) return router.push({ path: '/client' });
-		if (store.isExpert) return router.push({ path: '/client' });
+		if (store.isClient || store.isExpert)
+			return router.push({ path: '/orders' });
 	}
 }
 </script>

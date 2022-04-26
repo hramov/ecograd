@@ -2,6 +2,7 @@ import { Request, Response } from 'express';
 import { Section } from '../../../database/model/order/Section.model';
 import { BadRequestError } from '../../../error/http/bad-request.error';
 import { NotFoundError } from '../../../error/http/not-found.error';
+import { SendSuccessPutReply } from '../../utils/send-success-reply';
 
 export async function changeSectionStatus(req: Request, res: Response) {
 	const section_id = req.params.section_id as string;
@@ -23,7 +24,7 @@ export async function changeSectionStatus(req: Request, res: Response) {
 	console.log(section);
 	await section.save();
 
-	res.json({
+	SendSuccessPutReply(res, {
 		message: 'Successfully updated section with status ' + status,
 	});
 }

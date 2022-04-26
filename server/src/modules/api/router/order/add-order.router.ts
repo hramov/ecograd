@@ -5,6 +5,7 @@ import { User } from '../../../database/model/user/User.model';
 import { BadRequestError } from '../../../error/http/bad-request.error';
 import { NotFoundError } from '../../../error/http/not-found.error';
 import { Logger } from '../../../logger';
+import { SendSuccessGetReply } from '../../utils/send-success-reply';
 
 export async function addOrder(req: Request, res: Response) {
 	const user = req.user as User;
@@ -37,5 +38,5 @@ export async function addOrder(req: Request, res: Response) {
 
 	await order.save();
 	Logger.writeInfo(`Successfully added order with ID: ${order.id}`);
-	res.json(order);
+	SendSuccessGetReply(res, order);
 }
