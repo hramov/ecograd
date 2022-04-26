@@ -70,7 +70,7 @@
 									{{ expert.user.name }}
 								</option>
 							</select>
-							<span v-else>{{ order.expert.user.name }}</span>
+							<span v-else>{{ order.expert.name }}</span>
 						</td>
 					</tr>
 				</tbody>
@@ -113,6 +113,7 @@ const appointExpert = async (event: any, order_id: number) => {
 			{ expert_id },
 		);
 		if (result.status) {
+			await orderStore.getOrders();
 		}
 	}
 };

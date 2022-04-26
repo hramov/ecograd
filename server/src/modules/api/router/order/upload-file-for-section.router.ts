@@ -32,7 +32,6 @@ export async function uploadFileForSection(req: Request, res: Response) {
 	}
 
 	const fileNames = Object.keys(req.files);
-	console.log(fileNames);
 	if (fileNames.length == 0) return BadRequestError(res);
 
 	try {

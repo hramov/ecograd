@@ -21,7 +21,6 @@ export async function changeSectionStatus(req: Request, res: Response) {
 	}
 
 	section.status = status;
-	console.log(section);
 	await section.save();
 
 	SendSuccessPutReply(res, {

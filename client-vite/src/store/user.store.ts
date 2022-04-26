@@ -10,6 +10,7 @@ export interface Expert {
 	direction: string;
 	misc: string;
 	user: User;
+	name?: string;
 }
 
 export interface Users {

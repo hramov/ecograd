@@ -41,7 +41,7 @@ export class Database {
 			await DatabaseIniter.initUser();
 		} catch (_err) {
 			const err = _err as Error;
-			console.log(err.message);
+			Logger.writeError('Database init', err.message);
 		}
 	}
 }

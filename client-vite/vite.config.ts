@@ -2,7 +2,6 @@ import { defineConfig } from 'vite';
 import { fileURLToPath } from 'url';
 import vue from '@vitejs/plugin-vue';
 
-// https://vitejs.dev/config/
 export default defineConfig({
 	plugins: [vue()],
 	resolve: {
@@ -11,4 +10,7 @@ export default defineConfig({
 		},
 	},
 	base: '',
+	build: {
+		outDir: '../server/app',
+	},
 });

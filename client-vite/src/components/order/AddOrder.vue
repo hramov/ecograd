@@ -328,7 +328,7 @@ const createOrder = async () => {
 
 	const result = await ApiManager.post<any, any>(
 		'/order/upload-file/' + orderResult.data.id,
-		formData,
+		formData.value,
 	);
 	formData.value = new FormData();
 	alert('Проект успешно добавлен');

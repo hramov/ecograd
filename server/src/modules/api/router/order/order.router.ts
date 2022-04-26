@@ -50,26 +50,26 @@ router.post(
 	uploadFileForSection,
 );
 
-router.patch(
+router.put(
 	'/appoint-expert/:order_id',
 	passport.authenticate(new AdminStrategy(), { session: false }),
 	appointExpert,
 );
 
-router.patch(
+router.put(
 	'/change-order-status',
 	passport.authenticate(new ExpertStrategy(), { session: false }),
 	changeOrderStatus,
 );
 
-router.patch(
+router.put(
 	'/set-attach-opened/:attach_id',
 	passport.authenticate(new JWTStrategy(), { session: false }),
 	async (req: Request, res: Response) =>
 		SendSuccessPostReply(res, await Attach.save(req.body)),
 );
 
-router.patch(
+router.put(
 	'/change-section-status/:section_id',
 	passport.authenticate(new JWTStrategy(), { session: false }),
 	changeSectionStatus,

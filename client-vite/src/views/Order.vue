@@ -35,7 +35,7 @@
 						>
 							<img
 								align="left"
-								:src="getBackendURL() + 'public/img/change.png'"
+								src="@/assets/img/order/change.png"
 								style="width: 20px"
 								v-if="
 									changes
@@ -147,10 +147,7 @@
 							>
 								<img
 									align="left"
-									:src="
-										getBackendURL() +
-										'public/img/change.png'
-									"
+									src="@/assets/img/order/change.png"
 									style="width: 20px; margin-right: 10px"
 									v-if="
 										changes
@@ -162,14 +159,14 @@
 							</li>
 							<li
 								class="list-group-item list-group-item-action add-project-bt"
-								style="text-align: center"
+								style="text-align: center; cursor: pointer"
 								@click="showAddSection = true"
 								v-if="
 									userStore.isClient &&
 									sectionsToAdd.length > 0
 								"
 							>
-								<button>Добавить раздел</button>
+								<a>Добавить раздел</a>
 							</li>
 						</ul>
 					</div>
@@ -477,6 +474,8 @@ const setSectionDone = async (section_id: number) => {
 			{ new_status: 'done' },
 		);
 		alert('Секция помечена как законченная');
+		await chooseOrder(order.value.id);
+		await chooseSection(section_id);
 	}
 };
 
