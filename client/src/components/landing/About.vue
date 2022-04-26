@@ -14,7 +14,7 @@
 			<div class="col-md-12 col-lg-4 col-sm-12 mb-5">
 				<div>
 					<div class="card-img text-center">
-						<img src="/assets/img/rocket.png" />
+						<img src="@/assets/img/landing/rocket.png" />
 					</div>
 					<div class="card-title text-center">
 						Максимальная оперативность
@@ -28,7 +28,7 @@
 			</div>
 			<div class="col-md-12 col-lg-4 col-sm-12 mb-5">
 				<div class="card-img text-center">
-					<img src="/assets/img/success.png" />
+					<img src="@/assets/img/landing/success.png" />
 				</div>
 				<div class="card-title text-center">
 					Профессионализм и качество
@@ -42,7 +42,7 @@
 			</div>
 			<div class="col-md-12 col-lg-4 col-sm-12 mb-5">
 				<div class="card-img text-center">
-					<img src="/assets/img/result.png" />
+					<img src="@/assets/img/landing/result.png" />
 				</div>
 				<div class="card-title text-center">Гарантия результата</div>
 				<div class="card-conter">
@@ -55,20 +55,13 @@
 			</div>
 		</div>
 		<div class="text-center">
-			<buy-button v-if="getIsClient" />
+			<BuyButton v-if="store.isClient" />
 		</div>
 	</section>
 </template>
 
-<script lang="ts">
-import { defineComponent } from 'vue';
-import { mapGetters } from 'vuex';
-import BuyButton from '../BuyButton.vue';
-
-export default defineComponent({
-	components: { BuyButton },
-	computed: {
-		...mapGetters(['getIsClient']),
-	},
-});
+<script setup lang="ts">
+import { useUserStore } from '../../store/user.store';
+import BuyButton from './components/BuyButton.vue';
+const store = useUserStore();
 </script>

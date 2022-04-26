@@ -1,62 +1,53 @@
-import { FetchDataProvider } from '@/custom/fetch-data.provider';
+import { defineStore } from 'pinia';
+import { ApiManager } from '../api/manager';
+import { Expert } from './user.store';
+export interface Order {
+	id: number;
+	title: string;
+	name: string;
+	sections: string;
+	client_email: string;
+	client_phone: string;
+	status: OrderStatus;
+	exp_type: string;
+	object_type: string;
+	createdAt: Date;
+	expert: Expert;
+}
 
-const state = {
-	orders: [] as any[],
-	order: {} as any,
-	sections: [],
-};
+export enum OrderStatus {
+	New = 'new',
+	Taken = 'taken',
+	Done = 'done',
+}
+export interface Section {
+	id: number;
+	title: string;
+	code: string;
+	arrange: string;
+	checked: boolean;
+	sub: Section[];
+	status: string;
+}
 
-const mutations = {
-	setOrders(state: any, orders: any[]) {
-		state.orders = orders;
-	},
-	setOrder(state: any, order: any) {
-		state.order = order.data.order;
-	},
-	setSections(state: any, data: any) {
-		state.sections = data;
-	},
-};
-
-const actions = {
-	async getOrdersAction({ commit }: any) {
-		commit('setOrders', await FetchDataProvider.get('order'));
-	},
-	async getOrderAction({ commit }: any, id: number) {
-		commit('setOrder', await FetchDataProvider.getByID('order', id));
-		return true;
-	},
-	async addOrderUnauthorized(_: any, order: any) {
-		return FetchDataProvider.post('orders/unauth', order);
-	},
-	async addOrder(_: any, order: any) {
+export const useOrderStore = defineStore('order', {
+	state: () => {
 		return {
-			order: await FetchDataProvider.post('orders/', order),
+			orders: [] as Order[],
 		};
 	},
-	async getWorkAction(_: any, order_id: any) {
-		return FetchDataProvider.patch('orders/expert', order_id, null);
-	},
-	async deleteOrderDocsAction(_: any, order_id: any) {
-		return FetchDataProvider.patch('orders/delete', order_id, null);
-	},
-	async getSectionsAction({ commit }: any, type: number) {
-		const sections = await FetchDataProvider.get(
-			'order/sections-dict/' + type,
-		);
-		commit('setSections', sections);
-	},
-};
 
-const getters = {
-	getOrder: (state: any) => state.order,
-	getOrders: (state: any) => state.orders,
-	getSections: (state: any) => state.sections,
-};
+	actions: {
+		async getOrders() {
+			const result = await ApiManager.get<Order[]>('/order');
+			this.orders = result.data;
 
-export default {
-	state,
-	actions,
-	mutations,
-	getters,
-};
+			for await (const order of this.orders) {
+				const result = await ApiManager.get<Expert>(
+					'/order/expert/' + order.id,
+				);
+				order.expert = result.data;
+			}
+		},
+	},
+});

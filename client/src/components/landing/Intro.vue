@@ -15,8 +15,8 @@
 				<br />
 				<p>E-mail: oooecograd@mail.ru</p>
 				<br />
-				<BuyButton v-if="getIsClient" />
-				<div v-if="!getUser || !getUser.id">
+				<BuyButton v-if="store.isClient" />
+				<div v-if="!store.user || !store.user.id">
 					<div class="alert alert-warning" role="alert">
 						Для того, чтобы получить возможность добавлять заказы,
 						необходимо обратиться по одному из контактов выше. Далее
@@ -26,23 +26,15 @@
 			</div>
 			<div class="col-lg-6 col-md-12 col-sm-12 col-sm-12 text-center">
 				<div class="intro_img">
-					<img src="assets/img/intro.png" />
+					<img src="@/assets/img/landing/intro.png" />
 				</div>
 			</div>
 		</div>
 	</section>
 </template>
 
-<script lang="ts">
-import { defineComponent } from 'vue';
-import { mapGetters } from 'vuex';
-import BuyButton from './../BuyButton.vue';
-export default defineComponent({
-	components: {
-		BuyButton,
-	},
-	computed: {
-		...mapGetters(['getIsClient', 'getUser']),
-	},
-});
+<script setup lang="ts">
+import { useUserStore } from '../../store/user.store';
+import BuyButton from '@/components/landing/components/BuyButton.vue';
+const store = useUserStore();
 </script>

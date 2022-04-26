@@ -8,7 +8,10 @@
 			</h1>
 		</div>
 		<div style="padding: 20px">
-			<table class="table table-striped table-hover" v-if="orders.length">
+			<table
+				class="table table-striped table-hover"
+				v-if="orderStore.orders.length"
+			>
 				<thead>
 					<tr>
 						<th scope="col">Объект</th>
@@ -22,12 +25,12 @@
 					</tr>
 				</thead>
 				<tbody>
-					<tr v-for="order in orders" :key="order.id">
+					<tr v-for="order in orderStore.orders" :key="order.id">
 						<td>{{ order.title }}</td>
 						<td>{{ order.name }}</td>
 						<td>
 							<p
-								v-for="section in order.sections
+								v-for="(section, index) in order.sections
 									.split(';')
 									.sort((a, b) =>
 										Number(a.split(' ')[0]) -
@@ -36,15 +39,17 @@
 											? 1
 											: -1,
 									)"
-								:key="section.id"
+								:key="index"
 							>
 								{{ section }}
 							</p>
 						</td>
 						<td>{{ order.client_email }}</td>
 						<td>{{ order.client_phone }}</td>
-						<td v-if="order.status == 'new'">Зарегистрирован</td>
-						<td v-else-if="order.status == 'taken'">
+						<td v-if="order.status == OrderStatus.New">
+							Зарегистрирован
+						</td>
+						<td v-else-if="order.status == OrderStatus.Taken">
 							Взят в работу
 						</td>
 						<td>
@@ -56,13 +61,15 @@
 								class="form-select"
 								v-model="order.expert"
 								@change="appointExpert($event, order.id)"
-								><option
-									v-for="expert in getExperts"
+							>
+								<option
+									v-for="expert in userStore.experts"
 									:key="expert.id"
 									:value="expert.id"
-									>{{ expert.user?.name }}</option
-								></select
-							>
+								>
+									{{ expert.user.name }}
+								</option>
+							</select>
 							<span v-else>{{ order.expert.name }}</span>
 						</td>
 					</tr>
@@ -80,44 +87,34 @@
 	</section>
 </template>
 
-<script lang="ts">
-import { FetchDataProvider } from '@/custom/fetch-data.provider';
-import { defineComponent } from 'vue';
-import { mapGetters } from 'vuex';
+<script setup lang="ts">
+import { ref } from '@vue/reactivity';
+import { onMounted } from '@vue/runtime-core';
+import { ApiManager } from '../../api/manager';
+import { Order, useOrderStore, OrderStatus } from '../../store/order.store';
+import { Expert, useUserStore } from '../../store/user.store';
 
-export default defineComponent({
-	data() {
-		return {
-			orders: [] as any[],
-			isLoaded: false,
-		};
-	},
-	computed: {
-		...mapGetters(['getExperts']),
-	},
-	async mounted() {
-		await this.$store.dispatch('getExpertsAction');
-		this.isLoaded = false;
-		this.orders = await FetchDataProvider.get('/order');
-		for await (const order of this.orders) {
-			order.expert = await FetchDataProvider.get(
-				'/order/expert/' + order.id,
-			);
-		}
-		this.isLoaded = true;
-	},
-	methods: {
-		async appointExpert(event: any, order_id: number) {
-			const expert_id = event.target.value;
-			const sure = confirm('Подтверите назначение эксперта');
-			if (sure) {
-				const result = await FetchDataProvider.patch(
-					'/order/appoint-expert',
-					order_id,
-					{ expert_id },
-				);
-			}
-		},
-	},
+const userStore = useUserStore();
+const orderStore = useOrderStore();
+const isLoaded = ref(false);
+
+onMounted(async () => {
+	await userStore.getExperts();
+	await orderStore.getOrders();
+	isLoaded.value = true;
 });
+
+const appointExpert = async (event: any, order_id: number) => {
+	const expert_id = event.target.value;
+	const sure = confirm('Подтверите назначение эксперта');
+	if (sure) {
+		const result = await ApiManager.put<{ expert_id: number }, Expert>(
+			'/order/appoint-expert/' + order_id,
+			{ expert_id },
+		);
+		if (result.status) {
+			await orderStore.getOrders();
+		}
+	}
+};
 </script>

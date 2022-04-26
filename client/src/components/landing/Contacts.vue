@@ -73,33 +73,28 @@
 	</section>
 </template>
 
-<script lang="ts">
-import { FetchDataProvider } from '@/custom/fetch-data.provider';
-import { defineComponent } from 'vue';
+<script setup lang="ts">
+import { ref } from '@vue/reactivity';
+import { ApiManager } from '../../api/manager';
 
 export interface Feedback {
+	id: number;
 	name: string;
 	email: string;
 	text: string;
 }
-export default defineComponent({
-	data() {
-		return {
-			feedback: {} as Feedback,
-		};
-	},
-	methods: {
-		async sendFeedback() {
-			const result = await FetchDataProvider.post(
-				'/user/feedback',
-				this.feedback,
-			);
 
-			if (result.id) {
-				alert('Ваше сообщение успешно отправлено');
-				this.feedback = {} as Feedback;
-			}
-		},
-	},
-});
+const feedback = ref({} as Feedback);
+
+const sendFeedback = async () => {
+	const result = await ApiManager.post<Feedback, Feedback>(
+		'/user/feedback',
+		feedback.value,
+	);
+
+	if (result.data.id) {
+		alert('Ваше сообщение успешно отправлено');
+		feedback.value = {} as Feedback;
+	}
+};
 </script>

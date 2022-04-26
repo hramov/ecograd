@@ -30,8 +30,8 @@
 					</div>
 					<div class="col-lg-4" style="padding: 10px">
 						<img
-							style="width: 100%;"
-							src="assets/img/zakon.jpg"
+							style="width: 100%"
+							src="@/assets/img/expertise/zakon.jpg"
 							alt="Zakon"
 							data-aos="zoom-out"
 							data-aos-delay="100"
@@ -78,8 +78,8 @@
 					</div>
 					<div class="col-lg-4" style="padding: 10px">
 						<img
-							style="width: 100%;"
-							src="assets/img/docs.jpg"
+							style="width: 100%"
+							src="@/assets/img/expertise/docs.jpg"
 							alt="Zakon"
 							data-aos="zoom-out"
 							data-aos-delay="100"
@@ -91,9 +91,3 @@
 		</section>
 	</div>
 </template>
-
-<script lang="ts">
-import { defineComponent } from 'vue';
-
-export default defineComponent({});
-</script>

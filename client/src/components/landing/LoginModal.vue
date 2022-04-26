@@ -9,14 +9,14 @@
 		<div class="modal-dialog">
 			<div class="modal-content">
 				<div
-					v-if="!isLoggedIn && isTouched"
+					v-if="isTouched && !isLoggedIn"
 					class="alert alert-danger"
 					role="alert"
 				>
 					Ошибка авторизации!
 				</div>
 				<div
-					v-if="isLoggedIn && isTouched"
+					v-if="isTouched && isLoggedIn"
 					class="alert alert-success"
 					role="alert"
 				>
@@ -68,45 +68,39 @@
 	</div>
 </template>
 
-<script lang="ts">
-import { defineComponent } from 'vue';
-import { mapActions, mapGetters } from 'vuex';
+<script setup lang="ts">
+import { ref } from '@vue/reactivity';
+import { useRouter } from 'vue-router';
+import { useUserStore } from '../../store/user.store';
+const router = useRouter();
+const store = useUserStore();
+const email = ref('');
+const isLoggedIn = ref(false);
+const isTouched = ref(false);
+const password = ref('');
 
-export default defineComponent({
-	data() {
-		return {
-			email: '',
-			password: '',
-			isTouched: false,
-			isLoggedIn: false,
-		};
-	},
-	computed: {
-		...mapGetters(['getUser', 'getIsAdmin', 'getIsClient', 'getIsExpert']),
-	},
-	methods: {
-		...mapActions(['loginAction', 'getUserAction']),
-		async login() {
-			this.isTouched = true;
-			this.isLoggedIn = await this.loginAction({
-				email: this.email,
-				password: this.password,
-			});
-			await this.getUserAction();
+async function login() {
+	isLoggedIn.value = await store.login({
+		email: email.value,
+		password: password.value,
+	});
 
-			if (this.getUser) {
-				const closeBtn = document.getElementById(
-					'closeBtn',
-				) as HTMLElement;
-				closeBtn.click();
-				if (this.getIsAdmin)
-					return this.$router.push({ path: '/dashboard' });
-				if (this.getIsClient)
-					return this.$router.push({ path: '/client' });
-				if (this.getIsExpert)
-					return this.$router.push({ path: '/client' });
-			}
-		},
-	},
-});
+	isTouched.value = true;
+
+	await store.getUser();
+
+	if (store.user && store.user.id) {
+		const closeBtn = document.getElementById('closeBtn') as HTMLElement;
+		closeBtn.click();
+		if (store.isAdmin) return router.push({ path: '/dashboard' });
+		if (store.isClient || store.isExpert)
+			return router.push({ path: '/orders' });
+	}
+}
 </script>
+
+<style scoped>
+form input {
+	margin-bottom: 10px;
+}
+</style>

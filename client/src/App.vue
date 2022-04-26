@@ -1,39 +1,27 @@
 <template>
-	<div>
-		<Header :isUser="getUser?.email" />
-		<LoginModal />
+	<div style="padding-bottom: 100px">
+		<Header />
 		<router-view />
-		<br />
-		<Footer />
+		<LoginModal />
 	</div>
+	<Footer />
 </template>
 
-<script lang="ts">
+<script setup lang="ts">
+import Header from '@/components/layout/Header.vue';
+import LoginModal from '@/components/landing/LoginModal.vue';
+import Footer from '@/components/layout/Footer.vue';
+
 import '@/assets/css/style.css';
-import { defineComponent } from 'vue';
-import Header from './components/Header.vue';
-import Footer from './components/Footer.vue';
-import LoginModal from './components/landing/LoginModal.vue';
-import { mapGetters } from 'vuex';
-export default defineComponent({
-	name: 'App',
-
-	components: {
-		Header,
-		Footer,
-		LoginModal,
-	},
-	computed: {
-		...mapGetters(['getUser']),
-	},
-
-	async mounted() {
-		if (this.$route.path == '/') {
-			this.$router.push({ path: '/' });
-		}
-		if (!this.getUser) {
-			await this.$store.dispatch('getUserAction');
-		}
-	},
-});
 </script>
+
+<style>
+#app {
+	font-family: Avenir, Helvetica, Arial, sans-serif;
+	-webkit-font-smoothing: antialiased;
+	-moz-osx-font-smoothing: grayscale;
+	text-align: center;
+	color: #2c3e50;
+	margin-top: 60px;
+}
+</style>
