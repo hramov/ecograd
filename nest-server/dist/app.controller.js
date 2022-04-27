@@ -14,12 +14,8 @@ var __param = (this && this.__param) || function (paramIndex, decorator) {
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.AppController = void 0;
 const common_1 = require("@nestjs/common");
-const app_service_1 = require("./app.service");
 const path_1 = require("path");
 let AppController = class AppController {
-    constructor(appService) {
-        this.appService = appService;
-    }
     downloadFile(req, res) {
         const filePath = req.params[0];
         res.sendFile((0, path_1.resolve)(__dirname, '../public', filePath));
@@ -34,8 +30,7 @@ __decorate([
     __metadata("design:returntype", void 0)
 ], AppController.prototype, "downloadFile", null);
 AppController = __decorate([
-    (0, common_1.Controller)(),
-    __metadata("design:paramtypes", [app_service_1.AppService])
+    (0, common_1.Controller)()
 ], AppController);
 exports.AppController = AppController;
 //# sourceMappingURL=app.controller.js.map
