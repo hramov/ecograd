@@ -8,8 +8,9 @@ RUN npm i
 COPY ./src/ ./src
 COPY ./data/ ./data
 COPY ./app/ ./app
-COPY ./tsconfig.json ./tsconfig.json 
-COPY ./tsconfig.build.json ./tsconfig.build.json 
+COPY ./dist ./dist
+# COPY ./tsconfig.json ./tsconfig.json 
+# COPY ./tsconfig.build.json ./tsconfig.build.json 
 RUN mkdir logs
 RUN mkdir public
 RUN npm run build
