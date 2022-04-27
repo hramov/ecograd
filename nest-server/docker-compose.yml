@@ -1,0 +1,49 @@
+version: "3"
+services:
+
+  server:
+    image: ecograd_server
+    container_name: ecograd_server
+    expose:
+      - "5005"
+    ports:
+      - "5005:5005"
+    environment:
+      - JWT_SECRET=!seCreT
+      - HASH_SECRET=password
+      - DB_HOST=db
+      - DB_PORT=54302
+      - DB_USER=postgres
+      - DB_PASSWORD=grafserega1997
+      - DB_NAME=ecograd
+      - START_TYPE=PROD
+    volumes:
+      - logs:/usr/src/app/logs
+      - public:/usr/src/app/public
+    networks:
+      - postgres
+  
+  db:
+    image: postgres
+    container_name: ecograd_db
+    expose:
+      - "54302"
+    ports:
+      - "54302:54302"
+    environment:
+      - POSTGRES_PASSWORD=grafserega1997
+    volumes:
+      - db-data:/var/lib/postgresql/data
+      - ./data/sql/:/docker-entrypoint-initdb.d/
+    command: -p 54302
+    networks:
+      - postgres
+
+volumes:
+  db-data:
+  logs:
+  public:
+
+networks:
+  postgres:
+    driver: bridge

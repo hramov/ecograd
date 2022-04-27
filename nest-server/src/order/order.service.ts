@@ -11,6 +11,7 @@ import { Order } from 'src/database/models/order/Order.model';
 import { Section } from 'src/database/models/order/Section.model';
 import { Client } from 'src/database/models/user/profiles/Client.model';
 import { Expert } from 'src/database/models/user/profiles/Expert.model';
+import { User } from 'src/database/models/user/User.model';
 import { CreateUserDto } from 'src/user/dto/create-user.dto';
 import { AttachDto } from './dto/attach.dto';
 import { ChangeOrderStatusDto } from './dto/change-order-status.dto';
@@ -51,19 +52,16 @@ export class OrderService {
 			if (size > 10_000_000_000) {
 				throw 'File size overflow';
 			}
-			const inquire = Inquire.create(
-				{
-					title: file.originalname,
-					path:
-						'public/orders/' +
-						order.id +
-						'/inquires/' +
-						file.filename,
-					order,
-					user,
-				}[0],
-			)[0];
 
+			const dto = {
+				title: file.originalname,
+				path:
+					'public/orders/' + order.id + '/inquires/' + file.filename,
+				order: order as Order,
+				user: user as User,
+			};
+
+			const inquire = Inquire.create({ ...dto });
 			await inquire.save();
 		} catch (_err) {
 			const err = _err as Error;
@@ -96,7 +94,9 @@ export class OrderService {
 	}
 
 	async addOrder(user_id: number, dto: CreateOrderDto) {
-		const client = await Client.findOne({ where: { id: user_id } });
+		const client = await Client.findOne({
+			where: { user: { id: user_id } },
+		});
 
 		if (!client) {
 			Logger.error(
@@ -106,18 +106,16 @@ export class OrderService {
 			throw new NotFoundException();
 		}
 
-		const order = Order.create(
-			{
-				title: dto.title,
-				exp_type: dto.exp_type,
-				object_type: dto.object_type,
-				docs_cipher: dto.docs_cipher,
-				rii_cipher: dto.rii_cipher,
-				status: 'new',
-				client: client,
-				expert: null,
-			}[0],
-		)[0];
+		const order = Order.create({
+			title: dto.title,
+			exp_type: dto.exp_type,
+			object_type: dto.object_type,
+			docs_cipher: dto.docs_cipher,
+			rii_cipher: dto.rii_cipher,
+			status: 'new',
+			client: client,
+			expert: null,
+		});
 
 		await order.save();
 		Logger.log(`Successfully added order with ID: ${order.id}`);
@@ -372,7 +370,13 @@ export class OrderService {
 	}
 
 	async getOrdersForClient(user_id: number) {
-		const orders = await Order.find({ where: { client: { id: user_id } } });
+		const orders = await Order.query(
+			`select o.* from business.order o
+			join auth.client c on o."clientId" = c.id
+			join auth.user u on c."userId" = u.id
+			where u.id = ${user_id}
+			`,
+		);
 
 		for (const order of orders) {
 			order.sections = await Section.find({
@@ -389,10 +393,17 @@ export class OrderService {
 				});
 			}
 		}
+		return orders;
 	}
 
 	async getOrdersForExpert(user_id: number) {
-		const orders = await Order.find({ where: { expert: { id: user_id } } });
+		const orders = await Order.query(
+			`select o.* from business.order o
+			join auth.expert e on o."expertId" = e.id
+			join auth.user u on e."userId" = u.id
+			where u.id = ${user_id}
+			`,
+		);
 
 		for (const order of orders) {
 			order.sections = await Section.find({
@@ -409,6 +420,7 @@ export class OrderService {
 				});
 			}
 		}
+		return orders;
 	}
 
 	async getExpertForOrder(order_id: number) {
@@ -627,7 +639,7 @@ export class OrderService {
 	}
 
 	async getSectionByID(section_id: number) {
-		await Section.findOne({
+		return await Section.findOne({
 			where: {
 				id: section_id,
 			},
@@ -663,24 +675,6 @@ export class OrderService {
 		return sections;
 	}
 
-	async getORderByID(order_id: number) {
-		const result = await Order.query(
-			`SELECT o.id, o.title, o.exp_type, o.object_type, o.status, o."createdAt",
-					c.phone as client_phone,
-					u.name as client_name, u.email as client_email,
-					array_to_string(array_agg(distinct(concat(s.arrange, ' ', s.title))), ';') as sections
-			FROM business.order o
-			JOIN auth.client c on o."clientId" = c.id
-			JOIN auth.user u on u.id = c."userId"
-			JOIN business.section s on s."orderId" = o.id
-			JOIN business.attach a on a."sectionId" = s.id
-			WHERE a.id > 0 AND o.id = ${order_id}
-			GROUP BY o.id, c.id, u.id
-			`,
-		);
-		return result[0];
-	}
-
 	async getOrders() {
 		return await Order.query(
 			`SELECT o.id, o.title, o.exp_type, o.object_type, o.status, o."createdAt",
@@ -697,5 +691,18 @@ export class OrderService {
 					ORDER BY o.id desc
 					`,
 		);
+	}
+
+	async appointmentExpert(order_id: number) {
+		const result = await Order.query(
+			`
+				SELECT e.id, u.name
+				FROM auth.expert e
+				JOIN auth.user u on e."userId" = u.id
+				JOIN business.order o on o."expertId" = e.id
+				WHERE o.id = ${order_id};
+				`,
+		);
+		return result[0];
 	}
 }

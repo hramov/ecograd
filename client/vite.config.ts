@@ -11,6 +11,6 @@ export default defineConfig({
 	},
 	base: '',
 	build: {
-		outDir: '../server/app',
+		outDir: '../nest-server/app',
 	},
 });

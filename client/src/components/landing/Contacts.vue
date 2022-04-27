@@ -92,7 +92,7 @@ const sendFeedback = async () => {
 		feedback.value,
 	);
 
-	if (result.data.id) {
+	if (result.id) {
 		alert('Ваше сообщение успешно отправлено');
 		feedback.value = {} as Feedback;
 	}

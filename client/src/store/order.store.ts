@@ -40,13 +40,13 @@ export const useOrderStore = defineStore('order', {
 	actions: {
 		async getOrders() {
 			const result = await ApiManager.get<Order[]>('/order');
-			this.orders = result.data;
+			this.orders = result;
 
 			for await (const order of this.orders) {
 				const result = await ApiManager.get<Expert>(
 					'/order/expert/' + order.id,
 				);
-				order.expert = result.data;
+				order.expert = result;
 			}
 		},
 	},

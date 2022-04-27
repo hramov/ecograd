@@ -279,14 +279,12 @@ const isShowSections = computed(() => {
 });
 
 const loadSections = async () => {
-	sections.value = (
-		await ApiManager.get<Section[]>(
-			'/order/sections-dict/' +
-				order.value.exp_type +
-				'/' +
-				order.value.object_type,
-		)
-	).data;
+	sections.value = await ApiManager.get<Section[]>(
+		'/order/sections-dict/' +
+			order.value.exp_type +
+			'/' +
+			order.value.object_type,
+	);
 };
 
 const createOrder = async () => {
@@ -322,12 +320,12 @@ const createOrder = async () => {
 		order.value,
 	);
 
-	if (!orderResult.data.id) {
+	if (!orderResult.id) {
 		return;
 	}
 
 	const result = await ApiManager.post<any, any>(
-		'/order/upload-file/' + orderResult.data.id,
+		'/order/upload-file/' + orderResult.id,
 		formData.value,
 	);
 	formData.value = new FormData();

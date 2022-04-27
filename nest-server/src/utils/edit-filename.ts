@@ -1,5 +1,4 @@
 import { path } from 'app-root-path';
-import { createHash } from 'crypto';
 import { Request } from 'express';
 import { existsSync, mkdirSync } from 'fs';
 import { extname, resolve } from 'path';
@@ -26,6 +25,23 @@ export const getFolderName = (
 ) => {
 	const order_id = req.params.order_id;
 	const dirPath = resolve(path, 'public/orders/', order_id, file.fieldname);
+	if (!existsSync(dirPath)) {
+		mkdirSync(dirPath, { recursive: true });
+	}
+	callback(null, dirPath);
+};
+
+export const getInquireFolderName = (
+	req: Express.Request,
+	file: Express.Multer.File,
+	callback: any,
+) => {
+	const dirPath = resolve(
+		path,
+		'public/orders/',
+		req.params.order_id,
+		'inquires',
+	);
 	if (!existsSync(dirPath)) {
 		mkdirSync(dirPath, { recursive: true });
 	}

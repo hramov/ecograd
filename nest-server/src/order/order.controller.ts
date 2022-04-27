@@ -5,6 +5,7 @@ import {
 	Param,
 	Patch,
 	Post,
+	Put,
 	Request,
 	UploadedFiles,
 	UseGuards,
@@ -16,7 +17,11 @@ import { AdminAuthGuard } from 'src/auth/guards/admin-auth.guard';
 import { ClientAuthGuard } from 'src/auth/guards/client-auth.guard';
 import { ExpertAuthGuard } from 'src/auth/guards/expert-auth.guard';
 import { JwtAuthGuard } from 'src/auth/guards/jwt-auth.guard';
-import { editFileName, getFolderName } from 'src/utils/edit-filename';
+import {
+	editFileName,
+	getFolderName,
+	getInquireFolderName,
+} from 'src/utils/edit-filename';
 import { AttachDto } from './dto/attach.dto';
 import { ChangeOrderStatusDto } from './dto/change-order-status.dto';
 import { CreateOrderDto } from './dto/create-order.dto';
@@ -58,7 +63,7 @@ export class OrderController {
 		);
 	}
 
-	@Post('/upload-file-for-section')
+	@Post('/upload-file-for-section/:order_id')
 	@UseGuards(JwtAuthGuard)
 	@UseInterceptors(
 		AnyFilesInterceptor({
@@ -82,7 +87,7 @@ export class OrderController {
 		);
 	}
 
-	@Patch('/appoint-expert/:order_id')
+	@Put('/appoint-expert/:order_id')
 	@UseGuards(AdminAuthGuard)
 	async appointExpert(
 		@Param('order_id') order_id: number,
@@ -91,19 +96,19 @@ export class OrderController {
 		return await this.orderService.appointExpert(order_id, expert_id);
 	}
 
-	@Patch('/change-order-status')
+	@Put('/change-order-status')
 	@UseGuards(ExpertAuthGuard)
 	async changeOrderStatus(@Body() dto: ChangeOrderStatusDto) {
 		return await this.orderService.changeOrderStatus(dto);
 	}
 
-	@Patch('/set-attach-opened/:attach_id')
+	@Put('/set-attach-opened/:attach_id')
 	@UseGuards(JwtAuthGuard)
 	async setAttachOpened(@Body() dto: AttachDto) {
 		return await this.orderService.setAttachOpened(dto);
 	}
 
-	@Patch('/change-section-status/:section_id')
+	@Put('/change-section-status/:section_id')
 	@UseGuards(JwtAuthGuard)
 	async changeSectionStatus(
 		@Param('section_id') section_id: number,
@@ -125,7 +130,7 @@ export class OrderController {
 	@UseGuards(JwtAuthGuard)
 	async getSections(
 		@Param('exp_type') exp_type: number,
-		@Param('object-type') object_type: number,
+		@Param('object_type') object_type: number,
 	) {
 		return await this.orderService.getSections(exp_type, object_type);
 	}
@@ -148,6 +153,12 @@ export class OrderController {
 		return await this.orderService.getOrdersForClient(req.user.id);
 	}
 
+	@Get('/expert/:order_id')
+	@UseGuards(AdminAuthGuard)
+	async getAppointmentExpert(@Param('order_id') order_id: number) {
+		return await this.orderService.appointmentExpert(order_id);
+	}
+
 	@Get('/expert')
 	@UseGuards(ExpertAuthGuard)
 	async getOrdersForExpert(@Request() req: Express.Request) {
@@ -162,16 +173,16 @@ export class OrderController {
 
 	@Get('/section/:section_id')
 	@UseGuards(JwtAuthGuard)
-	async getSection(@Param('order_id') order_id: number) {
-		return await this.orderService.getSectionByID(order_id);
+	async getSection(@Param('section_id') section_id: number) {
+		return await this.orderService.getSectionByID(section_id);
 	}
 
-	@Get('/upload-inquire')
+	@Post('/upload-inquire/:order_id')
 	@UseGuards(JwtAuthGuard)
 	@UseInterceptors(
 		AnyFilesInterceptor({
 			storage: diskStorage({
-				destination: getFolderName,
+				destination: getInquireFolderName,
 				filename: editFileName,
 			}),
 		}),
@@ -179,6 +190,7 @@ export class OrderController {
 	async uploadInquire(
 		@Request() req: Express.Request,
 		@Body() dto: UploadInquireDto,
+		@Param('order_id') order_id: number,
 		@UploadedFiles() files: Array<Express.Multer.File>,
 	) {
 		return await this.orderService.uploadInquire(req.user, dto, files);

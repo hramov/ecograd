@@ -112,7 +112,7 @@ const appointExpert = async (event: any, order_id: number) => {
 			'/order/appoint-expert/' + order_id,
 			{ expert_id },
 		);
-		if (result.status) {
+		if (result) {
 			await orderStore.getOrders();
 		}
 	}

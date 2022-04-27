@@ -7,5 +7,9 @@ declare global {
 			params: any;
 			body: any;
 		}
+
+		interface Response {
+			sendFile: Function;
+		}
 	}
 }

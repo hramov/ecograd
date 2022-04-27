@@ -1,7 +1,6 @@
-import { IsNotEmpty, IsNumber } from 'class-validator';
+import { IsNotEmpty } from 'class-validator';
 
 export class UploadInquireDto {
 	@IsNotEmpty()
-	@IsNumber()
-	order_id: number;
+	order_id: string;
 }

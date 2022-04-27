@@ -39,7 +39,7 @@ const instance = axios.create({
 });
 
 export const ApiManager = {
-	get: async <T>(url: string): Promise<APIReply<T>> =>
+	get: async <T>(url: string): Promise<T> =>
 		(
 			await instance.get(url, {
 				headers: {
@@ -49,7 +49,7 @@ export const ApiManager = {
 				},
 			})
 		).data,
-	post: async <T, U>(url: string, data: T): Promise<APIReply<U>> =>
+	post: async <T, U>(url: string, data: T): Promise<U> =>
 		(
 			await instance.post(url, data, {
 				headers: {
@@ -59,7 +59,7 @@ export const ApiManager = {
 				},
 			})
 		).data,
-	put: async <T, U>(url: string, data: T): Promise<APIReply<U>> =>
+	put: async <T, U>(url: string, data: T): Promise<U> =>
 		(
 			await instance.put(url, data, {
 				headers: {
@@ -69,7 +69,7 @@ export const ApiManager = {
 				},
 			})
 		).data,
-	delete: async <T>(url: string): Promise<APIReply<T>> =>
+	delete: async <T>(url: string): Promise<T> =>
 		(
 			await instance.delete(url, {
 				headers: {

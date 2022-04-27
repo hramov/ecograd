@@ -126,7 +126,7 @@
 						<ul class="list-group">
 							<h4>Загруженные разделы</h4>
 							<li
-								class="list-group-item list-group-item-action color-selection"
+								class="list-group-item list-group-item-action"
 								:class="{
 									green: section.status == 'done',
 									yellow: section.status == 'taken',
@@ -453,16 +453,12 @@ onMounted(async () => await getOrders());
 
 const getOrders = async () => {
 	if (userStore.isExpert) {
-		orders.value = (await ApiManager.get<Order[]>('/order/expert')).data;
-		changes.value = (
-			await ApiManager.get<any>('/order/check-changes')
-		).data;
+		orders.value = await ApiManager.get<Order[]>('/order/expert');
+		changes.value = await ApiManager.get<any>('/order/check-changes');
 	}
 	if (userStore.isClient) {
-		orders.value = (await ApiManager.get<Order[]>('/order/client')).data;
-		changes.value = (
-			await ApiManager.get<any>('/order/check-changes')
-		).data;
+		orders.value = await ApiManager.get<Order[]>('/order/client');
+		changes.value = await ApiManager.get<any>('/order/check-changes');
 	}
 };
 
@@ -527,9 +523,12 @@ const addInquireFile = (ev: Event, code: string) => {
 const addAttach = async () => {
 	formData.append('order_id', String(order.value.id));
 	formData.append('section_id', String(section.value.id));
-	await ApiManager.post<any, any>('/order/upload-file-for-section', formData);
+	await ApiManager.post<any, any>(
+		'/order/upload-file-for-section/' + order.value.id,
+		formData,
+	);
 	formData = new FormData();
-	changes.value = (await ApiManager.get<any>('/order/check-changes')).data;
+	changes.value = await ApiManager.get<any>('/order/check-changes');
 
 	alert('Документ успешно загружен');
 	await chooseSection(Number(section.value.id));
@@ -543,7 +542,10 @@ const addInquire = async () => {
 	}
 
 	inquiryForm.append('order_id', String(order.value.id));
-	await ApiManager.post<any, any>('/order/upload-inquire', inquiryForm);
+	await ApiManager.post<any, any>(
+		'/order/upload-inquire/' + order.value.id,
+		inquiryForm,
+	);
 	inquiryForm = new FormData();
 
 	alert('Справка успешно загружена');
@@ -555,33 +557,29 @@ const chooseOrder = async (id: number) => {
 	if (!id) return;
 
 	selectedId.value = id;
-	order.value = (await ApiManager.get<Order>('/order/' + id)).data;
+	order.value = await ApiManager.get<Order>('/order/' + id);
 
 	if (!order.value || !order.value.id) return;
-	order.value.expert = (
-		await ApiManager.get<Expert>(
-			'/order/expert-for-order/' + order.value.id,
-		)
-	).data;
+	order.value.expert = await ApiManager.get<Expert>(
+		'/order/expert-for-order/' + order.value.id,
+	);
 
-	inquires.value = (
-		await ApiManager.get<any>('/order/inquire/' + order.value.id)
-	).data;
+	inquires.value = await ApiManager.get<any>(
+		'/order/inquire/' + order.value.id,
+	);
 
 	sections.value = (
 		await ApiManager.get<Section[]>('/order/sections/' + order.value.id)
-	).data.sort((a: Section, b: Section) =>
+	).sort((a: Section, b: Section) =>
 		Number(a.arrange) - Number(b.arrange) > 0 ? 1 : -1,
 	);
 
-	const candidate: Section[] = (
-		await ApiManager.get<Section[]>(
-			'/order/sections-dict/' +
-				order.value.exp_type +
-				'/' +
-				order.value.object_type,
-		)
-	).data;
+	const candidate: Section[] = await ApiManager.get<Section[]>(
+		'/order/sections-dict/' +
+			order.value.exp_type +
+			'/' +
+			order.value.object_type,
+	);
 
 	const orderArrange = sections.value.map(
 		(section: Section) => section.arrange,
@@ -609,11 +607,11 @@ const chooseOrder = async (id: number) => {
 const chooseSection = async (id: number) => {
 	selectedSectionId.value = id;
 	showAddSection.value = false;
-	section.value = (await ApiManager.get<any>('/order/section/' + id)).data;
-	attaches.value = (
-		await ApiManager.get<any>('/order/attaches-for-section/' + id)
-	).data;
-	changes.value = (await ApiManager.get<any>('/order/check-changes')).data;
+	section.value = await ApiManager.get<any>('/order/section/' + id);
+	attaches.value = await ApiManager.get<any>(
+		'/order/attaches-for-section/' + id,
+	);
+	changes.value = await ApiManager.get<any>('/order/check-changes');
 };
 
 const isFormDataHasItems = (formData: FormData) => {

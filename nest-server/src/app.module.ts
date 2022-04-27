@@ -17,8 +17,13 @@ import { Inquire } from './database/models/order/Inquire.model';
 import { ConfigModule, ConfigService } from '@nestjs/config';
 import configuration from './config/index';
 import { MulterModule } from '@nestjs/platform-express';
+import { ServeStaticModule } from '@nestjs/serve-static';
+import { join } from 'path';
 @Module({
 	imports: [
+		ServeStaticModule.forRoot({
+			rootPath: join(__dirname, '..', 'app'),
+		}),
 		MulterModule.register({
 			dest: 'public',
 		}),

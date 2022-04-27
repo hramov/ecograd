@@ -79,16 +79,16 @@ export const useUserStore = defineStore('user', {
 	actions: {
 		async login(data: Login) {
 			const result = await ApiManager.post<Login, AccessToken>(
-				'user/login',
+				'auth/login',
 				data,
 			);
 
-			if (!result.data.access_token) {
+			if (!result.access_token) {
 				return false;
 			}
 			this.isLoggedIn = true;
-			this.jwt_token = result.data.access_token;
-			localStorage.setItem(LSPREFIX + 'token', result.data.access_token);
+			this.jwt_token = result.access_token;
+			localStorage.setItem(LSPREFIX + 'token', result.access_token);
 			return true;
 		},
 
@@ -113,17 +113,17 @@ export const useUserStore = defineStore('user', {
 
 		async getProfiles() {
 			const result = await ApiManager.get<Profile[]>(`user/profile`);
-			this.profiles = result.data;
+			this.profiles = result;
 		},
 
 		async getUsers() {
 			const result = await ApiManager.get<Users>('user');
-			this.users = result.data;
+			this.users = result;
 		},
 
 		async getUser() {
-			const result = await ApiManager.get<User>('user/info');
-			this.user = result.data;
+			const result = await ApiManager.get<User>('auth/info');
+			this.user = result;
 			if (this.user) {
 				localStorage.setItem(
 					LSPREFIX + 'user',
@@ -134,7 +134,7 @@ export const useUserStore = defineStore('user', {
 
 		async getExperts() {
 			const result = await ApiManager.get<Expert[]>('user/expert');
-			this.experts = result.data;
+			this.experts = result;
 		},
 	},
 
