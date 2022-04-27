@@ -1,7 +1,27 @@
-import { Controller, Get, Patch, Post, UseGuards } from '@nestjs/common';
+import {
+	Body,
+	Controller,
+	Get,
+	Param,
+	Patch,
+	Post,
+	Request,
+	UploadedFiles,
+	UseGuards,
+	UseInterceptors,
+} from '@nestjs/common';
+import { AnyFilesInterceptor } from '@nestjs/platform-express';
+import { diskStorage } from 'multer';
 import { AdminAuthGuard } from 'src/auth/guards/admin-auth.guard';
+import { ClientAuthGuard } from 'src/auth/guards/client-auth.guard';
 import { ExpertAuthGuard } from 'src/auth/guards/expert-auth.guard';
 import { JwtAuthGuard } from 'src/auth/guards/jwt-auth.guard';
+import { editFileName, getFolderName } from 'src/utils/edit-filename';
+import { AttachDto } from './dto/attach.dto';
+import { ChangeOrderStatusDto } from './dto/change-order-status.dto';
+import { CreateOrderDto } from './dto/create-order.dto';
+import { UploadFileDto, UploadFileForSectionDto } from './dto/upload-file.dto';
+import { UploadInquireDto } from './dto/upload-inquire.dto';
 import { OrderService } from './order.service';
 
 @Controller('order')
@@ -10,225 +30,190 @@ export class OrderController {
 
 	@Get('/check-changes')
 	@UseGuards(JwtAuthGuard)
-	async checkChanges() {
-		return await this.orderService.checkChanges();
+	async checkChanges(@Request() req: Express.Request) {
+		return await this.orderService.checkChanges(req.user.id);
 	}
 
 	@Post('/upload-file/:order_id')
 	@UseGuards(JwtAuthGuard)
-	async uploadFile() {
-		return await this.orderService.uploadFile();
+	@UseInterceptors(
+		AnyFilesInterceptor({
+			storage: diskStorage({
+				destination: getFolderName,
+				filename: editFileName,
+			}),
+		}),
+	)
+	async uploadFile(
+		@Request() req: Express.Request,
+		@Param('order_id') order_id: number,
+		@Body() uploadFileDto: UploadFileDto,
+		@UploadedFiles() files: Array<Express.Multer.File>,
+	) {
+		return await this.orderService.uploadFile(
+			uploadFileDto,
+			files,
+			order_id,
+			req.user,
+		);
 	}
 
 	@Post('/upload-file-for-section')
 	@UseGuards(JwtAuthGuard)
-	async uploadFileForSection() {
-		return await this.orderService.uploadFileForSection();
+	@UseInterceptors(
+		AnyFilesInterceptor({
+			storage: diskStorage({
+				destination: getFolderName,
+				filename: editFileName,
+			}),
+		}),
+	)
+	@UseGuards(JwtAuthGuard)
+	async uploadFileForSection(
+		@Request() req: Express.Request,
+		@Param('order_id') order_id: number,
+		@Body() uploadFileForSectionDto: UploadFileForSectionDto,
+		@UploadedFiles() files: Array<Express.Multer.File>,
+	) {
+		return await this.orderService.uploadFileForSection(
+			req.user,
+			files,
+			uploadFileForSectionDto,
+		);
 	}
 
 	@Patch('/appoint-expert/:order_id')
 	@UseGuards(AdminAuthGuard)
-	async appointExpert() {
-		return await this.orderService.appointExpert();
+	async appointExpert(
+		@Param('order_id') order_id: number,
+		@Body('expert_id') expert_id: number,
+	) {
+		return await this.orderService.appointExpert(order_id, expert_id);
 	}
 
 	@Patch('/change-order-status')
 	@UseGuards(ExpertAuthGuard)
-	async changeOrderStatus() {
-		return await this.orderService.changeOrderStatus();
+	async changeOrderStatus(@Body() dto: ChangeOrderStatusDto) {
+		return await this.orderService.changeOrderStatus(dto);
 	}
 
 	@Patch('/set-attach-opened/:attach_id')
 	@UseGuards(JwtAuthGuard)
-	async setAttachOpened() {
-		return await this.orderService.setAttachOpened();
+	async setAttachOpened(@Body() dto: AttachDto) {
+		return await this.orderService.setAttachOpened(dto);
 	}
 
 	@Patch('/change-section-status/:section_id')
 	@UseGuards(JwtAuthGuard)
-	async changeSectionStatus() {
-		return await this.orderService.changeSectionStatus();
+	async changeSectionStatus(
+		@Param('section_id') section_id: number,
+		@Body('new_status') new_status: string,
+	) {
+		return await this.orderService.changeSectionStatus(
+			section_id,
+			new_status,
+		);
 	}
 
-	// router.get(
-	// 	'/no-expert',
-	// 	passport.authenticate(new JWTStrategy(), { session: false }),
-	// 	getOrdersWithoutExpert,
-	// );
+	@Get('/no-expert')
+	@UseGuards(AdminAuthGuard)
+	async getOrdersWithoutExpert() {
+		return await this.orderService.getOrdersWithoutExpert();
+	}
 
-	// router.get(
-	// 	'/sections-dict/:exp_type/:object_type',
-	// 	passport.authenticate(new JWTStrategy(), { session: false }),
-	// 	getSections,
-	// );
+	@Get('/sections-dict/:exp_type/:object_type')
+	@UseGuards(JwtAuthGuard)
+	async getSections(
+		@Param('exp_type') exp_type: number,
+		@Param('object-type') object_type: number,
+	) {
+		return await this.orderService.getSections(exp_type, object_type);
+	}
 
-	// router.get(
-	// 	'/attaches-for-section/:section_id',
-	// 	passport.authenticate(new JWTStrategy(), { session: false }),
-	// 	getAttachesForSection,
-	// );
+	@Get('/attaches-for-section/:section_id')
+	@UseGuards(JwtAuthGuard)
+	async getAttachesForSection(
+		@Request() req: Express.Request,
+		@Param('section_id') section_id: number,
+	) {
+		return await this.orderService.getAttachesForSection(
+			req.user.id,
+			section_id,
+		);
+	}
 
-	// router.get(
-	// 	'/client',
-	// 	passport.authenticate(new ClientStrategy(), { session: false }),
-	// 	getOrdersForClient,
-	// );
+	@Get('/client')
+	@UseGuards(ClientAuthGuard)
+	async getOrdersForClient(@Request() req: Express.Request) {
+		return await this.orderService.getOrdersForClient(req.user.id);
+	}
 
-	// router.get(
-	// 	'/expert',
-	// 	passport.authenticate(new ExpertStrategy(), { session: false }),
-	// 	getOrdersForExpert,
-	// );
+	@Get('/expert')
+	@UseGuards(ExpertAuthGuard)
+	async getOrdersForExpert(@Request() req: Express.Request) {
+		return await this.orderService.getOrdersForExpert(req.user.id);
+	}
 
-	// router.get(
-	// 	'/expert-for-order/:order_id',
-	// 	passport.authenticate(new JWTStrategy(), { session: false }),
-	// 	getExpertForOrder,
-	// );
+	@Get('/expert-for-order/:order_id')
+	@UseGuards(JwtAuthGuard)
+	async getExpertForOrder(@Param('order_id') order_id: number) {
+		return await this.orderService.getExpertForOrder(order_id);
+	}
 
-	// router.get(
-	// 	'/expert/:order_id',
-	// 	passport.authenticate(new AdminStrategy(), { session: false }),
-	// 	async (req: Request, res: Response) => {
-	// 		if (!req.params.order_id) return BadRequestError(res);
-	// 		SendSuccessGetReply(
-	// 			res,
-	// 			(
-	// 				await Order.query(
-	// 					`
-	// 				SELECT e.id, u.name
-	// 				FROM auth.expert e
-	// 				JOIN auth.user u on e."userId" = u.id
-	// 				JOIN business.order o on o."expertId" = e.id
-	// 				WHERE o.id = ${req.params.order_id};
-	// 				`,
-	// 				)
-	// 			)[0],
-	// 		);
-	// 	},
-	// );
+	@Get('/section/:section_id')
+	@UseGuards(JwtAuthGuard)
+	async getSection(@Param('order_id') order_id: number) {
+		return await this.orderService.getSectionByID(order_id);
+	}
 
-	// router.get(
-	// 	'/section/:section_id',
-	// 	passport.authenticate(new JWTStrategy(), { session: false }),
-	// 	async (req: Request, res: Response) => {
-	// 		if (!req.params.section_id) {
-	// 			return BadRequestError(res);
-	// 		}
-	// 		SendSuccessGetReply(
-	// 			res,
-	// 			await Section.findOne({
-	// 				where: {
-	// 					id: parseInt(req.params.section_id),
-	// 				},
-	// 			}),
-	// 		);
-	// 	},
-	// );
+	@Get('/upload-inquire')
+	@UseGuards(JwtAuthGuard)
+	@UseInterceptors(
+		AnyFilesInterceptor({
+			storage: diskStorage({
+				destination: getFolderName,
+				filename: editFileName,
+			}),
+		}),
+	)
+	async uploadInquire(
+		@Request() req: Express.Request,
+		@Body() dto: UploadInquireDto,
+		@UploadedFiles() files: Array<Express.Multer.File>,
+	) {
+		return await this.orderService.uploadInquire(req.user, dto, files);
+	}
 
-	// router.post(
-	// 	'/upload-inquire',
-	// 	passport.authenticate(new JWTStrategy(), { session: false }),
-	// 	uploadInquire,
-	// );
+	@Get('/inquire/:order_id')
+	@UseGuards(JwtAuthGuard)
+	async getInquire(@Param('order_id') order_id: number) {
+		return await this.orderService.getInquire(order_id);
+	}
 
-	// router.get(
-	// 	'/inquire/:order_id',
-	// 	passport.authenticate(new JWTStrategy(), { session: false }),
-	// 	getInquire,
-	// );
+	@Get('/sections/:order_id')
+	@UseGuards(JwtAuthGuard)
+	async getSectionsForOrder(@Param('order_id') order_id: number) {
+		return await this.orderService.getSectionsForOrder(order_id);
+	}
 
-	// router.get(
-	// 	'/sections/:order_id',
-	// 	passport.authenticate(new JWTStrategy(), { session: false }),
-	// 	async (req: Request, res: Response) => {
-	// 		if (!req.params.order_id) {
-	// 			return BadRequestError(res);
-	// 		}
-	// 		const sections = await Section.find({
-	// 			where: {
-	// 				order: {
-	// 					id: parseInt(req.params.order_id),
-	// 				},
-	// 			},
-	// 			order: {
-	// 				arrange: 'ASC',
-	// 			},
-	// 		});
+	@Post('/')
+	@UseGuards(ClientAuthGuard)
+	async addOrder(
+		@Request() req: Express.Request,
+		@Body() dto: CreateOrderDto,
+	) {
+		return await this.orderService.addOrder(req.user.id, dto);
+	}
 
-	// 		for await (const section of sections) {
-	// 			section.attach = await Attach.findBy({
-	// 				section: { id: section.id },
-	// 			});
-	// 		}
+	@Get('/:order_id')
+	@UseGuards(JwtAuthGuard)
+	async getOrder(@Param('order_id') order_id: number) {
+		return await this.orderService.getOrderByID(order_id);
+	}
 
-	// 		SendSuccessGetReply(
-	// 			res,
-	// 			sections.filter((section: Section) => section.attach.length),
-	// 		);
-	// 	},
-	// );
-
-	// router.post(
-	// 	'/',
-	// 	passport.authenticate(new ClientStrategy(), { session: false }),
-	// 	addOrder,
-	// );
-
-	// router.get(
-	// 	'/:order_id',
-	// 	passport.authenticate(new JWTStrategy(), { session: false }),
-	// 	async (req: Request, res: Response) => {
-	// 		if (!req.params.order_id) return BadRequestError(res);
-	// 		try {
-	// 			SendSuccessGetReply(
-	// 				res,
-	// 				(
-	// 					await Order.query(
-	// 						`SELECT o.id, o.title, o.exp_type, o.object_type, o.status, o."createdAt",
-	// 						c.phone as client_phone,
-	// 						u.name as client_name, u.email as client_email,
-	// 						array_to_string(array_agg(distinct(concat(s.arrange, ' ', s.title))), ';') as sections
-	// 				FROM business.order o
-	// 				JOIN auth.client c on o."clientId" = c.id
-	// 				JOIN auth.user u on u.id = c."userId"
-	// 				JOIN business.section s on s."orderId" = o.id
-	// 				JOIN business.attach a on a."sectionId" = s.id
-	// 				WHERE a.id > 0 AND o.id = ${req.params.order_id}
-	// 				GROUP BY o.id, c.id, u.id
-	// 				`,
-	// 					)
-	// 				)[0],
-	// 			);
-	// 		} catch (_err) {
-	// 			const err = _err as Error;
-	// 			Logger.writeError('getOrder', err.message);
-	// 			NotFoundError(res, 'order', err.message);
-	// 		}
-	// 	},
-	// );
-
-	// router.get(
-	// 	'/',
-	// 	passport.authenticate(new AdminStrategy(), { session: false }),
-	// 	async (req: Request, res: Response) =>
-	// 		SendSuccessGetReply<Order[]>(
-	// 			res,
-	// 			await Order.query(
-	// 				`SELECT o.id, o.title, o.exp_type, o.object_type, o.status, o."createdAt",
-	// 						c.phone as client_phone,
-	// 						u.name, u.email as client_email,
-	// 						array_to_string(array_agg(distinct(concat(s.arrange, ' ', s.title))), ';') as sections
-	// 				FROM business.order o
-	// 				JOIN auth.client c on o."clientId" = c.id
-	// 				JOIN auth.user u on u.id = c."userId"
-	// 				JOIN business.section s on s."orderId" = o.id
-	// 				JOIN business.attach a on a."sectionId" = s.id
-	// 				WHERE a.id > 0
-	// 				GROUP BY o.id, c.id, u.id
-	// 				ORDER BY o.id desc
-	// 				`,
-	// 			),
-	// 		),
-	// );
+	@Get('/')
+	@UseGuards(JwtAuthGuard)
+	async getOrders() {
+		return await this.orderService.getOrders();
+	}
 }

@@ -5,7 +5,7 @@ import { User } from 'src/database/models/user/User.model';
 import { ROLES } from '../roles';
 
 @Injectable()
-export class ClientStrategy extends PassportStrategy(Strategy) {
+export class ClientStrategy extends PassportStrategy(Strategy, 'client') {
 	constructor() {
 		super({
 			jwtFromRequest: ExtractJwt.fromAuthHeaderAsBearerToken(),

@@ -16,9 +16,12 @@ import { Feedback } from './database/models/user/Feedback.model';
 import { Inquire } from './database/models/order/Inquire.model';
 import { ConfigModule, ConfigService } from '@nestjs/config';
 import configuration from './config/index';
-
+import { MulterModule } from '@nestjs/platform-express';
 @Module({
 	imports: [
+		MulterModule.register({
+			dest: 'public',
+		}),
 		ConfigModule.forRoot({
 			isGlobal: true,
 			load: [configuration],

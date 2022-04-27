@@ -14,8 +14,6 @@ export interface IUser {}
 
 @Injectable()
 export class UserService {
-	constructor() {}
-
 	async getUserByID(user_id: number) {
 		return await User.findOne(user_id);
 	}
