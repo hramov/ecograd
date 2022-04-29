@@ -4,8 +4,8 @@ declare global {
 	namespace Express {
 		interface Request {
 			user: CreateUserDto;
-			params: any;
-			body: any;
+			params: Express.Request.params;
+			body: Express.Request.body;
 		}
 
 		interface Response {

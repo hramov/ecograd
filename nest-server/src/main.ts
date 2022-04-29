@@ -1,9 +1,11 @@
 import { ValidationPipe } from '@nestjs/common';
-import { NestFactory } from '@nestjs/core';
+import { NestFactory, Reflector } from '@nestjs/core';
 import { NestExpressApplication } from '@nestjs/platform-express';
 import { readFileSync } from 'fs';
-import { resolve } from 'path';
 import { AppModule } from './app.module';
+import { JwtAuthGuard } from './auth/guards/jwt-auth.guard';
+import { RolesGuard } from './auth/guards/roles.guard';
+import { DatabaseIniter } from './database/init';
 import { Logger } from './logger';
 
 const httpsOptions = {
@@ -26,10 +28,17 @@ async function bootstrap() {
 	app.useGlobalPipes(new ValidationPipe());
 	app.setGlobalPrefix('api');
 	app.enableCors();
+	app.useGlobalGuards(
+		new JwtAuthGuard(new Reflector()),
+		new RolesGuard(new Reflector()),
+	);
+
+	await DatabaseIniter.initUser();
 
 	await app.listen(5005);
 	Logger.writeInfo(
 		`Server started in ${process.env.START_TYPE} mode at port 5005`,
 	);
 }
+
 bootstrap();

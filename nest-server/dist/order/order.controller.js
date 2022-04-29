@@ -16,10 +16,8 @@ exports.OrderController = void 0;
 const common_1 = require("@nestjs/common");
 const platform_express_1 = require("@nestjs/platform-express");
 const multer_1 = require("multer");
-const admin_auth_guard_1 = require("../auth/guards/admin-auth.guard");
-const client_auth_guard_1 = require("../auth/guards/client-auth.guard");
-const expert_auth_guard_1 = require("../auth/guards/expert-auth.guard");
-const jwt_auth_guard_1 = require("../auth/guards/jwt-auth.guard");
+const roles_1 = require("../auth/roles");
+const roles_decorator_1 = require("../auth/roles.decorator");
 const edit_filename_1 = require("../utils/edit-filename");
 const attach_dto_1 = require("./dto/attach.dto");
 const change_order_status_dto_1 = require("./dto/change-order-status.dto");
@@ -97,7 +95,6 @@ let OrderController = class OrderController {
 };
 __decorate([
     (0, common_1.Get)('/check-changes'),
-    (0, common_1.UseGuards)(jwt_auth_guard_1.JwtAuthGuard),
     __param(0, (0, common_1.Request)()),
     __metadata("design:type", Function),
     __metadata("design:paramtypes", [Object]),
@@ -105,7 +102,6 @@ __decorate([
 ], OrderController.prototype, "checkChanges", null);
 __decorate([
     (0, common_1.Post)('/upload-file/:order_id'),
-    (0, common_1.UseGuards)(jwt_auth_guard_1.JwtAuthGuard),
     (0, common_1.UseInterceptors)((0, platform_express_1.AnyFilesInterceptor)({
         storage: (0, multer_1.diskStorage)({
             destination: edit_filename_1.getFolderName,
@@ -123,14 +119,12 @@ __decorate([
 ], OrderController.prototype, "uploadFile", null);
 __decorate([
     (0, common_1.Post)('/upload-file-for-section/:order_id'),
-    (0, common_1.UseGuards)(jwt_auth_guard_1.JwtAuthGuard),
     (0, common_1.UseInterceptors)((0, platform_express_1.AnyFilesInterceptor)({
         storage: (0, multer_1.diskStorage)({
             destination: edit_filename_1.getFolderName,
             filename: edit_filename_1.editFileName,
         }),
     })),
-    (0, common_1.UseGuards)(jwt_auth_guard_1.JwtAuthGuard),
     __param(0, (0, common_1.Request)()),
     __param(1, (0, common_1.Param)('order_id')),
     __param(2, (0, common_1.Body)()),
@@ -142,7 +136,7 @@ __decorate([
 ], OrderController.prototype, "uploadFileForSection", null);
 __decorate([
     (0, common_1.Put)('/appoint-expert/:order_id'),
-    (0, common_1.UseGuards)(admin_auth_guard_1.AdminAuthGuard),
+    (0, roles_decorator_1.Roles)(roles_1.ROLES.Admin),
     __param(0, (0, common_1.Param)('order_id')),
     __param(1, (0, common_1.Body)('expert_id')),
     __metadata("design:type", Function),
@@ -151,7 +145,7 @@ __decorate([
 ], OrderController.prototype, "appointExpert", null);
 __decorate([
     (0, common_1.Put)('/change-order-status'),
-    (0, common_1.UseGuards)(expert_auth_guard_1.ExpertAuthGuard),
+    (0, roles_decorator_1.Roles)(roles_1.ROLES.Admin),
     __param(0, (0, common_1.Body)()),
     __metadata("design:type", Function),
     __metadata("design:paramtypes", [change_order_status_dto_1.ChangeOrderStatusDto]),
@@ -159,7 +153,6 @@ __decorate([
 ], OrderController.prototype, "changeOrderStatus", null);
 __decorate([
     (0, common_1.Put)('/set-attach-opened/:attach_id'),
-    (0, common_1.UseGuards)(jwt_auth_guard_1.JwtAuthGuard),
     __param(0, (0, common_1.Body)()),
     __metadata("design:type", Function),
     __metadata("design:paramtypes", [attach_dto_1.AttachDto]),
@@ -167,7 +160,6 @@ __decorate([
 ], OrderController.prototype, "setAttachOpened", null);
 __decorate([
     (0, common_1.Put)('/change-section-status/:section_id'),
-    (0, common_1.UseGuards)(jwt_auth_guard_1.JwtAuthGuard),
     __param(0, (0, common_1.Param)('section_id')),
     __param(1, (0, common_1.Body)('new_status')),
     __metadata("design:type", Function),
@@ -176,14 +168,13 @@ __decorate([
 ], OrderController.prototype, "changeSectionStatus", null);
 __decorate([
     (0, common_1.Get)('/no-expert'),
-    (0, common_1.UseGuards)(admin_auth_guard_1.AdminAuthGuard),
+    (0, roles_decorator_1.Roles)(roles_1.ROLES.Admin),
     __metadata("design:type", Function),
     __metadata("design:paramtypes", []),
     __metadata("design:returntype", Promise)
 ], OrderController.prototype, "getOrdersWithoutExpert", null);
 __decorate([
     (0, common_1.Get)('/sections-dict/:exp_type/:object_type'),
-    (0, common_1.UseGuards)(jwt_auth_guard_1.JwtAuthGuard),
     __param(0, (0, common_1.Param)('exp_type')),
     __param(1, (0, common_1.Param)('object_type')),
     __metadata("design:type", Function),
@@ -192,7 +183,6 @@ __decorate([
 ], OrderController.prototype, "getSections", null);
 __decorate([
     (0, common_1.Get)('/attaches-for-section/:section_id'),
-    (0, common_1.UseGuards)(jwt_auth_guard_1.JwtAuthGuard),
     __param(0, (0, common_1.Request)()),
     __param(1, (0, common_1.Param)('section_id')),
     __metadata("design:type", Function),
@@ -201,7 +191,7 @@ __decorate([
 ], OrderController.prototype, "getAttachesForSection", null);
 __decorate([
     (0, common_1.Get)('/client'),
-    (0, common_1.UseGuards)(client_auth_guard_1.ClientAuthGuard),
+    (0, roles_decorator_1.Roles)(roles_1.ROLES.Client),
     __param(0, (0, common_1.Request)()),
     __metadata("design:type", Function),
     __metadata("design:paramtypes", [Object]),
@@ -209,7 +199,7 @@ __decorate([
 ], OrderController.prototype, "getOrdersForClient", null);
 __decorate([
     (0, common_1.Get)('/expert/:order_id'),
-    (0, common_1.UseGuards)(admin_auth_guard_1.AdminAuthGuard),
+    (0, roles_decorator_1.Roles)(roles_1.ROLES.Admin),
     __param(0, (0, common_1.Param)('order_id')),
     __metadata("design:type", Function),
     __metadata("design:paramtypes", [Number]),
@@ -217,7 +207,7 @@ __decorate([
 ], OrderController.prototype, "getAppointmentExpert", null);
 __decorate([
     (0, common_1.Get)('/expert'),
-    (0, common_1.UseGuards)(expert_auth_guard_1.ExpertAuthGuard),
+    (0, roles_decorator_1.Roles)(roles_1.ROLES.Expert),
     __param(0, (0, common_1.Request)()),
     __metadata("design:type", Function),
     __metadata("design:paramtypes", [Object]),
@@ -225,7 +215,6 @@ __decorate([
 ], OrderController.prototype, "getOrdersForExpert", null);
 __decorate([
     (0, common_1.Get)('/expert-for-order/:order_id'),
-    (0, common_1.UseGuards)(jwt_auth_guard_1.JwtAuthGuard),
     __param(0, (0, common_1.Param)('order_id')),
     __metadata("design:type", Function),
     __metadata("design:paramtypes", [Number]),
@@ -233,7 +222,6 @@ __decorate([
 ], OrderController.prototype, "getExpertForOrder", null);
 __decorate([
     (0, common_1.Get)('/section/:section_id'),
-    (0, common_1.UseGuards)(jwt_auth_guard_1.JwtAuthGuard),
     __param(0, (0, common_1.Param)('section_id')),
     __metadata("design:type", Function),
     __metadata("design:paramtypes", [Number]),
@@ -241,7 +229,6 @@ __decorate([
 ], OrderController.prototype, "getSection", null);
 __decorate([
     (0, common_1.Post)('/upload-inquire/:order_id'),
-    (0, common_1.UseGuards)(jwt_auth_guard_1.JwtAuthGuard),
     (0, common_1.UseInterceptors)((0, platform_express_1.AnyFilesInterceptor)({
         storage: (0, multer_1.diskStorage)({
             destination: edit_filename_1.getInquireFolderName,
@@ -258,7 +245,6 @@ __decorate([
 ], OrderController.prototype, "uploadInquire", null);
 __decorate([
     (0, common_1.Get)('/inquire/:order_id'),
-    (0, common_1.UseGuards)(jwt_auth_guard_1.JwtAuthGuard),
     __param(0, (0, common_1.Param)('order_id')),
     __metadata("design:type", Function),
     __metadata("design:paramtypes", [Number]),
@@ -266,7 +252,6 @@ __decorate([
 ], OrderController.prototype, "getInquire", null);
 __decorate([
     (0, common_1.Get)('/sections/:order_id'),
-    (0, common_1.UseGuards)(jwt_auth_guard_1.JwtAuthGuard),
     __param(0, (0, common_1.Param)('order_id')),
     __metadata("design:type", Function),
     __metadata("design:paramtypes", [Number]),
@@ -274,7 +259,7 @@ __decorate([
 ], OrderController.prototype, "getSectionsForOrder", null);
 __decorate([
     (0, common_1.Post)('/'),
-    (0, common_1.UseGuards)(client_auth_guard_1.ClientAuthGuard),
+    (0, roles_decorator_1.Roles)(roles_1.ROLES.Client),
     __param(0, (0, common_1.Request)()),
     __param(1, (0, common_1.Body)()),
     __metadata("design:type", Function),
@@ -283,7 +268,6 @@ __decorate([
 ], OrderController.prototype, "addOrder", null);
 __decorate([
     (0, common_1.Get)('/:order_id'),
-    (0, common_1.UseGuards)(jwt_auth_guard_1.JwtAuthGuard),
     __param(0, (0, common_1.Param)('order_id')),
     __metadata("design:type", Function),
     __metadata("design:paramtypes", [Number]),
@@ -291,7 +275,7 @@ __decorate([
 ], OrderController.prototype, "getOrder", null);
 __decorate([
     (0, common_1.Get)('/'),
-    (0, common_1.UseGuards)(jwt_auth_guard_1.JwtAuthGuard),
+    (0, roles_decorator_1.Roles)(roles_1.ROLES.Admin),
     __metadata("design:type", Function),
     __metadata("design:paramtypes", []),
     __metadata("design:returntype", Promise)

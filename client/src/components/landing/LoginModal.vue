@@ -87,15 +87,19 @@ async function login() {
 
 	isTouched.value = true;
 
-	await store.getUser();
+	if (isLoggedIn.value) {
+		await store.getUser();
 
-	if (store.user && store.user.id) {
-		const closeBtn = document.getElementById('closeBtn') as HTMLElement;
-		closeBtn.click();
-		if (store.isAdmin) return router.push({ path: '/dashboard' });
-		if (store.isClient || store.isExpert)
-			return router.push({ path: '/orders' });
+		if (store.user && store.user.id) {
+			const closeBtn = document.getElementById('closeBtn') as HTMLElement;
+			closeBtn.click();
+			if (store.isAdmin) return router.push({ path: '/dashboard' });
+			if (store.isClient || store.isExpert)
+				return router.push({ path: '/orders' });
+		}
 	}
+
+	setTimeout(() => (isTouched.value = false), 2000);
 }
 </script>
 

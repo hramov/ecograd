@@ -14,8 +14,9 @@ var __param = (this && this.__param) || function (paramIndex, decorator) {
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.UserController = void 0;
 const common_1 = require("@nestjs/common");
-const admin_auth_guard_1 = require("../auth/guards/admin-auth.guard");
-const jwt_auth_guard_1 = require("../auth/guards/jwt-auth.guard");
+const override_strategy_decorator_1 = require("../auth/override-strategy.decorator");
+const roles_1 = require("../auth/roles");
+const roles_decorator_1 = require("../auth/roles.decorator");
 const create_feedback_dto_1 = require("./dto/create-feedback.dto");
 const create_user_dto_1 = require("./dto/create-user.dto");
 const user_service_1 = require("./user.service");
@@ -44,20 +45,21 @@ let UserController = class UserController {
 };
 __decorate([
     (0, common_1.Get)('profile'),
-    (0, common_1.UseGuards)(admin_auth_guard_1.AdminAuthGuard),
+    (0, roles_decorator_1.Roles)(roles_1.ROLES.Admin),
     __metadata("design:type", Function),
     __metadata("design:paramtypes", []),
     __metadata("design:returntype", Promise)
 ], UserController.prototype, "getProfiles", null);
 __decorate([
     (0, common_1.Get)('expert'),
+    (0, override_strategy_decorator_1.OverrideGlobalStrategy)(),
     __metadata("design:type", Function),
     __metadata("design:paramtypes", []),
     __metadata("design:returntype", Promise)
 ], UserController.prototype, "getExperts", null);
 __decorate([
     (0, common_1.Post)('feedback'),
-    (0, common_1.UseGuards)(jwt_auth_guard_1.JwtAuthGuard),
+    (0, override_strategy_decorator_1.OverrideGlobalStrategy)(),
     __param(0, (0, common_1.Body)()),
     __metadata("design:type", Function),
     __metadata("design:paramtypes", [create_feedback_dto_1.CreateFeedbackDto]),
@@ -65,7 +67,7 @@ __decorate([
 ], UserController.prototype, "createFeedback", null);
 __decorate([
     (0, common_1.Delete)('/:id'),
-    (0, common_1.UseGuards)(admin_auth_guard_1.AdminAuthGuard),
+    (0, roles_decorator_1.Roles)(roles_1.ROLES.Admin),
     __param(0, (0, common_1.Param)()),
     __metadata("design:type", Function),
     __metadata("design:paramtypes", [Number]),
@@ -73,7 +75,7 @@ __decorate([
 ], UserController.prototype, "deleteUser", null);
 __decorate([
     (0, common_1.Post)('/'),
-    (0, common_1.UseGuards)(admin_auth_guard_1.AdminAuthGuard),
+    (0, roles_decorator_1.Roles)(roles_1.ROLES.Admin),
     __param(0, (0, common_1.Body)('user')),
     __param(1, (0, common_1.Body)('profile')),
     __metadata("design:type", Function),
@@ -82,7 +84,7 @@ __decorate([
 ], UserController.prototype, "createUser", null);
 __decorate([
     (0, common_1.Get)('/'),
-    (0, common_1.UseGuards)(admin_auth_guard_1.AdminAuthGuard),
+    (0, roles_decorator_1.Roles)(roles_1.ROLES.Admin),
     __metadata("design:type", Function),
     __metadata("design:paramtypes", []),
     __metadata("design:returntype", Promise)

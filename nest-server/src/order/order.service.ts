@@ -2,7 +2,6 @@ import {
 	BadRequestException,
 	Injectable,
 	InternalServerErrorException,
-	Logger,
 	NotFoundException,
 } from '@nestjs/common';
 import { Attach } from 'src/database/models/order/Attach.model';
@@ -12,6 +11,7 @@ import { Section } from 'src/database/models/order/Section.model';
 import { Client } from 'src/database/models/user/profiles/Client.model';
 import { Expert } from 'src/database/models/user/profiles/Expert.model';
 import { User } from 'src/database/models/user/User.model';
+import { Logger } from 'src/logger';
 import { CreateUserDto } from 'src/user/dto/create-user.dto';
 import { AttachDto } from './dto/attach.dto';
 import { ChangeOrderStatusDto } from './dto/change-order-status.dto';
@@ -65,7 +65,7 @@ export class OrderService {
 			await inquire.save();
 		} catch (_err) {
 			const err = _err as Error;
-			Logger.error(err.message);
+			Logger.writeError('uploadInquire', err.message);
 			throw new InternalServerErrorException();
 		}
 
@@ -99,7 +99,7 @@ export class OrderService {
 		});
 
 		if (!client) {
-			Logger.error(
+			Logger.writeError(
 				'addOrder',
 				`Cannot find client associated with user ID: ${user_id}`,
 			);
@@ -118,7 +118,7 @@ export class OrderService {
 		});
 
 		await order.save();
-		Logger.log(`Successfully added order with ID: ${order.id}`);
+		Logger.writeInfo(`Successfully added order with ID: ${order.id}`);
 		return order;
 	}
 
@@ -495,7 +495,7 @@ export class OrderService {
 				await attach.save();
 			} catch (_err) {
 				const err = _err as Error;
-				Logger.error(err.message);
+				Logger.writeError('uploadFile', err.message);
 				throw new InternalServerErrorException();
 			}
 		}
@@ -553,7 +553,7 @@ export class OrderService {
 			};
 		} catch (_err) {
 			const err = _err as Error;
-			Logger.error(err.message);
+			Logger.writeError('uploadFileForSection', err.message);
 			throw new InternalServerErrorException(err);
 		}
 	}

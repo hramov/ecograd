@@ -21,6 +21,7 @@ const Order_model_1 = require("../database/models/order/Order.model");
 const Section_model_1 = require("../database/models/order/Section.model");
 const Client_model_1 = require("../database/models/user/profiles/Client.model");
 const Expert_model_1 = require("../database/models/user/profiles/Expert.model");
+const logger_1 = require("../logger");
 var OrderTypes;
 (function (OrderTypes) {
     OrderTypes[OrderTypes["\u041E\u0431\u044A\u0435\u043A\u0442 \u043A\u0430\u043F\u0438\u0442\u0430\u043B\u044C\u043D\u043E\u0433\u043E \u0441\u0442\u0440\u043E\u0438\u0442\u0435\u043B\u044C\u0441\u0442\u0432\u0430"] = 1] = "\u041E\u0431\u044A\u0435\u043A\u0442 \u043A\u0430\u043F\u0438\u0442\u0430\u043B\u044C\u043D\u043E\u0433\u043E \u0441\u0442\u0440\u043E\u0438\u0442\u0435\u043B\u044C\u0441\u0442\u0432\u0430";
@@ -57,7 +58,7 @@ let OrderService = class OrderService {
         }
         catch (_err) {
             const err = _err;
-            common_1.Logger.error(err.message);
+            logger_1.Logger.writeError('uploadInquire', err.message);
             throw new common_1.InternalServerErrorException();
         }
         return {
@@ -84,7 +85,7 @@ let OrderService = class OrderService {
             where: { user: { id: user_id } },
         });
         if (!client) {
-            common_1.Logger.error('addOrder', `Cannot find client associated with user ID: ${user_id}`);
+            logger_1.Logger.writeError('addOrder', `Cannot find client associated with user ID: ${user_id}`);
             throw new common_1.NotFoundException();
         }
         const order = Order_model_1.Order.create({
@@ -98,7 +99,7 @@ let OrderService = class OrderService {
             expert: null,
         });
         await order.save();
-        common_1.Logger.log(`Successfully added order with ID: ${order.id}`);
+        logger_1.Logger.writeInfo(`Successfully added order with ID: ${order.id}`);
         return order;
     }
     async getOrderByID(order_id) {
@@ -457,7 +458,7 @@ let OrderService = class OrderService {
             }
             catch (_err) {
                 const err = _err;
-                common_1.Logger.error(err.message);
+                logger_1.Logger.writeError('uploadFile', err.message);
                 throw new common_1.InternalServerErrorException();
             }
         }
@@ -509,7 +510,7 @@ let OrderService = class OrderService {
         }
         catch (_err) {
             const err = _err;
-            common_1.Logger.error(err.message);
+            logger_1.Logger.writeError('uploadFileForSection', err.message);
             throw new common_1.InternalServerErrorException(err);
         }
     }

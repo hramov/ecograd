@@ -76,6 +76,7 @@ AppModule = __decorate([
             }),
         ],
         controllers: [app_controller_1.AppController],
+        providers: [],
     }),
     __metadata("design:paramtypes", [config_1.ConfigService])
 ], AppModule);

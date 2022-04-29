@@ -1,5 +1,5 @@
 import { defineStore } from 'pinia';
-import { ApiManager } from '../api/manager';
+import { ApiManager, HttpError } from '../api/manager';
 import { LSPREFIX } from '../config/constant';
 
 export interface Expert {
@@ -78,12 +78,12 @@ export const useUserStore = defineStore('user', {
 
 	actions: {
 		async login(data: Login) {
-			const result = await ApiManager.post<Login, AccessToken>(
-				'auth/login',
-				data,
-			);
+			const result = await ApiManager.post<
+				Login,
+				AccessToken | HttpError
+			>('auth/login', data);
 
-			if (!result.access_token) {
+			if (result instanceof HttpError) {
 				return false;
 			}
 			this.isLoggedIn = true;

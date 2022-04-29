@@ -7,36 +7,35 @@ export interface APIReply<T> {
 	error: Error | null;
 }
 
-axios.interceptors.request.use(
-	function (config) {
-		return config;
-	},
-	function (error) {
-		return Promise.reject(error);
-	},
-);
-
-axios.interceptors.response.use(
-	function (response) {
-		return response;
-	},
-	function (error) {
-		// if (error.data) {
-		// 	store.commit('addMessages', error.data.messages);
-		// } else {
-		// 	store.commit(
-		// 		'addMessageError',
-		// 		'Ошибка при получении данных с сервера',
-		// 	);
-		// }
-		return Promise.reject(error);
-	},
-);
+export class HttpError {
+	constructor(
+		private readonly statusCode: number,
+		private readonly message: string,
+	) {}
+}
 
 const instance = axios.create({
 	baseURL: import.meta.env.VITE_API_URL,
 	timeout: 5000,
 });
+
+instance.interceptors.response.use(
+	function (response) {
+		// Any status code that lie within the range of 2xx cause this function to trigger
+		// Do something with response data
+		return response;
+	},
+	function (error) {
+		// Any status codes that falls outside the range of 2xx cause this function to trigger
+		// Do something with response error
+		return {
+			data: new HttpError(
+				error.response.data.statusCode,
+				error.response.data.message,
+			),
+		};
+	},
+);
 
 export const ApiManager = {
 	get: async <T>(url: string): Promise<T> =>

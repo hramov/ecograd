@@ -58,6 +58,7 @@ import { join } from 'path';
 		}),
 	],
 	controllers: [AppController],
+	providers: [],
 })
 export class AppModule {
 	constructor(private readonly configService: ConfigService) {}

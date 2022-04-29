@@ -7,8 +7,9 @@ import {
 	Post,
 	UseGuards,
 } from '@nestjs/common';
-import { AdminAuthGuard } from 'src/auth/guards/admin-auth.guard';
-import { JwtAuthGuard } from 'src/auth/guards/jwt-auth.guard';
+import { OverrideGlobalStrategy } from 'src/auth/override-strategy.decorator';
+import { ROLES } from 'src/auth/roles';
+import { Roles } from 'src/auth/roles.decorator';
 import { CreateFeedbackDto } from './dto/create-feedback.dto';
 import { CreateUserDto } from './dto/create-user.dto';
 import { AdminDto, ClientDto, ExpertDto } from './dto/profiles.dto';
@@ -19,30 +20,31 @@ export class UserController {
 	constructor(private readonly userService: UserService) {}
 
 	@Get('profile')
-	@UseGuards(AdminAuthGuard)
+	@Roles(ROLES.Admin)
 	async getProfiles() {
 		return this.userService.getProfiles();
 	}
 
 	@Get('expert')
+	@OverrideGlobalStrategy()
 	async getExperts() {
 		return await this.userService.getExperts();
 	}
 
 	@Post('feedback')
-	@UseGuards(JwtAuthGuard)
+	@OverrideGlobalStrategy()
 	async createFeedback(@Body() createFeedbackDto: CreateFeedbackDto) {
 		return await this.userService.createFeedback(createFeedbackDto);
 	}
 
 	@Delete('/:id')
-	@UseGuards(AdminAuthGuard)
+	@Roles(ROLES.Admin)
 	async deleteUser(@Param() id: number) {
 		return await this.userService.deleteUser(id);
 	}
 
 	@Post('/')
-	@UseGuards(AdminAuthGuard)
+	@Roles(ROLES.Admin)
 	async createUser(
 		@Body('user') createUserDto: CreateUserDto,
 		@Body('profile') profileDto: AdminDto | ClientDto | ExpertDto,
@@ -51,7 +53,7 @@ export class UserController {
 	}
 
 	@Get('/')
-	@UseGuards(AdminAuthGuard)
+	@Roles(ROLES.Admin)
 	async getUsers() {
 		return await this.userService.getUsers();
 	}

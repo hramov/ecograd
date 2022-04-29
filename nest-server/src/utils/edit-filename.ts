@@ -6,7 +6,7 @@ import { extname, resolve } from 'path';
 export const editFileName = (
 	req: Express.Request,
 	file: Express.Multer.File,
-	callback: any,
+	callback: Function,
 ) => {
 	const name = file.originalname.split('.')[0];
 	const fileExtName = extname(file.originalname);
@@ -21,7 +21,7 @@ export const editFileName = (
 export const getFolderName = (
 	req: Express.Request,
 	file: Express.Multer.File,
-	callback: any,
+	callback: Function,
 ) => {
 	const order_id = req.params.order_id;
 	const dirPath = resolve(path, 'public/orders/', order_id, file.fieldname);
@@ -34,7 +34,7 @@ export const getFolderName = (
 export const getInquireFolderName = (
 	req: Express.Request,
 	file: Express.Multer.File,
-	callback: any,
+	callback: Function,
 ) => {
 	const dirPath = resolve(
 		path,
