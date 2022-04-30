@@ -1,4 +1,5 @@
 /// <reference types="multer" />
+import { CreateUserDto } from 'src/user/dto/create-user.dto';
 import { AttachDto } from './dto/attach.dto';
 import { ChangeOrderStatusDto } from './dto/change-order-status.dto';
 import { CreateOrderDto } from './dto/create-order.dto';
@@ -8,9 +9,9 @@ import { OrderService } from './order.service';
 export declare class OrderController {
     private readonly orderService;
     constructor(orderService: OrderService);
-    checkChanges(req: Express.Request): Promise<any>;
-    uploadFile(req: Express.Request, order_id: number, uploadFileDto: UploadFileDto, files: Array<Express.Multer.File>): Promise<void>;
-    uploadFileForSection(req: Express.Request, order_id: number, uploadFileForSectionDto: UploadFileForSectionDto, files: Array<Express.Multer.File>): Promise<{
+    checkChanges(user: CreateUserDto): Promise<any>;
+    uploadFile(user: CreateUserDto, order_id: number, uploadFileDto: UploadFileDto, files: Array<Express.Multer.File>): Promise<void>;
+    uploadFileForSection(user: CreateUserDto, order_id: number, uploadFileForSectionDto: UploadFileForSectionDto, files: Array<Express.Multer.File>): Promise<{
         message: string;
     }>;
     appointExpert(order_id: number, expert_id: number): Promise<import("../database/models/order/Order.model").Order>;
@@ -26,18 +27,18 @@ export declare class OrderController {
         code: string | number;
         title: string;
     }[]>;
-    getAttachesForSection(req: Express.Request, section_id: number): Promise<import("../database/models/order/Attach.model").Attach[]>;
-    getOrdersForClient(req: Express.Request): Promise<any>;
+    getAttachesForSection(user: CreateUserDto, section_id: number): Promise<import("../database/models/order/Attach.model").Attach[]>;
+    getOrdersForClient(user: CreateUserDto): Promise<any>;
     getAppointmentExpert(order_id: number): Promise<any>;
-    getOrdersForExpert(req: Express.Request): Promise<any>;
+    getOrdersForExpert(user: CreateUserDto): Promise<any>;
     getExpertForOrder(order_id: number): Promise<any>;
     getSection(section_id: number): Promise<import("../database/models/order/Section.model").Section>;
-    uploadInquire(req: Express.Request, dto: UploadInquireDto, order_id: number, files: Array<Express.Multer.File>): Promise<{
+    uploadInquire(user: CreateUserDto, dto: UploadInquireDto, order_id: number, files: Array<Express.Multer.File>): Promise<{
         message: string;
     }>;
     getInquire(order_id: number): Promise<import("../database/models/order/Inquire.model").Inquire[]>;
     getSectionsForOrder(order_id: number): Promise<import("../database/models/order/Section.model").Section[]>;
-    addOrder(req: Express.Request, dto: CreateOrderDto): Promise<import("../database/models/order/Order.model").Order>;
+    addOrder(user: CreateUserDto, dto: CreateOrderDto): Promise<import("../database/models/order/Order.model").Order>;
     getOrder(order_id: number): Promise<any>;
     getOrders(): Promise<any>;
 }

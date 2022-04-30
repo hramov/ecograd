@@ -1,5 +1,7 @@
-import { Controller, Get, Post, Request, UseGuards } from '@nestjs/common';
+import { Controller, Get, Post, UseGuards } from '@nestjs/common';
+import { CreateUserDto } from 'src/user/dto/create-user.dto';
 import { AuthService } from './auth.service';
+import { GetUser } from './decorator/user.decorator';
 import { JwtAuthGuard } from './guards/jwt-auth.guard';
 import { LocalAuthGuard } from './guards/local-auth.guard';
 import { OverrideGlobalStrategy } from './override-strategy.decorator';
@@ -11,13 +13,13 @@ export class AuthController {
 	@OverrideGlobalStrategy()
 	@UseGuards(LocalAuthGuard)
 	@Post('login')
-	async login(@Request() req: Express.Request) {
-		return this.authService.login(req.user);
+	async login(@GetUser() user: CreateUserDto) {
+		return this.authService.login(user);
 	}
 
 	@UseGuards(JwtAuthGuard)
 	@Get('info')
-	async info(@Request() req: Express.Request) {
-		return req.user;
+	async info(@GetUser() user: CreateUserDto) {
+		return user;
 	}
 }

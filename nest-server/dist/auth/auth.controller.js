@@ -14,7 +14,9 @@ var __param = (this && this.__param) || function (paramIndex, decorator) {
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.AuthController = void 0;
 const common_1 = require("@nestjs/common");
+const create_user_dto_1 = require("../user/dto/create-user.dto");
 const auth_service_1 = require("./auth.service");
+const user_decorator_1 = require("./decorator/user.decorator");
 const jwt_auth_guard_1 = require("./guards/jwt-auth.guard");
 const local_auth_guard_1 = require("./guards/local-auth.guard");
 const override_strategy_decorator_1 = require("./override-strategy.decorator");
@@ -22,28 +24,28 @@ let AuthController = class AuthController {
     constructor(authService) {
         this.authService = authService;
     }
-    async login(req) {
-        return this.authService.login(req.user);
+    async login(user) {
+        return this.authService.login(user);
     }
-    async info(req) {
-        return req.user;
+    async info(user) {
+        return user;
     }
 };
 __decorate([
     (0, override_strategy_decorator_1.OverrideGlobalStrategy)(),
     (0, common_1.UseGuards)(local_auth_guard_1.LocalAuthGuard),
     (0, common_1.Post)('login'),
-    __param(0, (0, common_1.Request)()),
+    __param(0, (0, user_decorator_1.GetUser)()),
     __metadata("design:type", Function),
-    __metadata("design:paramtypes", [Object]),
+    __metadata("design:paramtypes", [create_user_dto_1.CreateUserDto]),
     __metadata("design:returntype", Promise)
 ], AuthController.prototype, "login", null);
 __decorate([
     (0, common_1.UseGuards)(jwt_auth_guard_1.JwtAuthGuard),
     (0, common_1.Get)('info'),
-    __param(0, (0, common_1.Request)()),
+    __param(0, (0, user_decorator_1.GetUser)()),
     __metadata("design:type", Function),
-    __metadata("design:paramtypes", [Object]),
+    __metadata("design:paramtypes", [create_user_dto_1.CreateUserDto]),
     __metadata("design:returntype", Promise)
 ], AuthController.prototype, "info", null);
 AuthController = __decorate([

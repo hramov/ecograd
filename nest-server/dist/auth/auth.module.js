@@ -5,6 +5,7 @@ var __decorate = (this && this.__decorate) || function (decorators, target, key,
     else for (var i = decorators.length - 1; i >= 0; i--) if (d = decorators[i]) r = (c < 3 ? d(r) : c > 3 ? d(target, key, r) : d(target, key)) || r;
     return c > 3 && r && Object.defineProperty(target, key, r), r;
 };
+var AuthModule_1;
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.AuthModule = void 0;
 const common_1 = require("@nestjs/common");
@@ -15,21 +16,25 @@ const auth_controller_1 = require("./auth.controller");
 const auth_service_1 = require("./auth.service");
 const jwt_strategy_1 = require("./strategy/jwt.strategy");
 const local_strategy_1 = require("./strategy/local.strategy");
-let AuthModule = class AuthModule {
+let AuthModule = AuthModule_1 = class AuthModule {
+    static forRoot(secret, expiresIn) {
+        return {
+            module: AuthModule_1,
+            imports: [
+                user_module_1.UserModule,
+                passport_1.PassportModule,
+                jwt_1.JwtModule.register({
+                    secret,
+                    signOptions: { expiresIn },
+                }),
+            ],
+            controllers: [auth_controller_1.AuthController],
+            providers: [auth_service_1.AuthService, local_strategy_1.LocalStrategy, jwt_strategy_1.JwtStrategy],
+        };
+    }
 };
-AuthModule = __decorate([
-    (0, common_1.Module)({
-        imports: [
-            user_module_1.UserModule,
-            passport_1.PassportModule,
-            jwt_1.JwtModule.register({
-                secret: 'secret',
-                signOptions: { expiresIn: '60s' },
-            }),
-        ],
-        controllers: [auth_controller_1.AuthController],
-        providers: [auth_service_1.AuthService, local_strategy_1.LocalStrategy, jwt_strategy_1.JwtStrategy],
-    })
+AuthModule = AuthModule_1 = __decorate([
+    (0, common_1.Module)({})
 ], AuthModule);
 exports.AuthModule = AuthModule;
 //# sourceMappingURL=auth.module.js.map

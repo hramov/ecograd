@@ -30,7 +30,7 @@ import { join } from 'path';
 			isGlobal: true,
 			load: [configuration],
 		}),
-		AuthModule,
+		AuthModule.forRoot('secret', '60s'),
 		UserModule,
 		OrderModule,
 		TypeOrmModule.forRoot({

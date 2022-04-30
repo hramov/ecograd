@@ -48,7 +48,7 @@ AppModule = __decorate([
                 isGlobal: true,
                 load: [index_1.default],
             }),
-            auth_module_1.AuthModule,
+            auth_module_1.AuthModule.forRoot('secret', '60s'),
             user_module_1.UserModule,
             order_module_1.OrderModule,
             typeorm_1.TypeOrmModule.forRoot({

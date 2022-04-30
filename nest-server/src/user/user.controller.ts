@@ -1,12 +1,4 @@
-import {
-	Body,
-	Controller,
-	Delete,
-	Get,
-	Param,
-	Post,
-	UseGuards,
-} from '@nestjs/common';
+import { Body, Controller, Delete, Get, Param, Post } from '@nestjs/common';
 import { OverrideGlobalStrategy } from 'src/auth/override-strategy.decorator';
 import { ROLES } from 'src/auth/roles';
 import { Roles } from 'src/auth/roles.decorator';

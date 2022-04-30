@@ -5,14 +5,15 @@ import {
 	Param,
 	Post,
 	Put,
-	Request,
 	UploadedFiles,
 	UseInterceptors,
 } from '@nestjs/common';
 import { AnyFilesInterceptor } from '@nestjs/platform-express';
 import { diskStorage } from 'multer';
+import { GetUser } from 'src/auth/decorator/user.decorator';
 import { ROLES } from 'src/auth/roles';
 import { Roles } from 'src/auth/roles.decorator';
+import { CreateUserDto } from 'src/user/dto/create-user.dto';
 import {
 	editFileName,
 	getFolderName,
@@ -30,8 +31,8 @@ export class OrderController {
 	constructor(private readonly orderService: OrderService) {}
 
 	@Get('/check-changes')
-	async checkChanges(@Request() req: Express.Request) {
-		return await this.orderService.checkChanges(req.user.id);
+	async checkChanges(@GetUser() user: CreateUserDto) {
+		return await this.orderService.checkChanges(user.id);
 	}
 
 	@Post('/upload-file/:order_id')
@@ -44,7 +45,7 @@ export class OrderController {
 		}),
 	)
 	async uploadFile(
-		@Request() req: Express.Request,
+		@GetUser() user: CreateUserDto,
 		@Param('order_id') order_id: number,
 		@Body() uploadFileDto: UploadFileDto,
 		@UploadedFiles() files: Array<Express.Multer.File>,
@@ -53,7 +54,7 @@ export class OrderController {
 			uploadFileDto,
 			files,
 			order_id,
-			req.user,
+			user,
 		);
 	}
 
@@ -67,13 +68,13 @@ export class OrderController {
 		}),
 	)
 	async uploadFileForSection(
-		@Request() req: Express.Request,
+		@GetUser() user: CreateUserDto,
 		@Param('order_id') order_id: number,
 		@Body() uploadFileForSectionDto: UploadFileForSectionDto,
 		@UploadedFiles() files: Array<Express.Multer.File>,
 	) {
 		return await this.orderService.uploadFileForSection(
-			req.user,
+			user,
 			files,
 			uploadFileForSectionDto,
 		);
@@ -126,19 +127,19 @@ export class OrderController {
 
 	@Get('/attaches-for-section/:section_id')
 	async getAttachesForSection(
-		@Request() req: Express.Request,
+		@GetUser() user: CreateUserDto,
 		@Param('section_id') section_id: number,
 	) {
 		return await this.orderService.getAttachesForSection(
-			req.user.id,
+			user.id,
 			section_id,
 		);
 	}
 
 	@Get('/client')
 	@Roles(ROLES.Client)
-	async getOrdersForClient(@Request() req: Express.Request) {
-		return await this.orderService.getOrdersForClient(req.user.id);
+	async getOrdersForClient(@GetUser() user: CreateUserDto) {
+		return await this.orderService.getOrdersForClient(user.id);
 	}
 
 	@Get('/expert/:order_id')
@@ -149,8 +150,8 @@ export class OrderController {
 
 	@Get('/expert')
 	@Roles(ROLES.Expert)
-	async getOrdersForExpert(@Request() req: Express.Request) {
-		return await this.orderService.getOrdersForExpert(req.user.id);
+	async getOrdersForExpert(@GetUser() user: CreateUserDto) {
+		return await this.orderService.getOrdersForExpert(user.id);
 	}
 
 	@Get('/expert-for-order/:order_id')
@@ -173,12 +174,12 @@ export class OrderController {
 		}),
 	)
 	async uploadInquire(
-		@Request() req: Express.Request,
+		@GetUser() user: CreateUserDto,
 		@Body() dto: UploadInquireDto,
 		@Param('order_id') order_id: number,
 		@UploadedFiles() files: Array<Express.Multer.File>,
 	) {
-		return await this.orderService.uploadInquire(req.user, dto, files);
+		return await this.orderService.uploadInquire(user, dto, files);
 	}
 
 	@Get('/inquire/:order_id')
@@ -194,10 +195,10 @@ export class OrderController {
 	@Post('/')
 	@Roles(ROLES.Client)
 	async addOrder(
-		@Request() req: Express.Request,
+		@GetUser() user: CreateUserDto,
 		@Body() dto: CreateOrderDto,
 	) {
-		return await this.orderService.addOrder(req.user.id, dto);
+		return await this.orderService.addOrder(user.id, dto);
 	}
 
 	@Get('/:order_id')

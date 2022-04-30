@@ -16,8 +16,10 @@ exports.OrderController = void 0;
 const common_1 = require("@nestjs/common");
 const platform_express_1 = require("@nestjs/platform-express");
 const multer_1 = require("multer");
+const user_decorator_1 = require("../auth/decorator/user.decorator");
 const roles_1 = require("../auth/roles");
 const roles_decorator_1 = require("../auth/roles.decorator");
+const create_user_dto_1 = require("../user/dto/create-user.dto");
 const edit_filename_1 = require("../utils/edit-filename");
 const attach_dto_1 = require("./dto/attach.dto");
 const change_order_status_dto_1 = require("./dto/change-order-status.dto");
@@ -29,14 +31,14 @@ let OrderController = class OrderController {
     constructor(orderService) {
         this.orderService = orderService;
     }
-    async checkChanges(req) {
-        return await this.orderService.checkChanges(req.user.id);
+    async checkChanges(user) {
+        return await this.orderService.checkChanges(user.id);
     }
-    async uploadFile(req, order_id, uploadFileDto, files) {
-        return await this.orderService.uploadFile(uploadFileDto, files, order_id, req.user);
+    async uploadFile(user, order_id, uploadFileDto, files) {
+        return await this.orderService.uploadFile(uploadFileDto, files, order_id, user);
     }
-    async uploadFileForSection(req, order_id, uploadFileForSectionDto, files) {
-        return await this.orderService.uploadFileForSection(req.user, files, uploadFileForSectionDto);
+    async uploadFileForSection(user, order_id, uploadFileForSectionDto, files) {
+        return await this.orderService.uploadFileForSection(user, files, uploadFileForSectionDto);
     }
     async appointExpert(order_id, expert_id) {
         return await this.orderService.appointExpert(order_id, expert_id);
@@ -56,17 +58,17 @@ let OrderController = class OrderController {
     async getSections(exp_type, object_type) {
         return await this.orderService.getSections(exp_type, object_type);
     }
-    async getAttachesForSection(req, section_id) {
-        return await this.orderService.getAttachesForSection(req.user.id, section_id);
+    async getAttachesForSection(user, section_id) {
+        return await this.orderService.getAttachesForSection(user.id, section_id);
     }
-    async getOrdersForClient(req) {
-        return await this.orderService.getOrdersForClient(req.user.id);
+    async getOrdersForClient(user) {
+        return await this.orderService.getOrdersForClient(user.id);
     }
     async getAppointmentExpert(order_id) {
         return await this.orderService.appointmentExpert(order_id);
     }
-    async getOrdersForExpert(req) {
-        return await this.orderService.getOrdersForExpert(req.user.id);
+    async getOrdersForExpert(user) {
+        return await this.orderService.getOrdersForExpert(user.id);
     }
     async getExpertForOrder(order_id) {
         return await this.orderService.getExpertForOrder(order_id);
@@ -74,8 +76,8 @@ let OrderController = class OrderController {
     async getSection(section_id) {
         return await this.orderService.getSectionByID(section_id);
     }
-    async uploadInquire(req, dto, order_id, files) {
-        return await this.orderService.uploadInquire(req.user, dto, files);
+    async uploadInquire(user, dto, order_id, files) {
+        return await this.orderService.uploadInquire(user, dto, files);
     }
     async getInquire(order_id) {
         return await this.orderService.getInquire(order_id);
@@ -83,8 +85,8 @@ let OrderController = class OrderController {
     async getSectionsForOrder(order_id) {
         return await this.orderService.getSectionsForOrder(order_id);
     }
-    async addOrder(req, dto) {
-        return await this.orderService.addOrder(req.user.id, dto);
+    async addOrder(user, dto) {
+        return await this.orderService.addOrder(user.id, dto);
     }
     async getOrder(order_id) {
         return await this.orderService.getOrderByID(order_id);
@@ -95,9 +97,9 @@ let OrderController = class OrderController {
 };
 __decorate([
     (0, common_1.Get)('/check-changes'),
-    __param(0, (0, common_1.Request)()),
+    __param(0, (0, user_decorator_1.GetUser)()),
     __metadata("design:type", Function),
-    __metadata("design:paramtypes", [Object]),
+    __metadata("design:paramtypes", [create_user_dto_1.CreateUserDto]),
     __metadata("design:returntype", Promise)
 ], OrderController.prototype, "checkChanges", null);
 __decorate([
@@ -108,12 +110,12 @@ __decorate([
             filename: edit_filename_1.editFileName,
         }),
     })),
-    __param(0, (0, common_1.Request)()),
+    __param(0, (0, user_decorator_1.GetUser)()),
     __param(1, (0, common_1.Param)('order_id')),
     __param(2, (0, common_1.Body)()),
     __param(3, (0, common_1.UploadedFiles)()),
     __metadata("design:type", Function),
-    __metadata("design:paramtypes", [Object, Number, upload_file_dto_1.UploadFileDto,
+    __metadata("design:paramtypes", [create_user_dto_1.CreateUserDto, Number, upload_file_dto_1.UploadFileDto,
         Array]),
     __metadata("design:returntype", Promise)
 ], OrderController.prototype, "uploadFile", null);
@@ -125,12 +127,12 @@ __decorate([
             filename: edit_filename_1.editFileName,
         }),
     })),
-    __param(0, (0, common_1.Request)()),
+    __param(0, (0, user_decorator_1.GetUser)()),
     __param(1, (0, common_1.Param)('order_id')),
     __param(2, (0, common_1.Body)()),
     __param(3, (0, common_1.UploadedFiles)()),
     __metadata("design:type", Function),
-    __metadata("design:paramtypes", [Object, Number, upload_file_dto_1.UploadFileForSectionDto,
+    __metadata("design:paramtypes", [create_user_dto_1.CreateUserDto, Number, upload_file_dto_1.UploadFileForSectionDto,
         Array]),
     __metadata("design:returntype", Promise)
 ], OrderController.prototype, "uploadFileForSection", null);
@@ -183,18 +185,18 @@ __decorate([
 ], OrderController.prototype, "getSections", null);
 __decorate([
     (0, common_1.Get)('/attaches-for-section/:section_id'),
-    __param(0, (0, common_1.Request)()),
+    __param(0, (0, user_decorator_1.GetUser)()),
     __param(1, (0, common_1.Param)('section_id')),
     __metadata("design:type", Function),
-    __metadata("design:paramtypes", [Object, Number]),
+    __metadata("design:paramtypes", [create_user_dto_1.CreateUserDto, Number]),
     __metadata("design:returntype", Promise)
 ], OrderController.prototype, "getAttachesForSection", null);
 __decorate([
     (0, common_1.Get)('/client'),
     (0, roles_decorator_1.Roles)(roles_1.ROLES.Client),
-    __param(0, (0, common_1.Request)()),
+    __param(0, (0, user_decorator_1.GetUser)()),
     __metadata("design:type", Function),
-    __metadata("design:paramtypes", [Object]),
+    __metadata("design:paramtypes", [create_user_dto_1.CreateUserDto]),
     __metadata("design:returntype", Promise)
 ], OrderController.prototype, "getOrdersForClient", null);
 __decorate([
@@ -208,9 +210,9 @@ __decorate([
 __decorate([
     (0, common_1.Get)('/expert'),
     (0, roles_decorator_1.Roles)(roles_1.ROLES.Expert),
-    __param(0, (0, common_1.Request)()),
+    __param(0, (0, user_decorator_1.GetUser)()),
     __metadata("design:type", Function),
-    __metadata("design:paramtypes", [Object]),
+    __metadata("design:paramtypes", [create_user_dto_1.CreateUserDto]),
     __metadata("design:returntype", Promise)
 ], OrderController.prototype, "getOrdersForExpert", null);
 __decorate([
@@ -235,12 +237,13 @@ __decorate([
             filename: edit_filename_1.editFileName,
         }),
     })),
-    __param(0, (0, common_1.Request)()),
+    __param(0, (0, user_decorator_1.GetUser)()),
     __param(1, (0, common_1.Body)()),
     __param(2, (0, common_1.Param)('order_id')),
     __param(3, (0, common_1.UploadedFiles)()),
     __metadata("design:type", Function),
-    __metadata("design:paramtypes", [Object, upload_inquire_dto_1.UploadInquireDto, Number, Array]),
+    __metadata("design:paramtypes", [create_user_dto_1.CreateUserDto,
+        upload_inquire_dto_1.UploadInquireDto, Number, Array]),
     __metadata("design:returntype", Promise)
 ], OrderController.prototype, "uploadInquire", null);
 __decorate([
@@ -260,10 +263,11 @@ __decorate([
 __decorate([
     (0, common_1.Post)('/'),
     (0, roles_decorator_1.Roles)(roles_1.ROLES.Client),
-    __param(0, (0, common_1.Request)()),
+    __param(0, (0, user_decorator_1.GetUser)()),
     __param(1, (0, common_1.Body)()),
     __metadata("design:type", Function),
-    __metadata("design:paramtypes", [Object, create_order_dto_1.CreateOrderDto]),
+    __metadata("design:paramtypes", [create_user_dto_1.CreateUserDto,
+        create_order_dto_1.CreateOrderDto]),
     __metadata("design:returntype", Promise)
 ], OrderController.prototype, "addOrder", null);
 __decorate([
